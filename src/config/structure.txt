@@ -1,0 +1,46 @@
+/backend
++-- src/
+�   +-- config/                 
+�   �   +-- corsOptions.ts
+�   �   +-- dbConfig.ts
+�   �   +-- envConfig.ts
+�   �
+�   +-- controllers/            
+�   �   +-- AuthController.ts
+�   �   +-- UserController.ts
+�   �
+�   +-- routes/                 
+�   �   +-- auth.routes.ts
+�   �   +-- user.routes.ts
+�   �
+�   +-- models/                 
+�   �   +-- User.model.ts
+�   �   +-- Role.model.ts
+�   �
+�   +-- services/               
+�   �   +-- AuthService.ts
+�   �   +-- UserService.ts
+�   �
+�   +-- dtos/                   
+�   �   +-- AuthDto.ts
+�   �   +-- UserDto.ts
+�   �
+�   +-- middlewares/            
+�   �   +-- auth.middleware.ts
+�   �   +-- error.middleware.ts
+�   �
+�   +-- utils/                  
+�   �   +-- jwt.utils.ts
+�   �   +-- logger.utils.ts
+�   �
+�   +-- types/                  
+�   �   +-- auth.types.ts
+�   �   +-- user.types.ts
+�   �
+�   +-- app.ts                  
+�   +-- server.ts               
+�
++-- .env                        
++-- tsconfig.json               
++-- package.json
++-- README.md

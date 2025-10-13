@@ -1,0 +1,16 @@
+JWT_SECRET='b21b5a65152c9d03587cfd2fa7658aefc4fa3c1525d428e8ca2d963b2e377d1d'
+JWT_REFRESH_SECRET='da4c9d3e409f4a2f8b3e6a7cda826ab1'
+PORT=3000
+DB_PATH='./db/iam.db'
+API_BASE_URL='https://w.bankon.click/api'
+FRONTEND_URL='https://banks.trade'
+ENABLE_DEV_MODE=true
+ADMIN_ROLE_ID=2
+TOKEN_EXPIRY='1h'
+REFRESH_TOKEN_EXPIRY='7d'    
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=Amir@123
+DB_NAME=iam_db
+DB_DIALECT=mysql
+DB_PORT=3306
