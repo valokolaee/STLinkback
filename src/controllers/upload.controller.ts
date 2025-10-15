@@ -2,14 +2,14 @@
 import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
-import { UploadResponse, FileInfo } from '../types/upload';
+import { UploadResponse, FileInfo } from '../interfaces/upload';
 import { UserService } from '../services/user.service';
 import getUserByReq from '../utils/getUserByReq';
 
 export class UploadController {
   // Single file upload
   static uploadFile = async (req: Request, res: Response): Promise<void> => {
-          const userId = getUserByReq(req)!.id;
+    const userId = getUserByReq(req)!.id;
     try {
       if (!req.file) {
         const response: UploadResponse = {
@@ -22,11 +22,11 @@ export class UploadController {
       }
 
       const { filename, originalname, size, mimetype, path: filePath } = req.file;
-// console.log(req.file);
+      // console.log(req.file);
 
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
-      const success = await UserService.updateUser(userId, {profileImage:fileUrl});
+      const success = await UserService.updateUser(userId, { profileImage: fileUrl });
 
       const response: UploadResponse = {
         success: true,
@@ -67,7 +67,7 @@ export class UploadController {
 
       const uploadedFiles = (req.files as Express.Multer.File[]).map(file => {
         const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${file.filename}`;
-        
+
         return {
           filename: file.filename,
           originalName: file.originalname,
@@ -126,7 +126,7 @@ export class UploadController {
   static getFiles = async (req: Request, res: Response): Promise<void> => {
     try {
       const uploadsDir = path.join(__dirname, '../../uploads');
-      
+
       if (!fs.existsSync(uploadsDir)) {
         res.json({
           success: true,
@@ -139,7 +139,7 @@ export class UploadController {
       const fileList: FileInfo[] = files.map(filename => {
         const filePath = path.join(uploadsDir, filename);
         const stats = fs.statSync(filePath);
-        
+
         return {
           id: filename,
           filename,

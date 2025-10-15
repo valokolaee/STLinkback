@@ -1,12 +1,8 @@
 // src/controllers/auth.controller.ts
 import { Response } from 'express';
-import IRequest, { IResponse } from '../types/IRequest';
-import IUser from '../types/IUser';
-
-
-export default (req: IRequest ): IUser => {
+import { IUser } from '../models/user.model';
+import IRequest from '../interfaces/IRequest';
  
 
 
-  return req!?.user!.get({ plain: true });
-}
+export default (req: IRequest): IUser =>  req!?.user!.get({ plain: true })

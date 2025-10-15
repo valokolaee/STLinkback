@@ -10,12 +10,11 @@ const fs = require('fs');
 
 // Routes
 import authRoutes from './routes/auth.routes';
-import bankRoutes from './routes/bank.routes';
 import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
-import poolRoutes from './routes/pool.routes';
-import uploadRoutes from './routes/upload.routes';
 import userRoutes from './routes/user.routes';
+import deviceRoutes from './routes/device.routes';
+import earningsRoutes from './routes/earnings.routes';
 
 
 // Middleware
@@ -44,13 +43,16 @@ app.use(express.json());
 app.use(logger);
 
 // API Routes
-app.use('/uploads', imagesRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/upload', uploadRoutes);
 app.use('/api/db', databaseRoutes);
-app.use('/api/pools', poolRoutes);
-app.use('/api/banks', bankRoutes);
+app.use('/uploads', imagesRoutes);
+
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+
+app.use('/api/devices', deviceRoutes);
+app.use('/api/device-earnings', earningsRoutes);
+
+
 
 // Serve static files
 app.use(express.static(publicPath));

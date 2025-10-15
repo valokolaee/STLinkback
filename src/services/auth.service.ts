@@ -5,7 +5,7 @@ import { sequelize, models } from '../db';
 import { UserService } from './user.service';
 import { log } from 'console';
 
-export class AuthService {
+export default class  {
   static async register(data: any) {
     const { username, email, password, clientType } = data;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,7 +33,7 @@ export class AuthService {
 
   static async login(data: any) {
     const { email, password } = data;
-    console.log(data);
+    // console.log(data);
     var user = await models.User.findOne({ where: { email } });
 
     

@@ -1,10 +1,16 @@
-// src/models/Role.ts
+// src/models/role.model.ts
 import { Model } from 'sequelize';
 
 export default class Role extends Model {
   public id!: number;
   public name!: string;
   public description!: string | null;
+  public level!: number;
+  public isSystem!: boolean;
+  public createdAt!: Date;
+
+  public readonly users?: any[];
+  public readonly permissions?: any[];
 
   public static initModel(sequelize: any): typeof Role {
     return Role.init(
@@ -22,6 +28,22 @@ export default class Role extends Model {
         description: {
           type: 'TEXT',
           allowNull: true,
+        },
+        level: {
+          type: 'INT',
+          allowNull: false,
+          defaultValue: 0,
+        },
+        isSystem: {
+          type: 'BOOLEAN',
+          allowNull: false,
+          defaultValue: false,
+          field: 'is_system',
+        },
+        createdAt: {
+          type: 'DATETIME',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
         },
       },
       {

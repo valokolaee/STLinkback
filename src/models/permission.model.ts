@@ -1,10 +1,15 @@
-// src/models/Permission.ts
+// src/models/permission.model.ts
 import { Model } from 'sequelize';
 
 export default class Permission extends Model {
   public id!: number;
   public name!: string;
   public description!: string | null;
+  public module!: string;
+  public action!: string;
+  public createdAt!: Date;
+
+  public readonly roles?: any[];
 
   public static initModel(sequelize: any): typeof Permission {
     return Permission.init(
@@ -23,6 +28,19 @@ export default class Permission extends Model {
           type: 'TEXT',
           allowNull: true,
         },
+        module: {
+          type: 'VARCHAR(100)',
+          allowNull: false,
+        },
+        action: {
+          type: 'VARCHAR(100)',
+          allowNull: false,
+        },
+        createdAt: {
+          type: 'DATETIME',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
+        },
       },
       {
         sequelize,
@@ -39,13 +57,6 @@ export default class Permission extends Model {
       foreignKey: 'permissionId',
       otherKey: 'roleId',
       as: 'roles',
-    });
-
-    Permission.belongsToMany(models.User, {
-      through: models.UserPermission, 
-      foreignKey: 'permissionId',
-      otherKey: 'userId',
-      as: 'users',
     });
   }
 }

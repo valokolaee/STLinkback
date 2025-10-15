@@ -10,19 +10,24 @@ export const registerSchema = Joi.object({
     .required(),
 });
 
+
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
 
-export type RegisterRequest = {
-  username: string;
-  email: string;
-  password: string;
-  clientType: 'individual' | 'financial_entities' | 'business';
-};
 
-export type LoginRequest = {
-  email: string;
-  password: string;
-};
+export const createDeviceSchema = Joi.object({
+  deviceName: Joi.string().min(1).max(255).required(),
+  imei: Joi.string().min(1).max(15).required(),
+  deviceModel: Joi.string().min(1).max(100).required(),
+});
+
+
+// amount: 100, currency: 'ttr', deviceId: 1, isSettled: true
+export const createDeviceEarningSchema = Joi.object({
+  amount: Joi.number().required(),
+  currency: Joi.string().min(1).max(15).required(),
+  deviceId: Joi.number().required(),
+  isSettled: Joi.boolean().required(),
+});

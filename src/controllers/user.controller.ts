@@ -1,10 +1,9 @@
 // src/controllers/user.controller.ts
 import { Request, Response } from 'express';
+import { avatarSt, logoSt } from '../config/constants';
+import { UploadResponse } from '../interfaces/upload';
 import { UserService } from '../services/user.service';
 import getUserByReq from '../utils/getUserByReq';
-import { IResponse } from '../types/IRequest';
-import { UploadResponse } from '../types/upload';
-import { avatarSt, logoSt } from '../config/constants';
 
 export class UserController {
   /**
@@ -13,7 +12,7 @@ export class UserController {
   static async updateProfileImage(req: Request, res: Response) {
     try {
       // const { userId } = req.params;
-      const userId = getUserByReq(req ).id;
+      const userId = getUserByReq(req).id;
 
       const { profileImage } = req.body;
 
@@ -54,7 +53,7 @@ export class UserController {
   static async getUserProfile(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReq(req ).id;
+      const userId = getUserByReq(req).id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -92,7 +91,7 @@ export class UserController {
 
     try {
 
-      const userId = getUserByReq(req ).id;
+      const userId = getUserByReq(req).id;
 
       if (userId === undefined) {
         res.status(400).json({

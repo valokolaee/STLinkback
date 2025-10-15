@@ -1,22 +1,20 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
-import { AuthService } from '../services/auth.service';
-import MailService from '../services/mailer.service';
-import { registerSchema, loginSchema } from '../dtos/auth.dto';
-import { validate } from '../utils/validator.utils';
-import IRequest, { IResponse } from '../types/IRequest';
+import { registerSchema } from '../dtos/auth.dto';
 import getUserByReq from '../utils/getUserByReq';
-import User from '../models/user.model';
-import IUser from '../types/IUser';
-import { date } from 'joi';
+import { validate } from '../utils/validator.utils';
+import authService from '../services/auth.service';
+import { IUser } from '../models/user.model';
 
-export class AuthController {
+export default class {
   static async register(req: Request, res: Response) {
     try {
 
       var _user: Partial<IUser> = {}
-      const data = validate<Record<string, any>>(registerSchema, req.body);
-      const result = await AuthService.register(data);
+
+      const data = validate(registerSchema, req.body,res);
+      
+      const result = await authService.register(data);
 
       if (typeof result === 'string') {
         return res.status(200).json({
@@ -44,11 +42,11 @@ export class AuthController {
 
   static async login(req: Request, res: Response) {
     // console.log(req.);
-    
+
     try {
       // const data = validate<Record<string, any>>(loginSchema, req.body);
       const data = req.body;
-      const result = await AuthService.login(data);
+      const result = await authService.login(data);
 
       const _user: IUser = { ...result.user, token: result.accessToken } as IUser;
 
@@ -60,9 +58,9 @@ export class AuthController {
 
       });
     } catch (error: any) {
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: error.message,
+        message: 'user not found',
       });
     }
   }
@@ -96,22 +94,4 @@ export class AuthController {
     }
   }
 
-
-  static async sendMail(req: Request, res: Response) {
-    try {
-
-      MailService()
-
-      return res.status(201).json({
-        success: true,
-        message: 'User registered successfully',
-
-      });
-    } catch (error: any) {
-      return res.status(400).json({
-        success: false,
-        message: error.message,
-      });
-    }
-  }
 }

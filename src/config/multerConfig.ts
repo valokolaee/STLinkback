@@ -2,8 +2,8 @@ import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import getUserByReq from '../utils/getUserByReq';
-import IRequest from '../types/IRequest';
-import IUser from '../types/IUser';
+import IRequest from '../interfaces/IRequest';
+import IUser from '../interfaces/IUser';
 import { TAllowedMimes, TImageFor } from './constants';
 
 // Configure storage
