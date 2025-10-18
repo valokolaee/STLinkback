@@ -1,17 +1,18 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import deviceController from '../controllers/device.controller';
+import earningsController from '../controllers/device-earning.controller';
 import { authenticate } from '../middleware/auth.middleware';
-import earningsController from '../controllers/earnings.controller';
 
 const router = Router();
 
 
 router.get('/', authenticate, earningsController.getAll);
 router.get('/:id', authenticate, earningsController.getOne);
+router.post('/getAllBy', authenticate, earningsController.getAllBy);
+
 
 router.post('/', authenticate, earningsController.create);
 router.put('/', authenticate, earningsController.update);
-router.delete('/', authenticate, earningsController.delete);
+router.delete('/:id', authenticate, earningsController.delete);
 
 export default router;

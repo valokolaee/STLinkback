@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import { UploadResponse, FileInfo } from '../interfaces/upload';
 import { UserService } from '../services/user.service';
-import getUserByReq from '../utils/getUserByReq';
+import getUserByReq from '../utils/getUserByReq.utils';
 
 export class UploadController {
   // Single file upload

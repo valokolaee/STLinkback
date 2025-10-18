@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { avatarSt, logoSt } from '../config/constants';
 import { UploadResponse } from '../interfaces/upload';
 import { UserService } from '../services/user.service';
-import getUserByReq from '../utils/getUserByReq';
+import getUserByReq from '../utils/getUserByReq.utils';
 
 export class UserController {
   /**
@@ -23,7 +23,7 @@ export class UserController {
         });
       }
 
-      const success = await UserService.updateProfileImage(userId, profileImage);
+      const success = await UserService.updateProfileImage(userId!, profileImage);
 
       if (success) {
         res.json({
@@ -61,7 +61,7 @@ export class UserController {
           message: 'bad request'
         });
       }
-      const user = await UserService.getUserById(userId);
+      const user = await UserService.getUserById(userId!);
 
       if (user) {
         res.json({
@@ -100,7 +100,7 @@ export class UserController {
         });
       }
 
-      const user = await UserService.getUserInvestmentsById(userId);
+      const user = await UserService.getUserInvestmentsById(userId!);
 
 
       if (user) {
@@ -139,7 +139,7 @@ export class UserController {
           message: 'bad request'
         });
       }
-      const user = await UserService.getUserReferralsById(userId);
+      const user = await UserService.getUserReferralsById(userId!);
 
       if (user) {
         res.json({
@@ -176,7 +176,7 @@ export class UserController {
           message: 'bad request'
         });
       }
-      const user = await UserService.getUserLoansById(userId);
+      const user = await UserService.getUserLoansById(userId!);
 
       if (user) {
         res.json({
@@ -214,7 +214,7 @@ export class UserController {
           message: 'bad request'
         });
       }
-      const user = await UserService.getBankAffiliations(userId);
+      const user = await UserService.getBankAffiliations(userId!);
 
       if (user) {
         res.json({
@@ -256,7 +256,7 @@ export class UserController {
 
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${avatarSt}/${filename}`;
-      const success = await UserService.updateUser(userId, { profileImage: fileUrl });
+      const success = await UserService.updateUser(userId!, { profileImage: fileUrl });
 
       const response: UploadResponse = {
         success: true,
@@ -302,7 +302,7 @@ export class UserController {
 
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${logoSt}/${filename}`;
-      const success = await UserService.updateUser(userId, { logoUrl: fileUrl });
+      const success = await UserService.updateUser(userId!, { logoUrl: fileUrl });
 
       const response: UploadResponse = {
         success: true,
@@ -338,7 +338,7 @@ export class UserController {
       const userId = getUserByReq(req)!.id;
       const updateData = req.body;
 
-      const success = await UserService.updateUser(userId, updateData);
+      const success = await UserService.updateUser(userId!, updateData);
 
       if (success) {
         res.json({

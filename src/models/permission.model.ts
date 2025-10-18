@@ -7,6 +7,7 @@ export default class Permission extends Model {
   public description!: string | null;
   public module!: string;
   public action!: string;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly roles?: any[];
@@ -35,6 +36,11 @@ export default class Permission extends Model {
         action: {
           type: 'VARCHAR(100)',
           allowNull: false,
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

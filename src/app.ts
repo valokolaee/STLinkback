@@ -5,23 +5,30 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import corsOptions from './config/cors.options';
 import { sequelize } from './db';
-const https = require('https');
-const fs = require('fs');
 
-// Routes
 import authRoutes from './routes/auth.routes';
 import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
 import userRoutes from './routes/user.routes';
-import deviceRoutes from './routes/device.routes';
-import earningsRoutes from './routes/earnings.routes';
+import deviceEarningsRoutes from './routes/device-earning.routes';
+import withdrawalRequestRoutes from './routes/withdrawal-request.routes';
+import miningDeviceRoutes from './routes/mining-device.routes';
+import miningWalletRoutes from './routes/mining-wallet.routes';
 
+import deviceAlertRoutes from './routes/device-alert.routes';
+import deviceSpecificationRoutes from './routes/device-specification.routes';
+import miningSessionRoutes from './routes/mining-session.routes';
+import permissionRoutes from './routes/permission.routes';
+import rolePermissionRoutes from './routes/role-permission.routes';
+import roleRoutes from './routes/role.routes';
+import userSessionRoutes from './routes/user-session.routes';
 
-// Middleware
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
 import { logger } from './middleware/logger.middleware';
-
+ 
+const https = require('https');
+const fs = require('fs');
 
 
 
@@ -47,10 +54,21 @@ app.use('/api/db', databaseRoutes);
 app.use('/uploads', imagesRoutes);
 
 app.use('/api/auth', authRoutes);
+app.use('/api/withdrawal-request', withdrawalRequestRoutes);
 app.use('/api/users', userRoutes);
 
-app.use('/api/devices', deviceRoutes);
-app.use('/api/device-earnings', earningsRoutes);
+app.use('/api/mining-devices', miningDeviceRoutes);
+app.use('/api/device-earnings', deviceEarningsRoutes);
+app.use('/api/mining-wallet', miningWalletRoutes);
+
+
+app.use('/api/device-alert', deviceAlertRoutes);
+app.use('/api/device-specification', deviceSpecificationRoutes);
+app.use('/api/mining-session', miningSessionRoutes);
+app.use('/api/permission', permissionRoutes);
+app.use('/api/role-permission', rolePermissionRoutes);
+app.use('/api/role', roleRoutes);
+app.use('/api/user-session', userSessionRoutes);
 
 
 

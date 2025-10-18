@@ -4,6 +4,7 @@ import { Model } from 'sequelize';
 export default class DeviceEarning extends Model {
   public id!: number;
   public deviceId!: number;
+  public userId!: number;
   public miningSessionId!: number | null;
   public amount!: number;
   public currency!: string;
@@ -12,6 +13,7 @@ export default class DeviceEarning extends Model {
   public isSettled!: boolean;
   public transactionHash!: string | null;
   public exchangeRate!: number | null;
+  public softDeleted!: boolean;
 
   public readonly device?: any;
   public readonly miningSession?: any;
@@ -28,6 +30,11 @@ export default class DeviceEarning extends Model {
           type: 'INT',
           allowNull: false,
           field: 'device_id',
+        },
+        userId: {
+          type: 'INT',
+          allowNull: false,
+          field: 'user_id',
         },
         miningSessionId: {
           type: 'INT',
@@ -71,6 +78,11 @@ export default class DeviceEarning extends Model {
           allowNull: true,
           field: 'exchange_rate',
         },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
+        },
       },
       {
         sequelize,
@@ -80,6 +92,9 @@ export default class DeviceEarning extends Model {
         indexes: [
           {
             fields: ['device_id', 'earning_date']
+          },
+          {
+            fields: ['user_id', 'earning_date']
           },
           {
             fields: ['is_settled', 'earning_date']
@@ -95,6 +110,10 @@ export default class DeviceEarning extends Model {
       as: 'device',
     });
 
+    DeviceEarning.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+    });
     DeviceEarning.belongsTo(models.MiningSession, {
       foreignKey: 'miningSessionId',
       as: 'miningSession',

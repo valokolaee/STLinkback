@@ -17,6 +17,7 @@ export default class User extends Model {
   public phoneVerified!: boolean;
   public lastLogin!: Date | null;
   public createdAt!: Date;
+  public softDeleted!: boolean;
   public updatedAt!: Date | null;
 
   public readonly role?: any;
@@ -104,6 +105,11 @@ export default class User extends Model {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         updatedAt: {
           type: 'DATETIME',

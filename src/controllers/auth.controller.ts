@@ -1,10 +1,11 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
 import { registerSchema } from '../dtos/auth.dto';
-import getUserByReq from '../utils/getUserByReq';
+import getUserByReq from '../utils/getUserByReq.utils';
 import { validate } from '../utils/validator.utils';
 import authService from '../services/auth.service';
 import { IUser } from '../models/user.model';
+import responserUtils from '../utils/responser.utils';
 
 export default class {
   static async register(req: Request, res: Response) {
@@ -12,9 +13,10 @@ export default class {
 
       var _user: Partial<IUser> = {}
 
-      const data = validate(registerSchema, req.body,res);
-      
+      const data = validate(registerSchema, req.body, res);
+      console.log(data);
       const result = await authService.register(data);
+      // responserUtils(res, 200, {}, result); return
 
       if (typeof result === 'string') {
         return res.status(200).json({

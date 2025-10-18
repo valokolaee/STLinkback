@@ -10,6 +10,7 @@ export default class DeviceAlert extends Model {
   public isResolved!: boolean;
   public resolvedAt!: Date | null;
   public resolvedBy!: number | null;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly device?: any;
@@ -58,6 +59,11 @@ export default class DeviceAlert extends Model {
           type: 'INT',
           allowNull: true,
           field: 'resolved_by',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

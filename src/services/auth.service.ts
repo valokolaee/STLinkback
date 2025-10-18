@@ -4,13 +4,17 @@ import { JWT_SECRET } from '../config/env.config';
 import { sequelize, models } from '../db';
 import { UserService } from './user.service';
 import { log } from 'console';
+import Role, { IRole } from '../models/role.model';
 
-export default class  {
+export default class {
   static async register(data: any) {
-    const { username, email, password, clientType } = data;
+    const { username, email, password, clientType } = data.data;
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const _uName = await UserService.getUserByUserName(username)
     const _uEmail = await UserService.getUserByEmail(email)
+
 
     if (_uName?.id! > 0) {
       return 'username already taken'
@@ -18,6 +22,11 @@ export default class  {
     if (_uEmail?.id! > 0) {
       return 'email already taken'
     }
+
+
+    // const _role:IRole={name:'test'}
+
+    // const role = await models.Role.create(_role)
 
     const user = await models.User.create({
       username,
@@ -27,6 +36,7 @@ export default class  {
       roleId: 1,
     });
 
+    console.log('user', data);
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
     return { accessToken: token, user: user.get({ plain: true }) };
   }
@@ -36,7 +46,7 @@ export default class  {
     // console.log(data);
     var user = await models.User.findOne({ where: { email } });
 
-    
+
     // in order to make login possible with username too
     if (!user) { user = await models.User.findOne({ where: { username: email } }); }
 

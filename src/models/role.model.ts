@@ -7,6 +7,7 @@ export default class Role extends Model {
   public description!: string | null;
   public level!: number;
   public isSystem!: boolean;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly users?: any[];
@@ -40,6 +41,11 @@ export default class Role extends Model {
           defaultValue: false,
           field: 'is_system',
         },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
+        },
         createdAt: {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -69,3 +75,7 @@ export default class Role extends Model {
     });
   }
 }
+
+
+
+export interface IRole extends Partial<Role>{}

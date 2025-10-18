@@ -13,6 +13,7 @@ export default class DeviceSpecification extends Model {
   public fanCount!: number | null;
   public hashRate!: number | null;
   public algorithm!: string | null;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly device?: any;
@@ -73,6 +74,11 @@ export default class DeviceSpecification extends Model {
         algorithm: {
           type: 'VARCHAR(100)',
           allowNull: true,
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

@@ -1,8 +1,8 @@
 // src/utils/validator.utils.ts
 import { Response } from 'express';
 import Joi from 'joi';
-import responser from './responser';
-import serviceResult from './serviceResponser';
+import responser from './responser.utils';
+import serviceResult from './serviceResponser.utils';
 
 export const validate = (schema: Joi.ObjectSchema, data: any, res: Response) => {
   const { error, value } = schema.validate(data);
@@ -22,7 +22,7 @@ export const validate = (schema: Joi.ObjectSchema, data: any, res: Response) => 
   else {
     return serviceResult({
       ok: true,
-      data:value
+      data: value
     })
   }
 };

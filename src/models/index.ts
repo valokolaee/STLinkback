@@ -10,8 +10,8 @@ import DeviceMetric from './device-metric.model.js';
 import MiningSession from './mining-session.model.js';
 import DeviceEarning from './device-earning.model.js';
 import MiningWallet from './mining-wallet.model.js';
-import WithdrawalRequest from './withdrawal-request.model.js';
 import DeviceAlert from './device-alert.model.js';
+import WithdrawalRequest from './withdrawal-request.model.js';
 
 const initModels = (sequelize: any) => {
   const models = {
@@ -22,12 +22,12 @@ const initModels = (sequelize: any) => {
     UserSession: UserSession.initModel(sequelize),
     MiningDevice: MiningDevice.initModel(sequelize),
     DeviceSpecification: DeviceSpecification.initModel(sequelize),
+    WithdrawalRequest: WithdrawalRequest.initModel(sequelize),
     DeviceMetric: DeviceMetric.initModel(sequelize),
+    DeviceAlert: DeviceAlert.initModel(sequelize),
     MiningSession: MiningSession.initModel(sequelize),
     DeviceEarning: DeviceEarning.initModel(sequelize),
     MiningWallet: MiningWallet.initModel(sequelize),
-    WithdrawalRequest: WithdrawalRequest.initModel(sequelize),
-    DeviceAlert: DeviceAlert.initModel(sequelize),
   };
 
   Object.values(models).forEach((model: any) => {

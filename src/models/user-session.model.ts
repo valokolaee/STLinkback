@@ -9,6 +9,7 @@ export default class UserSession extends Model {
   public userAgent!: string | null;
   public expiresAt!: Date;
   public isActive!: boolean;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly user?: any;
@@ -51,6 +52,11 @@ export default class UserSession extends Model {
           allowNull: false,
           defaultValue: true,
           field: 'is_active',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

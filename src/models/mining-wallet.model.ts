@@ -10,6 +10,7 @@ export default class MiningWallet extends Model {
   public pendingBalance!: number;
   public currency!: string;
   public walletAddress!: string | null;
+  public softDeleted!: boolean;
   public lastUpdated!: Date;
 
   public readonly user?: any;
@@ -62,6 +63,11 @@ export default class MiningWallet extends Model {
           unique: true,
           field: 'wallet_address',
         },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
+        },
         lastUpdated: {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -76,7 +82,7 @@ export default class MiningWallet extends Model {
         indexes: [
           {
             unique: true,
-            fields: ['user_id', 'currency']
+            fields: ['walletAddress']
           }
         ]
       }
@@ -90,3 +96,6 @@ export default class MiningWallet extends Model {
     });
   }
 }
+
+
+export interface IMiningWallet extends MiningWallet{}

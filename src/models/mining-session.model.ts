@@ -11,6 +11,7 @@ export default class MiningSession extends Model {
   public status!: 'running' | 'completed' | 'interrupted' | 'failed';
   public avgHashRate!: number | null;
   public energyConsumed!: number | null;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly device?: any;
@@ -64,6 +65,11 @@ export default class MiningSession extends Model {
           type: 'DECIMAL(10,4)',
           allowNull: true,
           field: 'energy_consumed',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

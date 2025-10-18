@@ -14,6 +14,7 @@ export default class DeviceMetric extends Model {
   public hashRate!: number;
   public networkLatency!: number | null;
   public recordedAt!: Date;
+  public softDeleted!: boolean;
 
   public readonly device?: any;
 
@@ -86,6 +87,11 @@ export default class DeviceMetric extends Model {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'recorded_at',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
       },
       {

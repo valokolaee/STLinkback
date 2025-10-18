@@ -1,8 +1,11 @@
 // src/config/db.config.ts
-import { Options } from 'sequelize';
+// import { Options } from 'sequelize/types';
 import dotenv from 'dotenv';
+import Sequelize from 'sequelize';
+
+
 dotenv.config();
-const dbConfig: Options = {
+const dbConfig: Sequelize.Options = {
   dialect: process.env.DB_DIALECT as any,
   host: process.env.DB_HOST,
   username: process.env.DB_USER,

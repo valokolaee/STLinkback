@@ -5,6 +5,7 @@ export default class RolePermission extends Model {
   public id!: number;
   public roleId!: number;
   public permissionId!: number;
+  public softDeleted!: boolean;
   public createdAt!: Date;
 
   public readonly role?: any;
@@ -27,6 +28,11 @@ export default class RolePermission extends Model {
           type: 'INT',
           allowNull: false,
           field: 'permission_id',
+        },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',

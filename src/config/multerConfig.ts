@@ -1,7 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import getUserByReq from '../utils/getUserByReq';
+import getUserByReq from '../utils/getUserByReq.utils';
 import IRequest from '../interfaces/IRequest';
 import IUser from '../interfaces/IUser';
 import { TAllowedMimes, TImageFor } from './constants';

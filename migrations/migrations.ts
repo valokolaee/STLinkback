@@ -1,26 +1,9 @@
-// src/models/withdrawal-request.model.ts
-import { Model } from 'sequelize';
+"use strict";
 
-export default class WithdrawalRequest extends Model {
-  public id!: number;
-  public userId!: number;
-  public amount!: number;
-  public currency!: string;
-  public walletAddress!: string;
-  public transactionHash!: string | null;
-  public status!: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
-  public networkFee!: number;
-  public serviceFee!: number;
-  public requestedAt!: Date;
-  public processedAt!: Date | null;
-  public softDeleted!: boolean;
-  public processedBy!: number | null;
-
-  public readonly user?: any;
-  public readonly processedByUser?: any;
-
-  public static initModel(sequelize: any): typeof WithdrawalRequest {
-    return WithdrawalRequest.init(
+module.exports = {
+  async up(queryInterface: any, sequelize: any) {
+ 
+    await queryInterface.createWithdrawalRequestSchema(
       {
         id: {
           type: 'INT',
@@ -104,21 +87,12 @@ export default class WithdrawalRequest extends Model {
           }
         ]
       }
-    );
-  }
+    )
+    
+  },
 
-  public static associate(models: any) {
-    WithdrawalRequest.belongsTo(models.User, {
-      foreignKey: 'userId',
-      as: 'user',
-    });
+  async down(queryInterface: any, sequelize: any) {
 
-    WithdrawalRequest.belongsTo(models.User, {
-      foreignKey: 'processedBy',
-      as: 'processedByUser',
-    });
-  }
-}
-
-
-export interface IWithdrawalRequest extends WithdrawalRequest{}
+    
+  },
+};

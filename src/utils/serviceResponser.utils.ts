@@ -2,4 +2,8 @@ import { Response } from "express";
 import IResponse from "../interfaces/IResponse";
 import IServiceResult from "../interfaces/IServiceResult";
 
-export default (res: IServiceResult<any>) =>res
+export default (res: IServiceResult<any>, error?: any) => {
+   console.log(error);
+   
+    return res
+}

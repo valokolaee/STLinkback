@@ -17,6 +17,7 @@ export default class MiningDevice extends Model {
   public location!: string | null;
   public createdAt!: Date;
   public updatedAt!: Date | null;
+  public softDeleted!:boolean;
 
   public readonly user?: any;
   public readonly specifications?: any;
@@ -95,11 +96,17 @@ export default class MiningDevice extends Model {
           type: 'VARCHAR(255)',
           allowNull: true,
         },
+        softDeleted: {
+          type: 'BOOLEAN',
+          allowNull: true,
+          defaultValue:false
+        },
         createdAt: {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
+        
         updatedAt: {
           type: 'DATETIME',
           allowNull: true,
