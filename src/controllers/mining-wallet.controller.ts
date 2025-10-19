@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
-import { createMiningWalletSchema } from '../dtos/auth.dto';
+import { createMiningWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
@@ -61,7 +61,7 @@ export default {
 
       const userId = req.body.userId
 
-      const items = await service.getAllBy({  userId });
+      const items = await service.getAllBy({ userId });
 
       if (items.ok) {
         responser(res, 200, { success: true, data: items.data })
@@ -112,7 +112,7 @@ export default {
 
     try {
 
-      const w= req.body
+      const w = req.body
 
       const updatedItems = await service.update(w);
 

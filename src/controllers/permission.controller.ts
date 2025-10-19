@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
-import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/auth.dto';
+import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
@@ -89,7 +89,7 @@ export default {
         return
       }
 
-       const createdItem = await service.create(data.data);
+      const createdItem = await service.create(data.data);
 
 
       if (createdItem.ok) {

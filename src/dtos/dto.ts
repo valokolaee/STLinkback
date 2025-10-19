@@ -37,6 +37,7 @@ export const createDeviceEarningSchema = Joi.object({
 export const createMiningWalletSchema = Joi.object({
   userId: Joi.number().required(),
   walletAddress: Joi.string().required(),
+  currency: Joi.string() 
 });
 export const createWithdrawalRequestSchema = Joi.object({
   userId: Joi.number().required(),

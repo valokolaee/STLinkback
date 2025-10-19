@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
-import { createDeviceEarningSchema } from '../dtos/auth.dto';
+import { createDeviceEarningSchema } from '../dtos/dto';
 import { IDeviceEarning } from '../models/device-earning.model';
 import genericService from '../services/generic.service';
 import getUserByReq from '../utils/getUserByReq.utils';

@@ -1,6 +1,6 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
-import { registerSchema } from '../dtos/auth.dto';
+import { registerSchema } from '../dtos/dto';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { validate } from '../utils/validator.utils';
 import authService from '../services/auth.service';

@@ -6,7 +6,7 @@ import { IMiningDevice } from '../models/mining-device.model';
 import getUserByReq from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
-import { createDeviceSchema } from '../dtos/auth.dto';
+import { createDeviceSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import { models } from '../db';
 
