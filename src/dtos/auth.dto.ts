@@ -18,8 +18,10 @@ export const loginSchema = Joi.object({
 
 export const createDeviceSchema = Joi.object({
   deviceName: Joi.string().min(1).max(255).required(),
-  imei: Joi.string().min(1).max(15).required(),
+  imei: Joi.string().required(),
   deviceModel: Joi.string().min(1).max(100).required(),
+  serialNumber: Joi.string() 
+  
 });
 
 
