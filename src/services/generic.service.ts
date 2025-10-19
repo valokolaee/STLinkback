@@ -1,8 +1,9 @@
+import { Model, ModelStatic, WhereOptions } from 'sequelize';
 import serviceResponser from '../utils/serviceResponser.utils';
 
 
 
-export default (model: any) => {
+export default (model: ModelStatic<Model>) => {
 
   return {
 
@@ -37,7 +38,7 @@ export default (model: any) => {
 
     },
 
-    async getAllBy(foreignKey: object) {
+    async getAllBy(foreignKey: WhereOptions<any>) {
 
       try {
         const items = await model.findAll({ where: foreignKey });

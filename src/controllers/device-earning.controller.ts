@@ -1,7 +1,9 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
 import { createDeviceEarningSchema } from '../dtos/dto';
+import IServiceResult from '../interfaces/IServiceResult';
 import { IDeviceEarning } from '../models/device-earning.model';
+import MiningWallet, { IMiningWallet } from '../models/mining-wallet.model';
 import genericService from '../services/generic.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
@@ -9,6 +11,7 @@ import { validate } from '../utils/validator.utils';
 
 
 const service = genericService(models.DeviceEarning)
+const serviceWallet = genericService(models.MiningWallet)
 
 export default {
 
@@ -88,16 +91,32 @@ export default {
       }
 
       const _res: IDeviceEarning = { userId, ...data.data }
-      const createdDevice = await service.create(_res);
+      const createdDeviceEarning: IServiceResult<IDeviceEarning> = await service.create(_res);
 
 
-      if (createdDevice.ok) {
+      if (createdDeviceEarning.ok) {
 
-        responser(res, 200, { success: true, data: createdDevice.data })
+        const mwID = 1;//TODO MiningWallet id has to stored with device info
+
+        var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
+
+        const newBalance =
+          parseFloat(mw.availableBalance.toString()) + createdDeviceEarning.data?.amount! || 0;
+
+        // console.log('pre', mw.availableBalance, newBalance);
+
+        await serviceWallet.update({ id: mwID, availableBalance: newBalance })
+
+        // var mw2: IMiningWallet = (await serviceWallet.getOne(mwID)).data
+
+        // console.log('next', mw2.availableBalance);
+
+
+        responser(res, 200, { success: true, data: createdDeviceEarning.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdDevice.data })
+        responser(res, 400, { success: false, data: createdDeviceEarning.data })
 
       }
 

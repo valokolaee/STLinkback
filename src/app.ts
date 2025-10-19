@@ -153,6 +153,7 @@ https.createServer(options, app).listen(PORT, async () => {
     console.log('Database connection established successfully.');
     console.log(`Server is running on http://localhost:${PORT}`);
     console.log(`Backend URL: https://w.bankon.click`);
+    
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

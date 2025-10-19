@@ -1,9 +1,7 @@
-import { Response } from "express";
-import IResponse from "../interfaces/IResponse";
 import IServiceResult from "../interfaces/IServiceResult";
+import errorHandlerUtils from "./errorHandler.utils";
 
 export default (res: IServiceResult<any>, error?: any) => {
-   console.log(error);
-   
+    errorHandlerUtils(error)
     return res
 }
