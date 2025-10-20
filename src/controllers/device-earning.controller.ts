@@ -96,20 +96,17 @@ export default {
 
       if (createdDeviceEarning.ok) {
 
-        const mwID = 1;//TODO MiningWallet id has to stored with device info
+        const mwID = 1;//TODO MiningWallet id has to be stored with device info
 
         var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
 
         const newBalance =
           parseFloat(mw.availableBalance.toString()) + createdDeviceEarning.data?.amount! || 0;
+ 
 
-        // console.log('pre', mw.availableBalance, newBalance);
+        await serviceWallet.update({ id: mwID, availableBalance: newBalance,  })
 
-        await serviceWallet.update({ id: mwID, availableBalance: newBalance })
-
-        // var mw2: IMiningWallet = (await serviceWallet.getOne(mwID)).data
-
-        // console.log('next', mw2.availableBalance);
+ 
 
 
         responser(res, 200, { success: true, data: createdDeviceEarning.data })

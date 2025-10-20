@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
-import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
+import { createMiningSessionSchema, createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 
-
+// TODO 
 
 
 const service = genericService(models.MiningSession)
@@ -83,7 +83,7 @@ export default {
     try {
       const userId = getUserByReqUtils(req).id;
 
-      const data = validate(createWithdrawalRequestSchema, { userId, ...req?.body }, res);
+      const data = validate(createMiningSessionSchema, { userId, ...req?.body }, res);
 
       if (!data.ok) {
         return

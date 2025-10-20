@@ -29,6 +29,7 @@ export const createDeviceEarningSchema = Joi.object({
   amount: Joi.number().required(),
   currency: Joi.string().min(1).max(15).required(),
   deviceId: Joi.number().required(),
+  miningSessionId: Joi.number().required(),
   userId: Joi.number().required(),
   isSettled: Joi.boolean().required(),
 });
@@ -45,4 +46,9 @@ export const createWithdrawalRequestSchema = Joi.object({
   amount: Joi.number().required(),
   currency: Joi.string().required(),
   walletAddress: Joi.string().required(),
+});
+export const createMiningSessionSchema = Joi.object({
+  userId: Joi.number().required(),
+  deviceId: Joi.number().required(),
+ 
 });
