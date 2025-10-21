@@ -27,6 +27,7 @@ export const createDeviceSchema = Joi.object({
 
 export const createDeviceEarningSchema = Joi.object({
   amount: Joi.number().required(),
+  walletId: Joi.number().required(),
   currency: Joi.string().min(1).max(15).required(),
   deviceId: Joi.number().required(),
   miningSessionId: Joi.number().required(),

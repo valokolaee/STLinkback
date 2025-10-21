@@ -83,6 +83,7 @@ export default {
 
     try {
       const userId = getUserByReq(req).id;
+      const walletId =req.body.walletId!;
 
       const data = validate(createDeviceEarningSchema, req?.body, res);
 
@@ -92,11 +93,12 @@ export default {
 
       const _res: IDeviceEarning = { userId, ...data.data }
       const createdDeviceEarning: IServiceResult<IDeviceEarning> = await service.create(_res);
+      // console.log('walletId', walletId);
 
-
+//  TODO get device to reach walletId 
       if (createdDeviceEarning.ok) {
 
-        const mwID = 1;//TODO MiningWallet id has to be stored with device info
+        const mwID =walletId// 1;//TODO MiningWallet id has to be stored with device info
 
         var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
 

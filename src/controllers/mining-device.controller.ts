@@ -1,19 +1,20 @@
-// src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
 import IResponse from '../interfaces/IResponse';
 import { IMiningDevice } from '../models/mining-device.model';
-// import service from '../services/device.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import { createDeviceSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import { models } from '../db';
+import { IMiningWallet } from '../models/mining-wallet.model';
+import IServiceResult from '../interfaces/IServiceResult';
 
 
 
 
 const service = genericService(models.MiningDevice)
+const serviceWallet = genericService(models.MiningWallet)
 
 export default {
 
@@ -29,7 +30,6 @@ export default {
         responser(res, 404, {
           success: false,
         })
-
       }
 
     } catch (error) {
@@ -103,14 +103,34 @@ export default {
         return
       }
 
-      const _device: IMiningDevice = { userId, ...data.data }
+      const _deviceWallet: Partial<IMiningWallet> = { userId: userId!, walletAddress: data?.data?.imei, currency: 'USDT' }
+
+
+      const createdWallet: IServiceResult<IMiningWallet> = await serviceWallet.create(_deviceWallet);
+      console.log('createdWallet', createdWallet);
+
+      if (!createdWallet.ok) {
+        const _res: IResponse<IMiningDevice> = {
+          success: false,
+          message: 'device create failed due to issue in creating corresponding wallet'
+        }
+        responser(res, 400, _res)
+
+      }
+
+      const d = data.data
+      const _device: IMiningDevice = { userId: createdWallet.data?.userId, walletId: createdWallet.data?.id, deviceModel: d.deviceModel, serialNumber: d.serialNumber, deviceName: d.deviceName, imei: d.imei }
 
       const createdDevice = await service.create(_device);
 
+
       if (createdDevice.ok) {
-        const _res: IResponse<IMiningDevice> = {
+        const device = createdDevice.data
+        const wallet = createdWallet.data
+
+        const _res: IResponse<{ device: IMiningDevice; wallet: IMiningWallet }> = {
           success: true,
-          data: createdDevice.data
+          data: { device, wallet: wallet! }
         }
 
         responser(res, 200, _res)
@@ -118,7 +138,7 @@ export default {
       } else {
         responser(res, 400, {
           success: false,
-          data: createdDevice.data
+          message: 'we regret to inform fail'
         })
 
       }

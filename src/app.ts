@@ -47,28 +47,30 @@ app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Now use the logger (it will have access to req.body)
-app.use(logger);
+
+// app.use(logger); TODO logger stopped
 
 // API Routes
 app.use('/api/db', databaseRoutes);
 app.use('/uploads', imagesRoutes);
 
 app.use('/api/auth', authRoutes);
-app.use('/api/withdrawal-request', withdrawalRequestRoutes);
+app.use('/api/user-session', userSessionRoutes);
 app.use('/api/users', userRoutes);
 
 app.use('/api/mining-devices', miningDeviceRoutes);
-app.use('/api/device-earnings', deviceEarningsRoutes);
 app.use('/api/mining-wallet', miningWalletRoutes);
+app.use('/api/mining-session', miningSessionRoutes);
+app.use('/api/device-earnings', deviceEarningsRoutes);
 
+app.use('/api/withdrawal-request', withdrawalRequestRoutes);
 
 app.use('/api/device-alert', deviceAlertRoutes);
 app.use('/api/device-specification', deviceSpecificationRoutes);
-app.use('/api/mining-session', miningSessionRoutes);
+
+app.use('/api/role', roleRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/role-permission', rolePermissionRoutes);
-app.use('/api/role', roleRoutes);
-app.use('/api/user-session', userSessionRoutes);
 
 
 

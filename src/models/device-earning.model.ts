@@ -5,6 +5,7 @@ export default class DeviceEarning extends Model {
   public id!: number;
   public deviceId!: number;
   public userId!: number;
+  
   public miningSessionId!: number | null;
   public amount!: number;
   public currency!: string;

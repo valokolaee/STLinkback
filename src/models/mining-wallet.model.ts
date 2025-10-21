@@ -79,12 +79,12 @@ export default class MiningWallet extends Model {
         modelName: 'MiningWallet',
         tableName: 'mining_wallets',
         timestamps: false,
-        indexes: [
-          {
-            unique: true,
-            fields: ['walletAddress']
-          }
-        ]
+        // indexes: [
+        //   {
+        //     unique: true,
+        //     fields: ['walletAddress']
+        //   }
+        // ]
       }
     );
   }
@@ -98,4 +98,4 @@ export default class MiningWallet extends Model {
 }
 
 
-export interface IMiningWallet extends MiningWallet{}
+export interface IMiningWallet extends MiningWallet { }

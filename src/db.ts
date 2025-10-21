@@ -4,7 +4,7 @@ import initModels from './models';
 import dbConfig from './config/db.config';
 
 const sequelize = new Sequelize(dbConfig);
-// sequelize.sync({ alter: true, force: true })
+// sequelize.sync({   force: true })
 // .then((e) => { console.log(e) }).catch((e) => { console.log(e) });
 
 const models = initModels(sequelize);

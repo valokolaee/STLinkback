@@ -4,6 +4,7 @@ import { Model } from 'sequelize';
 export default class MiningDevice extends Model {
   public id!: number;
   public userId!: number;
+  public walletId!: number;
   public deviceName!: string;
   public imei!: string;
   public deviceModel!: string;
@@ -17,7 +18,7 @@ export default class MiningDevice extends Model {
   public location!: string | null;
   public createdAt!: Date;
   public updatedAt!: Date | null;
-  public softDeleted!:boolean;
+  public softDeleted!: boolean;
 
   public readonly user?: any;
   public readonly specifications?: any;
@@ -38,6 +39,11 @@ export default class MiningDevice extends Model {
           type: 'INT',
           allowNull: false,
           field: 'user_id',
+        },
+        walletId: {
+          type: 'INT',
+          allowNull: false,
+          field: 'wallet_id',
         },
         deviceName: {
           type: 'VARCHAR(255)',
@@ -99,14 +105,14 @@ export default class MiningDevice extends Model {
         softDeleted: {
           type: 'BOOLEAN',
           allowNull: true,
-          defaultValue:false
+          defaultValue: false
         },
         createdAt: {
           type: 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
-        
+
         updatedAt: {
           type: 'DATETIME',
           allowNull: true,
@@ -126,6 +132,11 @@ export default class MiningDevice extends Model {
     MiningDevice.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
+    });
+
+    MiningDevice.belongsTo(models.MiningWallet, {
+      foreignKey: 'walletId',
+      as: 'wallet',
     });
 
     MiningDevice.hasOne(models.DeviceSpecification, {
@@ -157,4 +168,4 @@ export default class MiningDevice extends Model {
 
 
 
-export interface IMiningDevice extends Partial <MiningDevice>{}
+export interface IMiningDevice extends Partial<MiningDevice> { }
