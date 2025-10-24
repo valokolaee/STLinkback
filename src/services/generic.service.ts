@@ -41,7 +41,7 @@ export default (model: ModelStatic<Model>) => {
     async getAllBy(foreignKey: WhereOptions<any>) {
 
       try {
-        const items = await model.findAll({ where: foreignKey });
+        const items = await model.findAll({ where: { ...foreignKey, softDeleted: 0 } });
 
         return serviceResponser({ ok: true, data: items })
 
@@ -70,6 +70,7 @@ export default (model: ModelStatic<Model>) => {
     },
 
     async update(object: any) {
+      
       try {
 
         const numOfUpdated = await model.update(object, { where: { id: object.id } });

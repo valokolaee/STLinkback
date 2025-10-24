@@ -37,7 +37,7 @@ export default class {
     });
 
     console.log('user', data);
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
     return { accessToken: token, user: user.get({ plain: true }) };
   }
 
@@ -56,7 +56,7 @@ export default class {
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
     return { accessToken: token, user: user.get({ plain: true }) };
   }
 

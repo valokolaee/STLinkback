@@ -121,4 +121,4 @@ export default class WithdrawalRequest extends Model {
 }
 
 
-export interface IWithdrawalRequest extends WithdrawalRequest{}
+export interface IWithdrawalRequest extends WithdrawalRequest { }

@@ -6,8 +6,7 @@ import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 
-// TODO 
-
+ 
 
 const service = genericService(models.MiningSession)
 

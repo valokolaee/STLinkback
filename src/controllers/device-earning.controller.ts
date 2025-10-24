@@ -93,12 +93,10 @@ export default {
 
       const _res: IDeviceEarning = { userId, ...data.data }
       const createdDeviceEarning: IServiceResult<IDeviceEarning> = await service.create(_res);
-      // console.log('walletId', walletId);
-
-//  TODO get device to reach walletId 
+       
       if (createdDeviceEarning.ok) {
 
-        const mwID =walletId// 1;//TODO MiningWallet id has to be stored with device info
+        const mwID =walletId
 
         var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
 

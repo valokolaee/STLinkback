@@ -1,15 +1,20 @@
 import { Request, Response } from 'express';
 import { models } from '../db';
-import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
+import { createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
+import getUserByReqUtils from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
+import miningWalletService from '../services/miningWallet.service';
+import IServiceResult from '../interfaces/IServiceResult';
+import { IMiningWallet } from '../models/mining-wallet.model';
+import { IWithdrawalRequest } from '../models/withdrawal-request.model';
 
 
 
 
 const service = genericService(models.WithdrawalRequest)
+const serviceMiningWallet = genericService(models.MiningWallet)
 
 
 export default {
@@ -83,17 +88,27 @@ export default {
     try {
       const userId = getUserByReqUtils(req).id;
 
-      const data = validate(createWithdrawalRequestSchema, { userId, ...req?.body }, res);
+      const currency = 'USDT'
+      const data: IServiceResult<IWithdrawalRequest> = validate(createWithdrawalRequestSchema, { userId, currency, ...req?.body }, res);
 
       if (!data.ok) {
         return
       }
+
+
+
+      // console.log('mw', _mw);
 
       // const _res: IDeviceEarning = { userId, ...data.data }
       const createdItem = await service.create(data.data);
 
 
       if (createdItem.ok) {
+
+        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.walletAddress)
+
+        const _newBalance = _mw?.data?.availableBalance! - data?.data?.amount!
+
 
         responser(res, 200, { success: true, data: createdItem.data })
 
@@ -138,6 +153,7 @@ export default {
     try {
 
       const id = parseInt(req?.params.id || '0')
+      console.log(id);
 
       const deletedItems = await service.delete(id);
 
