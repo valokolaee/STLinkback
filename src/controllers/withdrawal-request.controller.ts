@@ -154,17 +154,33 @@ export default {
 
         const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(w.miningWalletAddress)
 
-        var _newBalance = 0
+        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(w!?.userWalletAddress)
 
+        var _newBalance = 0
+        var _UW_newPendingBalance = 0
         if (w.status === 'cancelled') {
+
+
+
+
+
+          _UW_newPendingBalance = safeParseFloat(_uw?.data?.pendingBalance!) - safeParseFloat(w.amount!)
+
 
           _newBalance = safeParseFloat(_mw?.data?.availableBalance!) + safeParseFloat(w.amount!)
 
         } else {
 
-          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) - (safeParseFloat(w.amount!) - safeParseFloat(previous.data?.amount))
+          const _deference = (safeParseFloat(w.amount!) - safeParseFloat(previous.data?.amount))
+
+          _UW_newPendingBalance = safeParseFloat(_uw?.data?.pendingBalance!) + _deference
+
+
+          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) - _deference
 
         }
+
+        serviceUserWallet.update({ id: _uw.data?.id!, pendingBalance: _UW_newPendingBalance })
 
         serviceMiningWallet.update({ id: _mw.data?.id!, availableBalance: _newBalance })
 
@@ -180,6 +196,10 @@ export default {
       responser(res, 500, { success: false, }, error)
     }
   },
+
+
+  // {/*we dont have delete here 
+  // we just update the status into cancel on user asked for delete*/}
 
   async delete(req: Request, res: Response) {
 
