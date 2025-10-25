@@ -6,7 +6,8 @@ export default class WithdrawalRequest extends Model {
   public userId!: number;
   public amount!: number;
   public currency!: string;
-  public walletAddress!: string;
+  public miningWalletAddress!: string;
+  public userWalletAddress!: string;
   public transactionHash!: string | null;
   public status!: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
   public networkFee!: number;
@@ -41,10 +42,15 @@ export default class WithdrawalRequest extends Model {
           allowNull: false,
           defaultValue: 'BTC',
         },
-        walletAddress: {
+        miningWalletAddress: {
           type: 'VARCHAR(255)',
           allowNull: false,
-          field: 'wallet_address',
+          field: 'mining_wallet_address',
+        },
+        userWalletAddress: {
+          type: 'VARCHAR(255)',
+          allowNull: false,
+          field: 'user_wallet_address',
         },
         transactionHash: {
           type: 'VARCHAR(255)',

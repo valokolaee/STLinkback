@@ -8,12 +8,13 @@ import { sequelize } from './db';
 
 import authRoutes from './routes/auth.routes';
 import databaseRoutes from './routes/database.routes';
-import imagesRoutes from './routes/images.rout';
-import userRoutes from './routes/user.routes';
 import deviceEarningsRoutes from './routes/device-earning.routes';
-import withdrawalRequestRoutes from './routes/withdrawal-request.routes';
+import imagesRoutes from './routes/images.rout';
 import miningDeviceRoutes from './routes/mining-device.routes';
 import miningWalletRoutes from './routes/mining-wallet.routes';
+import userWalletRoutes from './routes/user-wallet.routes';
+import userRoutes from './routes/user.routes';
+import withdrawalRequestRoutes from './routes/withdrawal-request.routes';
 
 import deviceAlertRoutes from './routes/device-alert.routes';
 import deviceSpecificationRoutes from './routes/device-specification.routes';
@@ -23,10 +24,12 @@ import rolePermissionRoutes from './routes/role-permission.routes';
 import roleRoutes from './routes/role.routes';
 import userSessionRoutes from './routes/user-session.routes';
 
+
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
-import { logger } from './middleware/logger.middleware';
- 
+
+
+
 const https = require('https');
 const fs = require('fs');
 
@@ -60,6 +63,7 @@ app.use('/api/users', userRoutes);
 
 app.use('/api/mining-devices', miningDeviceRoutes);
 app.use('/api/mining-wallet', miningWalletRoutes);
+app.use('/api/user-wallet', userWalletRoutes);
 app.use('/api/mining-session', miningSessionRoutes);
 app.use('/api/device-earnings', deviceEarningsRoutes);
 

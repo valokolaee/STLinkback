@@ -1,9 +1,9 @@
-import { Model, ModelStatic, WhereOptions } from 'sequelize';
+import { Model, ModelStatic, Order, WhereOptions } from 'sequelize';
 import serviceResponser from '../utils/serviceResponser.utils';
 
 
 
-export default (model: ModelStatic<Model>) => {
+export default <T = any>(model: ModelStatic<Model>) => {
 
   return {
 
@@ -38,10 +38,13 @@ export default (model: ModelStatic<Model>) => {
 
     },
 
-    async getAllBy(foreignKey: WhereOptions<any>) {
+    async getAllBy(foreignKey: WhereOptions<any>,  order?: Order    ) {
 
       try {
-        const items = await model.findAll({ where: { ...foreignKey, softDeleted: 0 } });
+        const items = await model.findAll({
+          where: { ...foreignKey, softDeleted: 0 },
+          order
+        });
 
         return serviceResponser({ ok: true, data: items })
 
@@ -70,7 +73,8 @@ export default (model: ModelStatic<Model>) => {
     },
 
     async update(object: any) {
-      
+      console.log(object);
+
       try {
 
         const numOfUpdated = await model.update(object, { where: { id: object.id } });

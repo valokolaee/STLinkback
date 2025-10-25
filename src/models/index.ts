@@ -12,6 +12,8 @@ import DeviceEarning from './device-earning.model.js';
 import MiningWallet from './mining-wallet.model.js';
 import DeviceAlert from './device-alert.model.js';
 import WithdrawalRequest from './withdrawal-request.model.js';
+import { DownAction } from 'umzug';
+import UserWallet from './user-wallet.model.js';
 
 const initModels = (sequelize: any) => {
   const models = {
@@ -28,6 +30,7 @@ const initModels = (sequelize: any) => {
     MiningSession: MiningSession.initModel(sequelize),
     DeviceEarning: DeviceEarning.initModel(sequelize),
     MiningWallet: MiningWallet.initModel(sequelize),
+    UserWallet: UserWallet.initModel(sequelize),
   };
 
   Object.values(models).forEach((model: any) => {

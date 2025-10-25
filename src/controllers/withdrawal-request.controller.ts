@@ -9,12 +9,16 @@ import miningWalletService from '../services/miningWallet.service';
 import IServiceResult from '../interfaces/IServiceResult';
 import { IMiningWallet } from '../models/mining-wallet.model';
 import { IWithdrawalRequest } from '../models/withdrawal-request.model';
+import { safeParseFloat } from '../utils/math.utils';
+import { IUserWallet } from '../models/user-wallet.model';
+import userWalletService from '../services/userWallet.service';
 
 
 
 
 const service = genericService(models.WithdrawalRequest)
 const serviceMiningWallet = genericService(models.MiningWallet)
+const serviceUserWallet = genericService(models.UserWallet)
 
 
 export default {
@@ -68,7 +72,7 @@ export default {
 
       const userId = req.body.userId
 
-      const items = await service.getAllBy({ userId });
+      const items = await service.getAllBy({ userId }, [['requestedAt', 'desc']]);
 
       if (items.ok) {
         responser(res, 200, { success: true, data: items.data })
@@ -96,19 +100,28 @@ export default {
       }
 
 
+      const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress)
 
-      // console.log('mw', _mw);
+      const _MW_newBalance = _mw?.data?.availableBalance! - data?.data?.amount!
 
-      // const _res: IDeviceEarning = { userId, ...data.data }
+      if (_MW_newBalance < 0) {
+        responser(res, 400, { success: false, message: 'request amount more than available balance' })
+
+        return
+      }
+
       const createdItem = await service.create(data.data);
 
 
       if (createdItem.ok) {
 
-        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.walletAddress)
+        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(data?.data!?.userWalletAddress)
 
-        const _newBalance = _mw?.data?.availableBalance! - data?.data?.amount!
+        const _UW_newBalance = safeParseFloat(_uw?.data?.pendingBalance!) + safeParseFloat(data?.data?.amount!)
 
+        serviceUserWallet.update({ id: _uw.data?.id!, pendingBalance: _UW_newBalance })
+
+        serviceMiningWallet.update({ id: _mw.data?.id!, availableBalance: _MW_newBalance })
 
         responser(res, 200, { success: true, data: createdItem.data })
 
@@ -118,6 +131,7 @@ export default {
 
       }
 
+
     } catch (error) {
 
       responser(res, 500, { success: false, }, error)
@@ -125,15 +139,34 @@ export default {
     }
   },
 
+
   async update(req: Request, res: Response) {
 
     try {
 
-      const w = req.body
+      const w: IWithdrawalRequest = req.body
+
+      const previous: IServiceResult<IWithdrawalRequest> = await service.getOne(w.id!)
 
       const updatedItems = await service.update(w);
 
       if (updatedItems.ok) {
+
+        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(w.miningWalletAddress)
+
+        var _newBalance = 0
+
+        if (w.status === 'cancelled') {
+
+          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) + safeParseFloat(w.amount!)
+
+        } else {
+
+          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) - (safeParseFloat(w.amount!) - safeParseFloat(previous.data?.amount))
+
+        }
+
+        serviceMiningWallet.update({ id: _mw.data?.id!, availableBalance: _newBalance })
 
         responser(res, 200, { success: true, data: updatedItems.data })
 

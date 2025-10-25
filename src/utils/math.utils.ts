@@ -1,0 +1,1 @@
+export const safeParseFloat = (value:number|string|undefined) => parseFloat((value || '0.0').toString())

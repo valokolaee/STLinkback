@@ -42,11 +42,20 @@ export const createMiningWalletSchema = Joi.object({
   currency: Joi.string() 
 });
 
+
+export const createUserWalletSchema = Joi.object({
+  userId: Joi.number().required(),
+  walletAddress: Joi.string().required(),
+  nickname: Joi.string().required(),
+  currency: Joi.string() 
+});
+
 export const createWithdrawalRequestSchema = Joi.object({
   userId: Joi.number().required(),
   amount: Joi.number().required(),
   currency: Joi.string().required(),
-  walletAddress: Joi.string().required(),
+  miningWalletAddress: Joi.string().required(),
+  userWalletAddress: Joi.string().required(),
 });
 export const createMiningSessionSchema = Joi.object({
   userId: Joi.number().required(),

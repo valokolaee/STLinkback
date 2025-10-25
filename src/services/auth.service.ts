@@ -36,7 +36,7 @@ export default class {
       roleId: 1,
     });
 
-    console.log('user', data);
+    // console.log('user', data);
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
     return { accessToken: token, user: user.get({ plain: true }) };
   }
