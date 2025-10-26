@@ -72,10 +72,28 @@ export default {
 
       const userId = req.body.userId
 
-      const items = await service.getAllBy({ userId }, [['requestedAt', 'desc']]);
+      const items: IServiceResult<IWithdrawalRequest[]> = await service.getAllBy({ userId }, [['requestedAt', 'desc']]);
+
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        var _withdraws: IWithdrawalRequest[] = []
+
+
+
+        for (let index = 0; index < items.data!.length; index++) {
+
+          const element = items.data![index]
+
+          const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletAddress!);
+
+
+          
+          _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
+
+        }
+        console.log('yyy', _withdraws);
+
+        responser(res, 200, { success: true, data: _withdraws  })
       } else {
         responser(res, 404, { success: false, })
       }
@@ -100,7 +118,7 @@ export default {
       }
 
 
-      const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress)
+      const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress!)
 
       const _MW_newBalance = _mw?.data?.availableBalance! - data?.data?.amount!
 
@@ -115,7 +133,7 @@ export default {
 
       if (createdItem.ok) {
 
-        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(data?.data!?.userWalletAddress)
+        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(data?.data!?.userWalletAddress!)
 
         const _UW_newBalance = safeParseFloat(_uw?.data?.pendingBalance!) + safeParseFloat(data?.data?.amount!)
 
@@ -152,9 +170,9 @@ export default {
 
       if (updatedItems.ok) {
 
-        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(w.miningWalletAddress)
+        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(w.miningWalletAddress!)
 
-        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(w!?.userWalletAddress)
+        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(w!?.userWalletAddress!)
 
         var _newBalance = 0
         var _UW_newPendingBalance = 0

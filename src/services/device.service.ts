@@ -51,6 +51,25 @@ export default class <T> {
 
   }
 
+  static async getOneByImei(imei: string) {
+
+    try {
+      const devices = await models.MiningDevice.findOne({ where: { imei } })
+
+      return serviceResponser({
+        ok: true,
+        data: devices
+      })
+    } catch (error) {
+
+      return serviceResponser({
+        ok: true,
+        data: error
+      })
+    }
+
+  }
+
 
   static async getAllBy(userId: number) {
 
