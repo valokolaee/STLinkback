@@ -11,6 +11,7 @@ export default {
   async getOneByAddress(walletAddress: string) {
 
     try {
+      
       const devices = await models.UserWallet.findOne({ where: { walletAddress } })
 
       return serviceResponser({

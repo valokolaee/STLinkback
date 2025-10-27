@@ -87,13 +87,13 @@ export default {
           const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletAddress!);
 
 
-          
+
           _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
 
         }
-        console.log('yyy', _withdraws);
+        // console.log('yyy', _withdraws);
 
-        responser(res, 200, { success: true, data: _withdraws  })
+        responser(res, 200, { success: true, data: _withdraws })
       } else {
         responser(res, 404, { success: false, })
       }
@@ -128,7 +128,7 @@ export default {
         return
       }
 
-      const createdItem = await service.create(data.data);
+      const createdItem: IServiceResult<IWithdrawalRequest> = await service.create(data.data);
 
 
       if (createdItem.ok) {
@@ -141,7 +141,19 @@ export default {
 
         serviceMiningWallet.update({ id: _mw.data?.id!, availableBalance: _MW_newBalance })
 
-        responser(res, 200, { success: true, data: createdItem.data })
+
+        const _res: IWithdrawalRequest = {
+          id: createdItem.data?.id,
+          currency: createdItem.data?.currency,
+          amount: createdItem.data?.amount,
+          deviceName: ' _mw.data?.walletAddress,',
+          status: createdItem.data?.status,
+          userWalletNickname: _uw.data?.nickname,
+          miningWalletAddress: createdItem.data?.miningWalletAddress,
+          requestedAt: createdItem.data?.requestedAt
+        }
+
+        responser(res, 200, { success: true, data: _res })
 
       } else {
 
@@ -162,45 +174,85 @@ export default {
 
     try {
 
-      const w: IWithdrawalRequest = req.body
+      const _withDraw: IWithdrawalRequest = req.body
 
-      const previous: IServiceResult<IWithdrawalRequest> = await service.getOne(w.id!)
+      const previous: IServiceResult<IWithdrawalRequest> = await service.getOne(_withDraw.id!)
 
-      const updatedItems = await service.update(w);
+      const updatedItems = await service.update(_withDraw);
 
       if (updatedItems.ok) {
 
-        const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(w.miningWalletAddress!)
+        const _miningWallet: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(_withDraw.miningWalletAddress!)
 
-        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(w!?.userWalletAddress!)
+        const _userWallet: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(_withDraw!?.userWalletAddress!)
 
-        var _newBalance = 0
-        var _UW_newPendingBalance = 0
-        if (w.status === 'cancelled') {
-
+        // var _newBalance = 0
+        // var _UW_newPendingBalance = 0
 
 
+        switch (_withDraw.status) {
+
+          case 'cancelled':
+          case 'rejected':
+          case 'failed':
+
+            const _UW_newPendingBalance = safeParseFloat(_userWallet?.data?.pendingBalance!) - safeParseFloat(_withDraw.amount!)
+
+            const _newBalance = safeParseFloat(_miningWallet?.data?.availableBalance!) + safeParseFloat(_withDraw.amount!)
+
+            serviceUserWallet.update({ id: _userWallet.data?.id!, pendingBalance: _UW_newPendingBalance })
+
+            serviceMiningWallet.update({ id: _miningWallet.data?.id!, availableBalance: _newBalance })
+
+            break;
+
+          case 'approved':
+
+            // take from pendingBalance and add it to availableBalance
+            const _UW_newPendingBalance2 = safeParseFloat(_userWallet?.data?.pendingBalance!) - safeParseFloat(_withDraw.amount!)
+            const _UW_newAvailableBalance2 = safeParseFloat(_userWallet?.data?.availableBalance!) + safeParseFloat(_withDraw.amount!)
+
+            serviceUserWallet.update({ id: _userWallet.data?.id!, pendingBalance: _UW_newPendingBalance2, availableBalance: _UW_newAvailableBalance2 })
+
+            break;
+
+          case 'completed':
+
+            // take from availableBalance and add it to totalEarning and hereby the money it is also removed from our ecosystem
+            // its stored in totalEarning only for reports
+
+            const _UW_newAvailableBalance4 = safeParseFloat(_userWallet?.data?.availableBalance!) - safeParseFloat(_withDraw.amount!)
+            const _UW_newTotalEarnings4 = safeParseFloat(_userWallet?.data?.totalEarnings!) + safeParseFloat(_withDraw.amount!)
+
+            serviceUserWallet.update({ id: _userWallet.data?.id!, totalEarnings: _UW_newTotalEarnings4, availableBalance: _UW_newAvailableBalance4 })
+
+            break;
 
 
-          _UW_newPendingBalance = safeParseFloat(_uw?.data?.pendingBalance!) - safeParseFloat(w.amount!)
+
+          case 'processing':
+            break;
 
 
-          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) + safeParseFloat(w.amount!)
+          case 'pending':
+          default:
 
-        } else {
+            const _deference = (safeParseFloat(_withDraw.amount!) - safeParseFloat(previous.data?.amount))
 
-          const _deference = (safeParseFloat(w.amount!) - safeParseFloat(previous.data?.amount))
+            const _UW_newPendingBalance3 = safeParseFloat(_userWallet?.data?.pendingBalance!) + _deference
 
-          _UW_newPendingBalance = safeParseFloat(_uw?.data?.pendingBalance!) + _deference
+            const _newBalance3 = safeParseFloat(_miningWallet?.data?.availableBalance!) - _deference
 
+            serviceUserWallet.update({ id: _userWallet.data?.id!, pendingBalance: _UW_newPendingBalance3, })
 
-          _newBalance = safeParseFloat(_mw?.data?.availableBalance!) - _deference
-
+            serviceMiningWallet.update({ id: _miningWallet.data?.id!, availableBalance: _newBalance3 })
+            break;
         }
 
-        serviceUserWallet.update({ id: _uw.data?.id!, pendingBalance: _UW_newPendingBalance })
 
-        serviceMiningWallet.update({ id: _mw.data?.id!, availableBalance: _newBalance })
+
+
+
 
         responser(res, 200, { success: true, data: updatedItems.data })
 

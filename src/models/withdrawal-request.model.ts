@@ -9,7 +9,7 @@ export default class WithdrawalRequest extends Model {
   public miningWalletAddress!: string;
   public userWalletAddress!: string;
   public transactionHash!: string | null;
-  public status!: 'pending' | 'processing' | 'completed' | 'failed' | 'cancelled';
+  public status!: 'pending' | 'processing' | 'completed' | 'rejected' | 'approved' | 'failed' | 'cancelled';
   public networkFee!: number;
   public serviceFee!: number;
   public requestedAt!: Date;
@@ -59,7 +59,7 @@ export default class WithdrawalRequest extends Model {
           field: 'transaction_hash',
         },
         status: {
-          type: 'ENUM("pending", "processing", "completed", "failed", "cancelled")',
+          type: 'ENUM("pending", "processing", "completed",  "rejected" , "approved"  "failed", "cancelled")',
           allowNull: false,
           defaultValue: 'pending',
         },
@@ -127,7 +127,7 @@ export default class WithdrawalRequest extends Model {
 }
 
 
-export interface IWithdrawalRequest extends Partial <WithdrawalRequest> { 
-  userWalletNickname?:string
-  deviceName?:string
+export interface IWithdrawalRequest extends Partial<WithdrawalRequest> {
+  userWalletNickname?: string
+  deviceName?: string
 }

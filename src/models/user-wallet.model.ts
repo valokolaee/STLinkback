@@ -4,9 +4,9 @@ export default class UserWallet extends Model {
   public id!: number;
   public userId!: number;
   public totalEarnings!: number;
-  public withdrawnAmount!: number;
   public availableBalance!: number;
   public pendingBalance!: number;
+  public withdrawnAmount!: number;
   public currency!: string;
   public walletAddress!: string ;
   public nickname!: string ;

@@ -56,6 +56,23 @@ export default <T = any>(model: ModelStatic<Model>) => {
 
     },
 
+    async findOne(foreignKey: WhereOptions<any>    ) {
+
+      try {
+        const items = await model.findOne({
+          where: { ...foreignKey, softDeleted: 0 },
+         });
+
+        return serviceResponser({ ok: true, data: items })
+
+      } catch (error) {
+
+        return serviceResponser({ ok: false }, error)
+
+      }
+
+    },
+
 
     async create(object: any) {
 

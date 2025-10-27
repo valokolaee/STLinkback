@@ -4,6 +4,8 @@ import { createMiningWalletSchema, createUserWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
+import { IUserWallet } from '../models/user-wallet.model';
+import IServiceResult from '../interfaces/IServiceResult';
 
 
 
@@ -79,14 +81,29 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
- 
-      const data = validate(createUserWalletSchema, req?.body, res);
+
+      const data:IServiceResult <IUserWallet> = validate(createUserWalletSchema, req?.body, res);
 
       if (!data.ok) {
         return
       }
 
-       const createdItem = await service.create(data.data);
+      const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId: data.data!.userId });
+      // console.log(w);
+      if (w.data!?.id! > 0) {
+
+        responser(res, 400, { success: false, message: 'Wallet address already exists' })
+        return
+      }
+
+      const w2 = await service.findOne({ nickname: data.data!.nickname, userId: data.data!.userId });
+      // console.log(w);
+      if (w2.data!?.id! > 0) {
+
+        return responser(res, 400, { success: false, message: 'Wallet nickname already exists' })
+      }
+
+      const createdItem = await service.create(data.data);
 
 
       if (createdItem.ok) {
