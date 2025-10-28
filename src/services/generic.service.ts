@@ -3,7 +3,7 @@ import serviceResponser from '../utils/serviceResponser.utils';
 
 
 
-export default <T = any>(model: ModelStatic<Model>) => {
+export default  (model: ModelStatic<Model>) => {
 
   return {
 

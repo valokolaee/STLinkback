@@ -178,6 +178,18 @@ export default {
 
       const previous: IServiceResult<IWithdrawalRequest> = await service.getOne(_withDraw.id!)
 
+      switch (previous.data!.status) {
+
+        case 'cancelled':
+        case 'completed':
+        case 'rejected':
+        case 'failed':
+
+          responser(res, 400, { success: true, message:'This request is finalized and CAN NOT be altered'})
+          return
+      }
+
+
       const updatedItems = await service.update(_withDraw);
 
       if (updatedItems.ok) {
@@ -186,8 +198,6 @@ export default {
 
         const _userWallet: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(_withDraw!?.userWalletAddress!)
 
-        // var _newBalance = 0
-        // var _UW_newPendingBalance = 0
 
 
         switch (_withDraw.status) {
@@ -209,7 +219,9 @@ export default {
           case 'approved':
 
             // take from pendingBalance and add it to availableBalance
+            
             const _UW_newPendingBalance2 = safeParseFloat(_userWallet?.data?.pendingBalance!) - safeParseFloat(_withDraw.amount!)
+
             const _UW_newAvailableBalance2 = safeParseFloat(_userWallet?.data?.availableBalance!) + safeParseFloat(_withDraw.amount!)
 
             serviceUserWallet.update({ id: _userWallet.data?.id!, pendingBalance: _UW_newPendingBalance2, availableBalance: _UW_newAvailableBalance2 })

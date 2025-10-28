@@ -10,7 +10,7 @@ export default class MiningSession extends Model {
   public earnings!: number;
   public status!: 'running' | 'completed' | 'interrupted' | 'failed';
   public avgHashRate!: number | null;
-  public energyConsumed!: number | null;
+  public energyConsumed!: number | null;//TODO these 2 should be omitted 
   public softDeleted!: boolean;
   public createdAt!: Date;
 
@@ -102,4 +102,9 @@ export default class MiningSession extends Model {
       as: 'earningsRecords',
     });
   }
+}
+
+
+export interface IMiningSession extends Partial <MediaSession>{
+  
 }

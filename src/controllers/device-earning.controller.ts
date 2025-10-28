@@ -115,6 +115,10 @@ export default {
           totalEarnings: newTotalEarning
         })
 
+
+
+
+        
  
 
 
