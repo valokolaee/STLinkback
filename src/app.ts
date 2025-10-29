@@ -21,6 +21,7 @@ import deviceSpecificationRoutes from './routes/device-specification.routes';
 import miningSessionRoutes from './routes/mining-session.routes';
 import permissionRoutes from './routes/permission.routes';
 import rolePermissionRoutes from './routes/role-permission.routes';
+import monitor from './routes/monitor.routes';
 import roleRoutes from './routes/role.routes';
 import userSessionRoutes from './routes/user-session.routes';
 
@@ -76,6 +77,7 @@ app.use('/api/role', roleRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/role-permission', rolePermissionRoutes);
 
+app.use('/api/monitor', monitor);
 
 
 // Serve static files

@@ -100,3 +100,5 @@ export default class DeviceAlert extends Model {
     });
   }
 }
+
+export interface IDeviceAlert extends DeviceAlert { }

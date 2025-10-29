@@ -115,3 +115,7 @@ export default class DeviceMetric extends Model {
     });
   }
 }
+
+
+
+export interface IDeviceMetric extends DeviceMetric {}  

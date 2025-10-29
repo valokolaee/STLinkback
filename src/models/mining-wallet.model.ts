@@ -98,4 +98,4 @@ export default class MiningWallet extends Model {
 }
 
 
-export interface IMiningWallet extends MiningWallet { }
+export interface IMiningWallet extends Partial <MiningWallet> { }

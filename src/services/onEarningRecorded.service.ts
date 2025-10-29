@@ -2,24 +2,26 @@
 
 import { models } from '../db';
 import MiningSession, { IMiningSession } from '../models/mining-session.model';
+import { safeParseFloat } from '../utils/math.utils';
 import genericService from './generic.service';
 
 class OnEarningRecordedService {
-  async updateWallet(walletId: number, amount: number,session: MiningSession) {
+  async updateWallet(walletId: number, amount: number, session: MiningSession) {
     const wallet = await models.MiningWallet.findByPk(walletId);
     if (!wallet) throw new Error('Wallet not found');
 
-    const newAvailableBalance = (wallet.availableBalance || 0) + amount;
-    const newTotalEarnings = (wallet.totalEarnings || 0) + amount;
-    const newSessionEarnings = (session.earnings || 0) + amount;
+    const newAvailableBalance = safeParseFloat(wallet.availableBalance) + safeParseFloat(amount);
+    const newTotalEarnings = safeParseFloat(wallet.totalEarnings) + safeParseFloat(amount);
+    const newSessionEarnings = safeParseFloat(session.earnings) + safeParseFloat(amount);
 
 
 
+    
 
     await genericService(models.MiningSession).update({
       id: session.id,
       sessionEnd: new Date(),
-      earnings: newSessionEarnings,  
+      earnings: newSessionEarnings,
     } as IMiningSession)
 
 
@@ -28,6 +30,9 @@ class OnEarningRecordedService {
       totalEarnings: newTotalEarnings,
       lastUpdated: new Date(),
     });
+
+
+    
   }
 }
 

@@ -61,7 +61,8 @@ export default {
   async getAllBy(req: Request, res: Response) {
     try {
 
-      const userId = req.body.userId
+      const userId =getUserByReqUtils(req).id;
+   return   responser(res, 200, { success: true, data:{userId} })
 
       const items = await service.getAllBy({ userId });
 
