@@ -38,12 +38,16 @@ export default  (model: ModelStatic<Model>) => {
 
     },
 
-    async getAllBy(foreignKey: WhereOptions<any>,  order?: Order    ) {
+    async getAllBy(foreignKey: WhereOptions<any>, order?: Order, limit?: number,
+    ) {
 
       try {
         const items = await model.findAll({
           where: { ...foreignKey, softDeleted: 0 },
-          order
+          order,
+          limit,
+          
+
         });
 
         return serviceResponser({ ok: true, data: items })

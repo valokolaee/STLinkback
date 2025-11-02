@@ -18,8 +18,7 @@ class OnEarningRecordedService {
 
     
 
-    await genericService(models.MiningSession).update({
-      id: session.id,
+    await session.update({
       sessionEnd: new Date(),
       earnings: newSessionEarnings,
     } as IMiningSession)

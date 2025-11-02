@@ -11,19 +11,22 @@ import { IMiningWallet } from '../models/mining-wallet.model';
 import { IMiningDevice } from '../models/mining-device.model';
 import { IDeviceMetric } from '../models/device-metric.model';
 import { IMiningSession } from '../models/mining-session.model';
+import { IWithdrawalRequest } from '../models/withdrawal-request.model';
+import { IDeviceEarning } from '../models/device-earning.model';
 
 
 
 
-const service = genericService(models.RolePermission)
+const serviceRolePermission = genericService(models.RolePermission)
 
+const serviceDeviceEarning = genericService(models.DeviceEarning)
 
 export default {
 
   async getAll(req: Request, res: Response) {
     try {
 
-      const items = await service.getAll();
+      const items = await serviceRolePermission.getAll();
 
 
       if (items.ok) {
@@ -51,15 +54,15 @@ export default {
       const _alerts: IServiceResult<IDeviceAlert[]> = await genericService(models.DeviceAlert).getAllBy({ deviceId }, [['createdAt', 'desc']]);
       var _alert = null;
       if (_alerts?.data!?.length > 0) {
-        _alert = _alerts.data![0];
+        _alert = _alerts.data!;
 
       }
 
-      const _metrics: IServiceResult<IDeviceMetric[]> = await genericService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']]);
+      const _metrics: IServiceResult<IDeviceMetric[]> = await genericService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']],10);
 
       var _metric = null;
       if (_metrics?.data!?.length > 0) {
-        _metric = _metrics?.data![0];
+        _metric = _metrics?.data!;
       }
 
       const _sessions: IServiceResult<IMiningSession[]> = await genericService(models.MiningSession).getAllBy({ deviceId }, [['createdAt', 'desc']]);
@@ -69,17 +72,18 @@ export default {
         _currentSession = _sessions?.data![0];
       }
 
-      // console.log(_sessions);
-
+ 
       const _deviceWallet: IServiceResult<IMiningWallet> = await genericService(models.MiningWallet).findOne({ walletAddress });
 
-
+      const items: IServiceResult<IDeviceEarning[]> = await serviceDeviceEarning.getAllBy({ deviceId }, [['calculatedAt', 'desc']],10);
+      
 
       const monitorData = {
-        alert: _alert,
-        metric: _metric,
+        alerts: _alert,
+        metrics: _metric,
         wallet: _deviceWallet.data,
-        session: _currentSession
+        session: _currentSession,
+        lastEarnings:items.data
       }
 
 

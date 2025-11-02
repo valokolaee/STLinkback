@@ -101,25 +101,20 @@ export default {
         var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
 
         const newBalance =
-          parseFloat(mw.availableBalance.toString())
+          parseFloat(mw.availableBalance!.toString())
           + createdDeviceEarning.data?.amount! || 0;
  
 
         const newTotalEarning =
-          parseFloat(mw.totalEarnings.toString())
+          parseFloat(mw.totalEarnings!.toString())
           + createdDeviceEarning.data?.amount! || 0;
  
 
         await serviceWallet.update({
-          id: mwID, availableBalance: newBalance,
+          id: mwID,
+          availableBalance: newBalance,
           totalEarnings: newTotalEarning
         })
-
-
-
-
-        
- 
 
 
         responser(res, 200, { success: true, data: createdDeviceEarning.data })
