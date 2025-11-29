@@ -24,15 +24,14 @@ export default class {
     }
 
     const rolls = await models.Role.findAndCountAll()
-    
+
     if (rolls.count < 1) {
 
-      const admin: IRole = { name: 'admin' }
-      const agent: IRole = { name: 'agent' }
-      const user: IRole = { name: 'user' }
-      const customer: IRole = { name: 'customer' }
-      const _rolls: IRole[] = [admin, agent, user, customer]
-
+      const admin: IRole = { name: 'admin' };
+      const agent: IRole = { name: 'agent' };
+      const user: IRole = { name: 'user' };
+      const customer: IRole = { name: 'customer' };
+      const _rolls: IRole[] = [admin, agent, user, customer];
 
       for (let index = 0; index < _rolls.length; index++) {
         const role = await models.Role.create(_rolls[index])
