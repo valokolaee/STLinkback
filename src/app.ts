@@ -10,6 +10,8 @@ import authRoutes from './routes/auth.routes';
 import databaseRoutes from './routes/database.routes';
 import deviceEarningsRoutes from './routes/device-earning.routes';
 import imagesRoutes from './routes/images.rout';
+
+import miningDeviceReportRoutes from './routes/device-report.routes';
 import miningDeviceRoutes from './routes/mining-device.routes';
 import miningWalletRoutes from './routes/mining-wallet.routes';
 import userWalletRoutes from './routes/user-wallet.routes';
@@ -62,7 +64,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user-session', userSessionRoutes);
 app.use('/api/users', userRoutes);
 
+app.use('/api/mining-devicesReport', miningDeviceReportRoutes);
 app.use('/api/mining-devices', miningDeviceRoutes);
+
 app.use('/api/mining-wallet', miningWalletRoutes);
 app.use('/api/user-wallet', userWalletRoutes);
 app.use('/api/mining-session', miningSessionRoutes);

@@ -3,7 +3,7 @@ import serviceResponser from '../utils/serviceResponser.utils';
 
 
 
-export default  (model: ModelStatic<Model>) => {
+export default (model: ModelStatic<Model>) => {
 
   return {
 
@@ -38,15 +38,14 @@ export default  (model: ModelStatic<Model>) => {
 
     },
 
-    async getAllBy(foreignKey: WhereOptions<any>, order?: Order, limit?: number,
-    ) {
+    async getAllBy(foreignKey: WhereOptions<any>, order?: Order, limit?: number,) {
 
       try {
         const items = await model.findAll({
           where: { ...foreignKey, softDeleted: 0 },
           order,
           limit,
-          
+
 
         });
 
@@ -60,12 +59,12 @@ export default  (model: ModelStatic<Model>) => {
 
     },
 
-    async findOne(foreignKey: WhereOptions<any>    ) {
+    async findOne(foreignKey: WhereOptions<any>) {
 
       try {
         const items = await model.findOne({
           where: { ...foreignKey, softDeleted: 0 },
-         });
+        });
 
         return serviceResponser({ ok: true, data: items })
 

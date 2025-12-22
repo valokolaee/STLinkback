@@ -42,6 +42,7 @@ class DeviceReportService {
       where: { imei, status: 'active', softDeleted: false },
     });
 
+
     if (!device) {
       return serviceResponser({ ok: false, }, 'Device not found or inactive');
     }
@@ -64,7 +65,10 @@ class DeviceReportService {
     }
 
     if (ipAddress) {
-      await device.update({ ipAddress });
+      await device.update({
+        ipAddress,
+        updatedAt: new Date()
+      });
     }
 
     try {
@@ -96,7 +100,7 @@ class DeviceReportService {
       });
 
       // Real-time wallet update
-      await onEarningRecordedService.updateWallet(wallet.id, amount, session);
+      await onEarningRecordedService.updateWallet(wallet,device, amount, session);
 
       return serviceResponser({ ok: true });
     } catch (error: any) {

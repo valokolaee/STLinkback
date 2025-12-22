@@ -9,6 +9,7 @@ import genericService from '../services/generic.service';
 import { models } from '../db';
 import { IMiningWallet } from '../models/mining-wallet.model';
 import IServiceResult from '../interfaces/IServiceResult';
+import { dateDifference } from '../utils/DateTimeHelper';
 
 
 
@@ -21,6 +22,7 @@ export default {
   async getAll(req: Request, res: Response) {
     try {
       const devices = await service.getAll();
+
       if (devices.ok) {
         responser(res, 200, {
           success: true,
@@ -72,12 +74,28 @@ export default {
 
       const userId = req.body.userId
 
-      const devices = await service.getAllBy({ userId });
+      const devices: IServiceResult<IMiningDevice[]> = await service.getAllBy({ userId });
+
+      // console.log(devices.data);
+
+
+      var _devs: IMiningDevice[] = []
+
+      devices?.data?.forEach(element => {
+
+        _devs.push({
+          ...element.dataValues,
+          status: dateDifference(new Date(), element.updatedAt) > 60 ? 'offline' : 'active'
+        })
+      });
+
+      console.log(_devs);
+
 
       if (devices.ok) {
         responser(res, 200, {
           success: true,
-          data: devices.data
+          data: _devs //devices.data
         })
       } else {
         responser(res, 404, {

@@ -85,7 +85,6 @@ export default class UserWallet extends Model {
         modelName: 'UserWallet',
         tableName: 'user_wallets',
         timestamps: false,
-    
       }
     );
   }
