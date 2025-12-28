@@ -1,7 +1,7 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import earningsController from '../controllers/device-earning.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import earningsController from '../../controllers/tst.controller';
+import { authenticate } from '../../middleware/auth.middleware';
 
 const router = Router();
 

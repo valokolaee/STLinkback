@@ -12,6 +12,7 @@ export const dateDifference = (d1: any, d2: any) => {
   } else {
     return d1.diff(d2, "s");
   }
+  
 }
 
 

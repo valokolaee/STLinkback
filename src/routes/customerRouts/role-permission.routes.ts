@@ -1,7 +1,7 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import controller from '../controllers/withdrawal-request.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import controller from '../../controllers/role-permission.controller';
+import { authenticate } from '../../middleware/auth.middleware';
 
 const router = Router();
 

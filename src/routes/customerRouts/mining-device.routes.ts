@@ -1,7 +1,7 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import deviceController from '../controllers/mining-device.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import deviceController from '../../controllers/mining-device.controller';
+import { authenticate } from '../../middleware/auth.middleware';
 
 const router = Router();
 

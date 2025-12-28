@@ -8,28 +8,30 @@ import { sequelize } from './db';
 
 import authRoutes from './routes/auth.routes';
 import databaseRoutes from './routes/database.routes';
-import deviceEarningsRoutes from './routes/device-earning.routes';
+import deviceEarningsRoutes from './routes/customerRouts/device-earning.routes';
 import imagesRoutes from './routes/images.rout';
 
-import miningDeviceReportRoutes from './routes/device-report.routes';
-import miningDeviceRoutes from './routes/mining-device.routes';
-import miningWalletRoutes from './routes/mining-wallet.routes';
-import userWalletRoutes from './routes/user-wallet.routes';
-import userRoutes from './routes/user.routes';
-import withdrawalRequestRoutes from './routes/withdrawal-request.routes';
+import miningDeviceReportRoutes from './routes/customerRouts/device-report.routes';
+import miningDeviceRoutes from './routes/customerRouts/mining-device.routes';
+import miningWalletRoutes from './routes/customerRouts/mining-wallet.routes';
+import userWalletRoutes from './routes/customerRouts/user-wallet.routes';
+import userRoutes from './routes/customerRouts/user.routes';
+import withdrawalRequestRoutes from './routes/customerRouts/withdrawal-request.routes';
 
-import deviceAlertRoutes from './routes/device-alert.routes';
-import deviceSpecificationRoutes from './routes/device-specification.routes';
-import miningSessionRoutes from './routes/mining-session.routes';
-import permissionRoutes from './routes/permission.routes';
-import rolePermissionRoutes from './routes/role-permission.routes';
-import monitor from './routes/monitor.routes';
-import roleRoutes from './routes/role.routes';
-import userSessionRoutes from './routes/user-session.routes';
+import deviceAlertRoutes from './routes/customerRouts/device-alert.routes';
+import deviceSpecificationRoutes from './routes/customerRouts/device-specification.routes';
+import miningSessionRoutes from './routes/customerRouts/mining-session.routes';
+import permissionRoutes from './routes/customerRouts/permission.routes';
+import rolePermissionRoutes from './routes/customerRouts/role-permission.routes';
+import monitor from './routes/customerRouts/monitor.routes';
+import roleRoutes from './routes/customerRouts/role.routes';
+import userSessionRoutes from './routes/customerRouts/user-session.routes';
 
 
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
+import customerRouts from './routes/customerRouts';
+import panelRouts from './routes/panleRouts';
 
 
 
@@ -59,29 +61,33 @@ app.use(express.json());
 // API Routes
 app.use('/api/db', databaseRoutes);
 app.use('/uploads', imagesRoutes);
+app.use('/api', customerRouts);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/user-session', userSessionRoutes);
-app.use('/api/users', userRoutes);
+app.use('/panel',panelRouts);
 
-app.use('/api/mining-devicesReport', miningDeviceReportRoutes);
-app.use('/api/mining-devices', miningDeviceRoutes);
+// app.use('/api/auth', authRoutes);
+// app.use('/api/user-session', userSessionRoutes);
+// app.use('/api/users', userRoutes);
 
-app.use('/api/mining-wallet', miningWalletRoutes);
-app.use('/api/user-wallet', userWalletRoutes);
-app.use('/api/mining-session', miningSessionRoutes);
-app.use('/api/device-earnings', deviceEarningsRoutes);
+// app.use('/api/mining-devicesReport', miningDeviceReportRoutes);
+// app.use('/api/mining-devices', miningDeviceRoutes);
 
-app.use('/api/withdrawal-request', withdrawalRequestRoutes);
+// app.use('/api/mining-wallet', miningWalletRoutes);
+// app.use('/api/user-wallet', userWalletRoutes);
+// app.use('/api/mining-session', miningSessionRoutes);
+// app.use('/api/device-earnings', deviceEarningsRoutes);
 
-app.use('/api/device-alert', deviceAlertRoutes);
-app.use('/api/device-specification', deviceSpecificationRoutes);
+// app.use('/api/withdrawal-request', withdrawalRequestRoutes);
 
-app.use('/api/role', roleRoutes);
-app.use('/api/permission', permissionRoutes);
-app.use('/api/role-permission', rolePermissionRoutes);
+// app.use('/api/device-alert', deviceAlertRoutes);
+// app.use('/api/device-specification', deviceSpecificationRoutes);
 
-app.use('/api/monitor', monitor);
+// app.use('/api/role', roleRoutes);
+// app.use('/api/permission', permissionRoutes);
+// app.use('/api/role-permission', rolePermissionRoutes);
+
+// app.use('/api/monitor', monitor);
+// app.use('/panel/monitor', monitor);
 
 
 // Serve static files
@@ -165,7 +171,7 @@ https.createServer(options, app).listen(PORT, async () => {
     console.log('Database connection established successfully.');
     console.log(`Server is running on http://localhost:${PORT}`);
     console.log(`Backend URL: https://w.bankon.click`);
-    
+
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

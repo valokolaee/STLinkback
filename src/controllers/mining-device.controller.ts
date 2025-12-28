@@ -82,14 +82,17 @@ export default {
       var _devs: IMiningDevice[] = []
 
       devices?.data?.forEach(element => {
+        // console.log(
 
+        //   dateDifference(new Date(), element.updatedAt)
+        // );
         _devs.push({
           ...element.dataValues,
-          status: dateDifference(new Date(), element.updatedAt) > 60 ? 'offline' : 'active'
+          status: (dateDifference(new Date(), element.updatedAt) > 10 || dateDifference(new Date(), element.updatedAt) < 0) ? 'offline' : 'active'
         })
       });
 
-      console.log(_devs);
+      // console.log(_devs);
 
 
       if (devices.ok) {
