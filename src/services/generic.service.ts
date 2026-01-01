@@ -7,10 +7,13 @@ export default (model: ModelStatic<Model>) => {
 
   return {
 
-    async getAll() {
+    async getAll(
+        order?: Order
+      
+    ) {
       try {
 
-        const items = await model.findAll();
+        const items = await model.findAll({order});
 
         return serviceResponser({ ok: true, data: items })
 

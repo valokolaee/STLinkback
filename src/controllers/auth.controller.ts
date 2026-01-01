@@ -51,8 +51,8 @@ export default class {
       // const data = validate<Record<string, any>>(loginSchema, req.body);
       const data = req.body;
       const result = await authService.login(data);
-
-      const _user: IUser = { ...result.user, token: result.accessToken } as IUser;
+      // console.log(result.user)
+      const _user: IUser = { ...result.user, token: result.accessToken, passwordHash: undefined } as IUser;
 
 
       return res.status(200).json({

@@ -12,10 +12,13 @@ import { IWithdrawalRequest } from '../models/withdrawal-request.model';
 import { safeParseFloat } from '../utils/math.utils';
 import { IUserWallet } from '../models/user-wallet.model';
 import userWalletService from '../services/userWallet.service';
+import { IUser } from '../models/user.model';
+import IWithdrawalRequestWithUser from '../interfaces/IWithdrawalRequest';
 
 
 
 
+const userService = genericService(models.User)
 const service = genericService(models.WithdrawalRequest)
 const serviceMiningWallet = genericService(models.MiningWallet)
 const serviceUserWallet = genericService(models.UserWallet)
@@ -26,11 +29,28 @@ export default {
   async getAll(req: Request, res: Response) {
     try {
 
-      const items = await service.getAll();
+      const items = await service.getAll([['requestedAt', 'DESC']]);
+      // console.log(items.data);
 
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        const list: IWithdrawalRequest[] = items.data;
+        var nList: IWithdrawalRequestWithUser[] = []
+        for (let index = 0; index < list.length; index++) {
+          const element: IWithdrawalRequest = list[index];
+          const _user: IUser | null = await models.User.findByPk(element.userId) || {};
+          nList.push({
+            ...element.dataValues,
+            user: {
+              username: _user.username,
+              email: _user.email
+            }
+          })
+        }
+
+        console.log(nList);
+
+        responser(res, 200, { success: true, data: nList })
       } else {
         responser(res, 404, { success: false, })
       }
@@ -185,7 +205,7 @@ export default {
         case 'rejected':
         case 'failed':
 
-          responser(res, 400, { success: true, message:'This request is finalized and CAN NOT be altered'})
+          responser(res, 400, { success: true, message: 'This request is finalized and CAN NOT be altered' })
           return
       }
 
@@ -219,7 +239,7 @@ export default {
           case 'approved':
 
             // take from pendingBalance and add it to availableBalance
-            
+
             const _UW_newPendingBalance2 = safeParseFloat(_userWallet?.data?.pendingBalance!) - safeParseFloat(_withDraw.amount!)
 
             const _UW_newAvailableBalance2 = safeParseFloat(_userWallet?.data?.availableBalance!) + safeParseFloat(_withDraw.amount!)
@@ -311,3 +331,8 @@ export default {
   }
 
 }
+
+
+
+
+
