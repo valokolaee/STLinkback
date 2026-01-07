@@ -4,6 +4,7 @@ import { createMiningWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
+import { IMiningWallet } from '../models/mining-wallet.model';
 
 
 
@@ -55,6 +56,34 @@ export default {
 
     }
   },
+
+
+  async getOneByObject(req: Request, res: Response) {
+    try {
+
+      const walletAddress = req.body.walletAddress
+      // console.log(id);
+
+      // return responser(res, 200, { data: { yes: 'thanks' } })
+      const items = await service.findOne<IMiningWallet>({ walletAddress })
+
+      if (items.ok) {
+
+        responser(res, 200, { success: true, data: items.data })
+
+      } else {
+
+        responser(res, 404, { success: false, })
+
+      }
+
+    } catch (error) {
+
+      responser(res, 500, { success: false, }, error)
+
+    }
+  },
+
 
   async getAllBy(req: Request, res: Response) {
     try {

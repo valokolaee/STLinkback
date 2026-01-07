@@ -124,6 +124,8 @@ export default {
         return
       }
 
+
+      // TODO walletAddress should be a combination of imei and userid in case the owner changes we can have a new wallet with a new address
       const _deviceWallet: Partial<IMiningWallet> = { userId: userId!, walletAddress: data?.data?.imei, currency: 'USDT' }
 
 

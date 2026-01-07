@@ -91,7 +91,6 @@ export default {
       const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId: data.data!.userId });
       // console.log(w);
       if (w.data!?.id! > 0) {
-
         responser(res, 400, { success: false, message: 'Wallet address already exists' })
         return
       }

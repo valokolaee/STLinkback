@@ -90,15 +90,15 @@ export default {
   async getAllBy(req: Request, res: Response) {
     try {
 
-      const userId = req.body.userId
+      // const userId = req.body.userId
+      const { userId, miningWalletAddress, status } = req.body as IWithdrawalRequest;
+      // console.log(req.body);
 
-      const items: IServiceResult<IWithdrawalRequest[]> = await service.getAllBy({ userId }, [['requestedAt', 'desc']]);
+      const items: IServiceResult<IWithdrawalRequest[]> = await service.getAllBy<IWithdrawalRequest>({ userId, status, miningWalletAddress, }, [['requestedAt', 'desc']]);
 
 
       if (items.ok) {
-        var _withdraws: IWithdrawalRequest[] = []
-
-
+        var _withdraws: IWithdrawalRequest[] = [];
 
         for (let index = 0; index < items.data!.length; index++) {
 
@@ -111,7 +111,6 @@ export default {
           _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
 
         }
-        // console.log('yyy', _withdraws);
 
         responser(res, 200, { success: true, data: _withdraws })
       } else {
