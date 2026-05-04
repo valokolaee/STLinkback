@@ -34,7 +34,7 @@ export default {
     }
   },
 
-
+  // 09116246120
   async getOne(req: Request, res: Response) {
     try {
       const id = parseInt(req?.params.id || '0')
@@ -82,7 +82,7 @@ export default {
 
     try {
 
-      const data:IServiceResult <IUserWallet> = validate(createUserWalletSchema, req?.body, res);
+      const data: IServiceResult<IUserWallet> = validate(createUserWalletSchema, req?.body, res);
 
       if (!data.ok) {
         return

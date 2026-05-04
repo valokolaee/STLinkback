@@ -10,7 +10,7 @@ import MiningDevice, { IMiningDevice } from '../models/mining-device.model';
 
 class OnEarningRecordedService {
   async updateWallet(wallet: MiningWallet, device: MiningDevice, amount: number, session: MiningSession) {
-    // const wallet = await models.MiningWallet.findByPk(walletId);
+
     if (!wallet) throw new Error('Wallet not found');
 
     const newAvailableBalance = safeParseFloat(wallet.availableBalance) + safeParseFloat(amount);

@@ -1,7 +1,7 @@
 // src/migrations/2-create-users-table.ts
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db';
- 
+
 export const up = async () => {
   await sequelize.getQueryInterface().createTable('users', {
     id: {
@@ -20,7 +20,7 @@ export const up = async () => {
       unique: true,
     },
     password_hash: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     role_id: {

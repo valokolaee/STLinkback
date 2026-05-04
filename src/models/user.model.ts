@@ -1,5 +1,6 @@
 // src/models/user.model.ts
 import { Model } from 'sequelize';
+import Agent from './agent.model';
 
 export default class User extends Model {
   public id!: number;
@@ -9,7 +10,6 @@ export default class User extends Model {
   public phone!: string | null;
   public firstName!: string | null;
   public lastName!: string | null;
-  public roleId!: number;
   public profileImageUrl!: string | null;
   public logoUrl!: string | null;
   public isActive!: boolean;
@@ -20,11 +20,8 @@ export default class User extends Model {
   public softDeleted!: boolean;
   public updatedAt!: Date | null;
 
-  public readonly role?: any;
-  public readonly sessions?: any[];
-  public readonly miningDevices?: any[];
-  public readonly miningWallets?: any[];
-  public readonly withdrawalRequests?: any[];
+
+  
 
   public static initModel(sequelize: any): typeof User {
     return User.init(
@@ -63,11 +60,7 @@ export default class User extends Model {
           allowNull: true,
           field: 'last_name',
         },
-        roleId: {
-          type: 'INT',
-          allowNull: false,
-          field: 'role_id',
-        },
+ 
         profileImageUrl: {
           type: 'VARCHAR(255)',
           allowNull: true,
@@ -127,43 +120,16 @@ export default class User extends Model {
   }
 
   public static associate(models: any) {
-    User.belongsTo(models.Role, {
-      foreignKey: 'roleId',
-      as: 'role',
-    });
 
-    User.hasMany(models.UserSession, {
+    User.hasOne(Agent, {
       foreignKey: 'userId',
-      as: 'sessions',
-    });
-
-    User.hasMany(models.MiningDevice, {
-      foreignKey: 'userId',
-      as: 'miningDevices',
-    });
-
-    User.hasMany(models.MiningWallet, {
-      foreignKey: 'userId',
-      as: 'miningWallets',
-    });
-
-    User.hasMany(models.WithdrawalRequest, {
-      foreignKey: 'userId',
-      as: 'withdrawalRequests',
-    });
-
-    User.hasMany(models.DeviceAlert, {
-      foreignKey: 'resolvedBy',
-      as: 'resolvedAlerts',
-    });
-
-    User.hasMany(models.WithdrawalRequest, {
-      foreignKey: 'processedBy',
-      as: 'processedWithdrawals',
+      as: 'agent',
     });
   }
 }
 
 
 
-export interface IUser extends Partial<User>{}
+export interface IUser extends Partial<User> {
+  token?: string
+}

@@ -49,13 +49,13 @@ export default class UserWallet extends Model {
         pendingBalance: {
           type: 'DECIMAL(15,8)',
           allowNull: false,
-          defaultValue: 0.00000000,
+          defaultValue: 0.0000,
           field: 'pending_balance',
         },
         currency: {
           type: 'VARCHAR(10)',
           allowNull: false,
-          defaultValue: 'BTC',
+          defaultValue: 'USDT',
         },
         walletAddress: {
           type: 'VARCHAR(255)',

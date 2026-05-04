@@ -6,32 +6,17 @@ import { fileURLToPath } from 'url';
 import corsOptions from './config/cors.options';
 import { sequelize } from './db';
 
-import authRoutes from './routes/auth.routes';
 import databaseRoutes from './routes/database.routes';
-import deviceEarningsRoutes from './routes/customerRouts/device-earning.routes';
 import imagesRoutes from './routes/images.rout';
 
-import miningDeviceReportRoutes from './routes/customerRouts/device-report.routes';
-import miningDeviceRoutes from './routes/customerRouts/mining-device.routes';
-import miningWalletRoutes from './routes/customerRouts/mining-wallet.routes';
-import userWalletRoutes from './routes/customerRouts/user-wallet.routes';
-import userRoutes from './routes/customerRouts/user.routes';
-import withdrawalRequestRoutes from './routes/customerRouts/withdrawal-request.routes';
 
-import deviceAlertRoutes from './routes/customerRouts/device-alert.routes';
-import deviceSpecificationRoutes from './routes/customerRouts/device-specification.routes';
-import miningSessionRoutes from './routes/customerRouts/mining-session.routes';
-import permissionRoutes from './routes/customerRouts/permission.routes';
-import rolePermissionRoutes from './routes/customerRouts/role-permission.routes';
-import monitor from './routes/customerRouts/monitor.routes';
-import roleRoutes from './routes/customerRouts/role.routes';
-import userSessionRoutes from './routes/customerRouts/user-session.routes';
 
 
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
 import customerRouts from './routes/customerRouts';
 import panelRouts from './routes/panleRouts';
+import initializeRolesUtils from './utils/initializeRoles.utils';
 
 
 
@@ -61,9 +46,9 @@ app.use(express.json());
 // API Routes
 app.use('/api/db', databaseRoutes);
 app.use('/uploads', imagesRoutes);
-app.use('/api', customerRouts);
 
-app.use('/panel',panelRouts);
+app.use('/api', customerRouts);
+app.use('/panel', panelRouts);
 
 // app.use('/api/auth', authRoutes);
 // app.use('/api/user-session', userSessionRoutes);
@@ -165,6 +150,7 @@ const options = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 };
+
 https.createServer(options, app).listen(PORT, async () => {
   try {
     await sequelize.authenticate();
@@ -175,6 +161,10 @@ https.createServer(options, app).listen(PORT, async () => {
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
+
+
+  await initializeRolesUtils();
+
 }
 
 );

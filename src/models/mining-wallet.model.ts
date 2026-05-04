@@ -55,7 +55,7 @@ export default class MiningWallet extends Model {
         currency: {
           type: 'VARCHAR(10)',
           allowNull: false,
-          defaultValue: 'BTC',
+          defaultValue: 'USDT',
         },
         walletAddress: {
           type: 'VARCHAR(255)',

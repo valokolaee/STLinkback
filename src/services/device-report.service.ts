@@ -100,7 +100,7 @@ class DeviceReportService {
       });
 
       // Real-time wallet update
-      await onEarningRecordedService.updateWallet(wallet,device, amount, session);
+      await onEarningRecordedService.updateWallet(wallet, device, amount, session);
 
       return serviceResponser({ ok: true });
     } catch (error: any) {

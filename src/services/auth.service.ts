@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { log } from 'console';
 import Role, { IRole } from '../models/role.model';
 import initialRolesList from '../utils/initialRolesList';
+import User, { IUser } from '../models/user.model';
 
 export default class {
   static async register(data: any) {
@@ -24,21 +25,20 @@ export default class {
       return 'email already taken'
     }
 
-    const rolls = await models.Role.findAndCountAll()
+    // await initializeRoles();
 
-    if (rolls.count < 1) {
+    // const rolls = await models.Role.findAndCountAll()
 
-      // const admin: IRole = { name: 'admin' };
-      // const agent: IRole = { name: 'agent' };
-      // const user: IRole = { name: 'user' };
-      // const customer: IRole = { name: 'customer' };
-      const _rolls: IRole[] =initialRolesList
+    // if (rolls.count < 1) {
 
-      for (let index = 0; index < _rolls.length; index++) {
-        const role = await models.Role.create(_rolls[index])
-      }
 
-    }
+    //   const _rolls: IRole[] =initialRolesList
+
+    //   for (let index = 0; index < _rolls.length; index++) {
+    //     const role = await models.Role.create(_rolls[index])
+    //   }
+
+    // }
 
 
     const user = await models.User.create({
@@ -87,3 +87,6 @@ export default class {
     }
   }
 }
+
+
+

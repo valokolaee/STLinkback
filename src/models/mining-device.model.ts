@@ -9,7 +9,7 @@ export default class MiningDevice extends Model {
   public imei!: string;
   public deviceModel!: string;
   public serialNumber!: string | null;
-  public startDate!: Date;
+  public startDate!: Date;//created date of device in system
   public totalUptimeSeconds!: number;
   public totalRevenue!: number;
   public status!: 'active' | 'inactive' | 'maintenance' | 'offline' | 'error';

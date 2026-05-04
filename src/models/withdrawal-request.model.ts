@@ -1,5 +1,5 @@
 // src/models/withdrawal-request.model.ts
-import { Model } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 
 export default class WithdrawalRequest extends Model {
   public id!: number;
@@ -24,74 +24,74 @@ export default class WithdrawalRequest extends Model {
     return WithdrawalRequest.init(
       {
         id: {
-          type: 'INT',
+          type: DataTypes.INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: 'INT',
+          type: DataTypes.INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         amount: {
-          type: 'DECIMAL(15,8)',
+          type: DataTypes.DOUBLE,
           allowNull: false,
         },
         currency: {
-          type: 'VARCHAR(10)',
+          type: DataTypes.STRING(255),
           allowNull: false,
-          defaultValue: 'BTC',
+          defaultValue: 'USDT',
         },
         miningWalletAddress: {
-          type: 'VARCHAR(255)',
+          type: DataTypes.STRING(255),
           allowNull: false,
           field: 'mining_wallet_address',
         },
         userWalletAddress: {
-          type: 'VARCHAR(255)',
+          type: DataTypes.STRING(255),
           allowNull: false,
           field: 'user_wallet_address',
         },
         transactionHash: {
-          type: 'VARCHAR(255)',
+          type: DataTypes.STRING(255),
           allowNull: true,
           unique: true,
           field: 'transaction_hash',
         },
         status: {
-          type: 'ENUM("pending", "processing", "completed",  "rejected" , "approved"  "failed", "cancelled")',
+          type: DataTypes.ENUM("pending", "processing", "completed", "rejected", "approved", "failed", "cancelled"),
           allowNull: false,
           defaultValue: 'pending',
         },
         networkFee: {
-          type: 'DECIMAL(15,8)',
+          type: DataTypes.DOUBLE,
           allowNull: false,
-          defaultValue: 0.00000000,
+          defaultValue: 0.0000,
           field: 'network_fee',
         },
         serviceFee: {
-          type: 'DECIMAL(15,8)',
+          type: DataTypes.DECIMAL,
           allowNull: false,
-          defaultValue: 0.00000000,
+          defaultValue: 0.00000,
           field: 'service_fee',
         },
         requestedAt: {
-          type: 'DATETIME',
+          type: DataTypes.DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'requested_at',
         },
         processedAt: {
-          type: 'DATETIME',
+          type: DataTypes.DATE,
           allowNull: true,
           field: 'processed_at',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: DataTypes.BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         processedBy: {
-          type: 'INT',
+          type: DataTypes.INTEGER,
           allowNull: true,
           field: 'processed_by',
         },
@@ -115,12 +115,12 @@ export default class WithdrawalRequest extends Model {
 
   public static associate(models: any) {
     WithdrawalRequest.belongsTo(models.User, {
-      foreignKey: 'userId',
+      foreignKey: 'user_id',
       as: 'user',
     });
 
     WithdrawalRequest.belongsTo(models.User, {
-      foreignKey: 'processedBy',
+      foreignKey: 'processed_by',
       as: 'processedByUser',
     });
   }

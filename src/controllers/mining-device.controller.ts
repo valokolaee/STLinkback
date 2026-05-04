@@ -73,6 +73,12 @@ export default {
     try {
 
       const userId = req.body.userId
+      console.log('fired');
+
+      // return responser(res, 200, {
+      //   success: true,
+      //   data: [{}]
+      // })
 
       const devices: IServiceResult<IMiningDevice[]> = await service.getAllBy({ userId });
 
@@ -98,7 +104,7 @@ export default {
       if (devices.ok) {
         responser(res, 200, {
           success: true,
-          data: _devs //devices.data
+          data:_devs// devices.data
         })
       } else {
         responser(res, 404, {

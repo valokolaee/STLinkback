@@ -1,7 +1,7 @@
 // src/migrations/1-create-roles-table.ts
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db';
- 
+
 export const up = async () => {
   await sequelize.getQueryInterface().createTable('roles', {
     id: {
@@ -15,10 +15,10 @@ export const up = async () => {
       unique: true,
     },
     description: {
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       allowNull: true,
     },
- 
+
   });
 };
 

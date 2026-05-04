@@ -1,5 +1,7 @@
 // src/models/role.model.ts
 import { Model } from 'sequelize';
+import User from './user.model';
+import Agent from './agent.model';
 
 export default class Role extends Model {
   public id!: number;
@@ -10,8 +12,8 @@ export default class Role extends Model {
   public softDeleted!: boolean;
   public createdAt!: Date;
 
-  public readonly users?: any[];
-  public readonly permissions?: any[];
+  public readonly users?: Agent[];
+  public readonly permissions?: Permissions[];
 
   public static initModel(sequelize: any): typeof Role {
     return Role.init(
@@ -62,11 +64,14 @@ export default class Role extends Model {
   }
 
   public static associate(models: any) {
-    Role.hasMany(models.User, {
-      foreignKey: 'roleId',
-      as: 'users',
-    });
+    // Role.hasMany(models.User, {
+    //   foreignKey: 'roleId',
+    //   as: 'users',
+    // });
 
+    // Role.belongsTo(Agent, {
+      
+    // })
     Role.belongsToMany(models.Permission, {
       through: models.RolePermission,
       foreignKey: 'roleId',

@@ -50,7 +50,7 @@ export default class DeviceEarning extends Model {
         currency: {
           type: 'VARCHAR(10)',
           allowNull: false,
-          defaultValue: 'BTC',
+          defaultValue: 'USDT',
         },
         earningDate: {
           type: 'DATETIME',

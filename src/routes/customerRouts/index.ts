@@ -1,5 +1,5 @@
 import express from 'express';
-import authRoutes from '../auth.routes';
+import authRoutes from './auth.routes';
 import deviceEarningsRoutes from './device-earning.routes';
 import miningDeviceReportRoutes from './device-report.routes';
 import miningDeviceRoutes from './mining-device.routes';

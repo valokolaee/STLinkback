@@ -7,6 +7,8 @@ import responserUtils from '../utils/responser.utils';
 import Role, { IRole } from '../models/role.model';
 import genericService from '../services/generic.service';
 import initialRolesList, { agentRoles, customerRoles } from '../utils/initialRolesList';
+import Agent from '../models/agent.model';
+import User from '../models/user.model';
 
 export const authenticate = async (
   req: Request,
@@ -39,7 +41,7 @@ export const authenticate = async (
 
     // Find user
     const user = await models.User.findByPk(decoded.id, {
-      include: [{ model: models.Role, as: 'role' }]
+      // include: [{ model: models.Role, as: 'role' }]
     });
 
 
@@ -51,10 +53,9 @@ export const authenticate = async (
     }
 
     // console.log(user.roleId);
-    const r = await Role.findByPk(user.roleId);
     // const r = await Role.findByPk(1)
     // r?.update({ name: 'customer' })
-    const roleName = r?.name;
+
     const baseUrl = req.baseUrl.toString().split('/');
 
     const api = baseUrl.length > 0 ? baseUrl[1] : '';
@@ -67,9 +68,26 @@ export const authenticate = async (
 
 
     if (api === 'api') {
-      _rolls = customerRoles
+      // _rolls = customerRoles
     } else if (api === 'panel') {
+      // const _agent = await Agent.findByPk(decoded.id, {
+      //   include: [{ model: models.Role, as: 'role' }]
+      // });
+
+      const _agent = await Agent.findByPk(user.id);
+      const r = await Role.findByPk(_agent!.roleId);
+      const roleName = r?.name;
       _rolls = agentRoles;
+      const _permitted = _rolls.some(obj => obj.name === roleName);
+      
+      if (!_permitted) {
+        responserUtils(res, 403, {
+          success: false,
+          message: 'You do not have permission to access this resource'
+        });
+        return;
+      }
+
     } else {
       responserUtils(res, 401, {
         success: false,
@@ -79,14 +97,6 @@ export const authenticate = async (
     }
 
 
-    const _permitted = _rolls.some(obj => obj.name === roleName);
-    if (!_permitted) {
-      responserUtils(res, 403, {
-        success: false,
-        message: 'You do not have permission to access this resource'
-      });
-      return;
-    }
 
 
 
@@ -123,7 +133,7 @@ export const authenticate = async (
 
   } catch (error: any) {
 
-    // console.log(error); 
+    console.log(error);
 
     if (error.name === 'JsonWebTokenError') {
       return responserUtils(res, 401, {
