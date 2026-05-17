@@ -27,8 +27,6 @@ export default async () => {
         // console.log(`Created new role: ${role.name}`);
       }
 
-
-
     }
 
     // console.log('Roles initialization completed');

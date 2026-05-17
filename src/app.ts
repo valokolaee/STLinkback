@@ -10,8 +10,6 @@ import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
 
 
-
-
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
 import customerRouts from './routes/customerRouts';
@@ -19,10 +17,8 @@ import panelRouts from './routes/panleRouts';
 import initializeRolesUtils from './utils/initializeRoles.utils';
 
 
-
 const https = require('https');
 const fs = require('fs');
-
 
 
 const app = express();
@@ -150,6 +146,7 @@ const options = {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 };
+
 
 https.createServer(options, app).listen(PORT, async () => {
   try {
