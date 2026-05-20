@@ -1,5 +1,6 @@
 // src/services/user.service.ts
 import { models } from '../db';
+import { IUser } from '../models/user.model';
 
 export class UserService {
   /**
@@ -146,8 +147,10 @@ export class UserService {
    * @param userId 
    * @param updateData 
    */
-  static async updateUser(userId: number, updateData: Partial<User>) {
+  static async updateUser(userId: number, updateData:IUser) {
+
     try {
+
       const result = await models.User.update(updateData, {
         where: { id: userId }
       });
@@ -161,12 +164,12 @@ export class UserService {
   }
 }
 
-interface User {
-  id?: number;
-  username?: string;
-  email?: string;
-  profileImage?: string;
-  logoUrl?: string;
-  clientType?: 'individual' | 'financial_entities' | 'business';
-  roleId?: number;
-}
+// interface User {
+//   id?: number;
+//   username?: string;
+//   email?: string;
+//   profileImage?: string;
+//   logoUrl?: string;
+//   clientType?: 'individual' | 'financial_entities' | 'business';
+//   roleId?: number;
+// }

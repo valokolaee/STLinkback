@@ -52,7 +52,7 @@ export default async () => {
       const _adminUser = await User.create(
         {
           username: 'admin',
-          email: 'abc@d.com',
+          email: 'admin@michael.com',
           passwordHash: await bcrypt.hash('michAeel@', 10),
           clientType: 'admin',
         }

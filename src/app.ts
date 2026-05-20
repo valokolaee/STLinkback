@@ -29,7 +29,9 @@ const __dirname = path.dirname(__filename);
 const publicPath = path.join(__dirname, '../src/public');
 
 // Middlewares
-app.use(cors(corsOptions));
+app.use(cors(
+  // corsOptions
+));
 app.options('*', cors(corsOptions));
 
 // Parse JSON body before any other middleware

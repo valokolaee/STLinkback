@@ -25,7 +25,7 @@ export default class {
       const _user = { ...result.user, token: result.accessToken, passwordHash: undefined, };
 
 
-      console.log('result', _user);
+      // console.log('result', _user);
       const r = _user?.agent?.role
 
 

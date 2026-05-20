@@ -61,7 +61,6 @@ export default class {
 
       const result = await authService.login(data);
 
-      console.log('result', result)
 
       const _user: ICustomer = { ...result.user, token: result.accessToken, passwordHash: undefined };
 

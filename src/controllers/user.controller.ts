@@ -256,8 +256,11 @@ export class UserController {
 
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${avatarSt}/${filename}`;
-      const success = await UserService.updateUser(userId!, { profileImage: fileUrl });
 
+      const success = await UserService.updateUser(userId!, { profileImageUrl: fileUrl });
+
+      console.log(success);
+      
       const response: UploadResponse = {
         success: true,
         message: 'File uploaded successfully',
@@ -303,6 +306,7 @@ export class UserController {
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${logoSt}/${filename}`;
       const success = await UserService.updateUser(userId!, { logoUrl: fileUrl });
+      console.log(success);
 
       const response: UploadResponse = {
         success: true,

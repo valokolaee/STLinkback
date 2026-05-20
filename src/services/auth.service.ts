@@ -65,6 +65,7 @@ export default class {
 
 
     if (!user) throw new Error('Invalid credentials');
+      console.log('result', user)
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
     if (!isPasswordValid) throw new Error('Invalid credentials');

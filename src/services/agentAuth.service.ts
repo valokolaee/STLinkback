@@ -25,7 +25,7 @@ export default class {
     });
 
     // const aaa = await Agent.findAll()
-    // console.log(user.agent.role);
+    console.log(user?.dataValues);
 
 
     if (!user) throw new Error('User not found');
