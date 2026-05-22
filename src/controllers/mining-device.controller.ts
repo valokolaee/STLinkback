@@ -94,7 +94,7 @@ export default {
         // );
         _devs.push({
           ...element.dataValues,
-          status: (dateDifference(new Date(), element.updatedAt) > 10 || dateDifference(new Date(), element.updatedAt) < 0) ? 'offline' : 'active'
+          status: (dateDifference(new Date(), element.updatedAt) > 300 || dateDifference(new Date(), element.updatedAt) < 0) ? 'offline' : 'active'
         })
       });
 
