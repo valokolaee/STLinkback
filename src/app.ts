@@ -12,8 +12,9 @@ import imagesRoutes from './routes/images.rout';
 
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
-import customerRouts from './routes/customerRouts';
-import panelRouts from './routes/panleRouts';
+import customerRouts from './routes/customerRoutes';
+import panelRouts from './routes/panleRoutes';
+import xmasterRoutes from './routes/xmasterRoutes';
 import initializeRolesUtils from './utils/initializeRoles.utils';
 
 
@@ -47,6 +48,7 @@ app.use('/uploads', imagesRoutes);
 
 app.use('/api', customerRouts);
 app.use('/panel', panelRouts);
+app.use('/xmaster', xmasterRoutes);
 
 // app.use('/api/auth', authRoutes);
 // app.use('/api/user-session', userSessionRoutes);

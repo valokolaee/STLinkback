@@ -1,7 +1,7 @@
 import express from 'express';
 import authRoutes from './auth.routes';
 import deviceEarningsRoutes from './device-earning.routes';
-import miningDeviceReportRoutes from './device-report.routes';
+// import miningDeviceReportRoutes from './device-report.routes';
 import miningDeviceRoutes from './mining-device.routes';
 import miningWalletRoutes from './mining-wallet.routes';
 import userWalletRoutes from './user-wallet.routes';
@@ -23,7 +23,7 @@ customer.use('/auth', authRoutes);
 customer.use('/user-session', userSessionRoutes);
 customer.use('/users', userRoutes);
 
-customer.use('/mining-devicesReport', miningDeviceReportRoutes);
+// customer.use('/mining-devicesReport', miningDeviceReportRoutes);
 customer.use('/mining-devices', miningDeviceRoutes);
 
 customer.use('/mining-wallet', miningWalletRoutes);

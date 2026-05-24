@@ -1,6 +1,6 @@
 import express from 'express';
 import tstRoutes from './tst.routs';
-import authRoutes from '../panleRouts/auth.routes';
+import authRoutes from './auth.routes';
 
 
 const panel = express();

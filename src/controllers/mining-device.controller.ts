@@ -104,7 +104,7 @@ export default {
       if (devices.ok) {
         responser(res, 200, {
           success: true,
-          data:_devs// devices.data
+          data: _devs// devices.data
         })
       } else {
         responser(res, 404, {
