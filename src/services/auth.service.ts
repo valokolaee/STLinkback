@@ -7,6 +7,11 @@ import { log } from 'console';
 import Role, { IRole } from '../models/role.model';
 import initialRolesList from '../utils/initialRolesList';
 import User, { IUser } from '../models/user.model';
+import Customer, { ICustomer } from '../models/customer.model';
+import UserWallet, { IUserWallet } from '../models/user-wallet.model';
+import Joi from 'joi';
+import isValidEmail from '../utils/isValidEmail';
+import getCustomerInfoService from './getCustomerInfo.service';
 
 export default class {
   static async register(data: any) {
@@ -41,37 +46,75 @@ export default class {
     // }
 
 
-    const user = await models.User.create({
+    const user = await User.create({
       username,
       email,
       passwordHash: hashedPassword,
       clientType,
-      roleId: 1,
+      // roleId: 1,
     });
 
-    // console.log('user', data);
+
+    const w: IUserWallet = {
+      userId: user.id,
+      walletAddress: 'samp',
+
+    }
+
+
+    const wallet = await UserWallet.create(w)
+
+    const c: ICustomer = {
+      userId: user?.id,
+      ranking: 'None',
+      defaultWalletId: wallet?.id
+
+    }
+    await Customer.create(c)
+    console.log('user', user);
+
+
+
+
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
     return { accessToken: token, user: user.get({ plain: true }) };
   }
 
   static async login(data: any) {
     const { email, password } = data;
-    // console.log(data);
-    var user = await models.User.findOne({ where: { email } });
 
+    // var where = {};
 
-    // in order to make login possible with username too
-    if (!user) { user = await models.User.findOne({ where: { username: email } }); }
+    // if (isValidEmail(email)) {
+    //   where = { email };
+    // } else {
+    //   where = { username: email };
+    // }
 
+    // var user = await User.findOne({
+    //   where,
+    //   include: [
+    //     {
+    //       model: Customer,
+    //       as: 'customer',
+    //       include: [{
+    //         model: UserWallet,
+    //         as: 'defaultWallet'
+    //       }]
+    //     }]
+    // });
+
+    const user: IUser | null = await getCustomerInfoService(data);
+    console.log(user);
 
     if (!user) throw new Error('Invalid credentials');
-      console.log('result', user)
 
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
+
+    const isPasswordValid = await bcrypt.compare(password, user?.passwordHash!);
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-    return { accessToken: token, user: user.get({ plain: true }) };
+    return { accessToken: token, user: user.get!({ plain: true }) };
   }
 
   static async authenticate(token: string) {

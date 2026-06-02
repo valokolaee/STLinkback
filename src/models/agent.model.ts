@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import {  BOOLEAN, DATE, INTEGER, Model } from 'sequelize';
 import User from './user.model';
 import Role from './role.model';
 
@@ -19,27 +19,27 @@ export default class Agent extends Model {
     return Agent.init(
       {
         id: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         roleId: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           allowNull: false,
           field: 'role_id',
         },
         createdAt: {
-          type: DataTypes.DATE,// 'DATETIME',
+          type: DATE,// 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
         softDeleted: {
-          type: DataTypes.BOOLEAN,// 'BOOLEAN',
+          type: BOOLEAN,// 'BOOLEAN',
           allowNull: true,
           defaultValue: false
         },

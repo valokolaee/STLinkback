@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 
 export default class UserWallet extends Model {
   public id!: number;
@@ -19,63 +19,63 @@ export default class UserWallet extends Model {
     return UserWallet.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         totalEarnings: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'total_earnings',
         },
         withdrawnAmount: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'withdrawn_amount',
         },
         availableBalance: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'available_balance',
         },
         pendingBalance: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),
           allowNull: false,
           defaultValue: 0.0000,
           field: 'pending_balance',
         },
         currency: {
-          type: 'VARCHAR(10)',
+          type: STRING(10),
           allowNull: false,
           defaultValue: 'USDT',
         },
         walletAddress: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: true,
           unique: true,
           field: 'wallet_address',
         },
         nickname: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: true,
           unique: true,
           field: 'nickname',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         lastUpdated: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'last_updated',
         },
@@ -98,4 +98,4 @@ export default class UserWallet extends Model {
 }
 
 
-export interface IUserWallet extends UserWallet { }
+export interface IUserWallet extends Partial <UserWallet> { }

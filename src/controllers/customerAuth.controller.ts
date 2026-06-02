@@ -56,7 +56,7 @@ export default class {
 
       // const data = validate<Record<string, any>>(loginSchema, req.body);
 
-      const data = req.body;
+      const data = req?.body;
       // console.log(req.body);
 
       const result = await authService.login(data);
@@ -71,7 +71,7 @@ export default class {
       const roleName = r?.name;
       const baseUrl = req.baseUrl.toString().split('/');
 
-      const api = baseUrl.length > 0 ? baseUrl[1] : '';
+      const api = baseUrl?.length > 0 ? baseUrl[1] : '';
 
       // console.log(api, roleName);
 

@@ -1,5 +1,5 @@
 // src/models/mining-session.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, INTEGER, Model } from 'sequelize';
 
 export default class MiningSession extends Model {
   public id!: number;
@@ -21,33 +21,33 @@ export default class MiningSession extends Model {
     return MiningSession.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         deviceId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'device_id',
         },
         sessionStart: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'session_start',
         },
         sessionEnd: {
-          type: 'DATETIME',
+          type: DATE,
           allowNull: true,
           field: 'session_end',
         },
         durationSeconds: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           defaultValue: 0,
           field: 'duration_seconds',
         },
         earnings: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),
           allowNull: false,
           defaultValue: 0.00000000,
         },
@@ -57,22 +57,22 @@ export default class MiningSession extends Model {
           defaultValue: 'running',
         },
         avgHashRate: {
-          type: 'DECIMAL(12,4)',
+          type: DECIMAL(12,4),
           allowNull: true,
           field: 'avg_hash_rate',
         },
         energyConsumed: {
-          type: 'DECIMAL(10,4)',
+          type: DECIMAL(10,4),
           allowNull: true,
           field: 'energy_consumed',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },

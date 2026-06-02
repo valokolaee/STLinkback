@@ -65,7 +65,7 @@ export const createMiningSessionSchema = Joi.object({
 });
 
 export const deviceEarningReportSchema = Joi.object({
-  imei: Joi.string().length(15).pattern(/^\d+$/).required(),
+  imei: Joi.string().length(30).pattern(/^\d+$/).required(),
   amount: Joi.number().positive().required(),
   currency: Joi.string().min(2).max(10).required(),
   ipAddress: Joi.string().ip({ version: ['ipv4', 'ipv6'] }).optional(),

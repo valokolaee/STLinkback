@@ -1,5 +1,5 @@
 // src/models/device-metric.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DataTypes, DECIMAL, INTEGER, Model } from 'sequelize';
 
 export default class DeviceMetric extends Model {
   public id!: number;
@@ -22,74 +22,74 @@ export default class DeviceMetric extends Model {
     return DeviceMetric.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,// 'INT',
           autoIncrement: true,
           primaryKey: true,
         },
         deviceId: {
-          type: 'INT',
+          type: INTEGER,//'INT',
           allowNull: false,
           field: 'device_id',
         },
         cpuUsage: {
-          type: 'DECIMAL(5,2)',
+          type: DECIMAL(5, 2),
           allowNull: false,
           defaultValue: 0.00,
           field: 'cpu_usage',
         },
         memoryUsage: {
-          type: 'DECIMAL(5,2)',
+          type: DECIMAL(5,2) ,
           allowNull: false,
           defaultValue: 0.00,
           field: 'memory_usage',
         },
         gpuUsage: {
-          type: 'DECIMAL(5,2)',
+          type: DECIMAL(5,2),
           allowNull: true,
           defaultValue: 0.00,
           field: 'gpu_usage',
         },
         processingSpeed: {
-          type: 'DECIMAL(10,2)',
+          type: DECIMAL(10,2),
           allowNull: false,
           defaultValue: 0.00,
           field: 'processing_speed',
         },
         fanSpeedRpm: {
-          type: 'INT',
+          type: INTEGER,//'INT',
           allowNull: false,
           defaultValue: 0,
           field: 'fan_speed_rpm',
         },
         temperature: {
-          type: 'DECIMAL(5,2)',
+          type:DECIMAL(5,2),
           allowNull: false,
           defaultValue: 0.00,
         },
         powerConsumption: {
-          type: 'DECIMAL(8,2)',
+          type: DECIMAL(8,2) ,
           allowNull: false,
           defaultValue: 0.00,
           field: 'power_consumption',
         },
         hashRate: {
-          type: 'DECIMAL(12,4)',
+          type: DataTypes.DECIMAL(12,4),
           allowNull: false,
           defaultValue: 0.0000,
           field: 'hash_rate',
         },
         networkLatency: {
-          type: 'DECIMAL(8,4)',
+          type: DataTypes.DECIMAL(8,4),
           allowNull: true,
           field: 'network_latency',
         },
         recordedAt: {
-          type: 'DATETIME',
+          type: DataTypes.DATE ,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'recorded_at',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN ,
           allowNull: true,
           defaultValue: false
         },
@@ -118,4 +118,4 @@ export default class DeviceMetric extends Model {
 
 
 
-export interface IDeviceMetric extends DeviceMetric {}  
+export interface IDeviceMetric extends DeviceMetric { }  

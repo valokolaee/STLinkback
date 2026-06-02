@@ -2,30 +2,37 @@
 
 import { Request, Response } from 'express';
 import { validate } from '../utils/validator.utils';
-import deviceReportService from '../services/device-report.service';
+import { deviceEarningReportSchema } from '../dtos/device.dto';
+// import deviceReportService from '../services/device-report.service';
 import responser from '../utils/responser.utils';
-import { deviceEarningReportSchema } from '../dtos/dto';
+import deviceReportService from '../services/device-report.service';
+
+function getClientIP(req: Request): string {
+  return (
+    (req.headers['x-forwarded-for'] as string | undefined)?.split(',')[0]?.trim() ||
+    req.socket.remoteAddress ||
+    '0.0.0.0'
+  );
+}
+
 
 export default class DeviceReportController {
-  static async go(req: Request, res: Response) {
-    return responser(res, 200, {
-      success: false,
-      message: 'Failed to record data',
-    });
-  }
-
+  static async go(req: Request, res: Response) { }
   static async reportEarning(req: Request, res: Response) {
-    // console.log(req.body);
-
     const validated = validate(deviceEarningReportSchema, req.body, res);
     if (!validated.ok) return;
 
-    const result = await deviceReportService.recordEarning(validated.data);
+    const clientIP = getClientIP(req);
+
+    const result = await deviceReportService.recordEarning({
+      ...validated.data,
+      clientIP,
+    });
 
     if (!result.ok) {
       return responser(res, 400, {
         success: false,
-        message: 'Failed to record data',
+        message: result.error || 'Failed to record data',
       });
     }
 
@@ -34,4 +41,5 @@ export default class DeviceReportController {
       message: 'Data recorded successfully',
     });
   }
+
 }

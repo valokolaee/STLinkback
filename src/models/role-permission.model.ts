@@ -1,5 +1,5 @@
 // src/models/role-permission.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model } from 'sequelize';
 
 export default class RolePermission extends Model {
   public id!: number;
@@ -15,27 +15,27 @@ export default class RolePermission extends Model {
     return RolePermission.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         roleId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'role_id',
         },
         permissionId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'permission_id',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },

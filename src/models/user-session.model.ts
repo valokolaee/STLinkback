@@ -1,5 +1,5 @@
 // src/models/user-session.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 
 export default class UserSession extends Model {
   public id!: number;
@@ -18,43 +18,43 @@ export default class UserSession extends Model {
     return UserSession.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         token: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: false,
           unique: true,
         },
         ipAddress: {
-          type: 'VARCHAR(45)',
+          type: STRING(45),
           allowNull: true,
           field: 'ip_address',
         },
         userAgent: {
-          type: 'TEXT',
+          type: STRING,
           allowNull: true,
           field: 'user_agent',
         },
         expiresAt: {
-          type: 'DATETIME',
+          type: DATE,
           allowNull: false,
           field: 'expires_at',
         },
         isActive: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: false,
           defaultValue: true,
           field: 'is_active',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },

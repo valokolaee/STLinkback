@@ -1,9 +1,10 @@
-import { DataTypes, Model } from 'sequelize';
-import User from './user.model';
+import {  BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
+import User, { IUser } from './user.model';
 import MiningSession from './mining-session.model';
 import MiningWallet from './mining-wallet.model';
 import WithdrawalRequest from './withdrawal-request.model';
 import MiningDevice from './mining-device.model';
+import UserWallet, { IUserWallet } from './user-wallet.model';
 
 export default class Customer extends Model {
 
@@ -13,6 +14,7 @@ export default class Customer extends Model {
   public totalIncome!: number;
   public totalAvailableBalance!: number;
   public ranking!: 'None' | 'Bronze' | 'Silver' | 'Gold' | 'VIP';
+  //TODO public activeStatus!: 'active' | 'suspended' 
   public createdAt!: Date;
   public softDeleted!: boolean;
   public visibility !: boolean;
@@ -32,50 +34,51 @@ export default class Customer extends Model {
       {
 
         id: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
 
         userId: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           field: 'user_id',
         },
 
         defaultWalletId: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           field: 'default_wallet_id',
         },
 
         totalIncome: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           field: 'total_income',
         },
 
         totalAvailableBalance: {
-          type: DataTypes.INTEGER,
+          type: INTEGER,
           field: 'total_available_balance',
         },
 
         ranking: {
-          type: DataTypes.STRING(255),
-          allowNull: false,
+          type: STRING(255),
+          defaultValue: 'None',
+          // allowNull: false,
           field: 'ranking',
         },
 
         createdAt: {
-          type: DataTypes.DATE,
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
 
         softDeleted: {
-          type: DataTypes.BOOLEAN,
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         visibility: {
-          type: DataTypes.BOOLEAN,
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: true
         },
@@ -105,6 +108,12 @@ export default class Customer extends Model {
       as: 'miningDevices',
     });
 
+    Customer.hasOne(UserWallet, {
+      foreignKey: 'id',
+      as: 'defaultWallet',
+    });
+
+
     Customer.hasMany(models.MiningWallet, {
       foreignKey: 'userId',
       as: 'miningWallets',
@@ -130,5 +139,9 @@ export default class Customer extends Model {
 
 
 
-export interface ICustomer extends Partial<Customer> {
+export type ICustomer = Partial<Customer> & {
+  defaultWallet?: IUserWallet;
 }
+
+
+

@@ -16,6 +16,7 @@ import customerRouts from './routes/customerRoutes';
 import panelRouts from './routes/panleRoutes';
 import mxRoutes from './routes/mxRoutes';
 import initializeRolesUtils from './utils/initializeRoles.utils';
+// import './cron/cleanup.cron';
 
 
 const https = require('https');

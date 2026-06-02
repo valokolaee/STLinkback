@@ -1,5 +1,5 @@
 // src/models/device-alert.model.ts
-import { Model } from 'sequelize';
+import {  BOOLEAN, DATE, ENUM, INTEGER, Model, STRING } from 'sequelize';
 
 export default class DeviceAlert extends Model {
   public id!: number;
@@ -20,53 +20,55 @@ export default class DeviceAlert extends Model {
     return DeviceAlert.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,// 'INT',
           autoIncrement: true,
           primaryKey: true,
         },
         deviceId: {
-          type: 'INT',
+          type: INTEGER,//'INT',
           allowNull: false,
           field: 'device_id',
         },
         alertType: {
-          type: 'ENUM("high_temperature", "low_hash_rate", "offline", "high_power", "fan_failure", "maintenance_required", "error")',
+          type: ENUM("high_temperature", "low_hash_rate", "offline", "high_power", "fan_failure", "maintenance_required", "error"),
+          // type: 'ENUM("high_temperature", "low_hash_rate", "offline", "high_power", "fan_failure", "maintenance_required", "error")',
           allowNull: false,
           field: 'alert_type',
         },
         alertMessage: {
-          type: 'TEXT',
+          type: STRING,// 'TEXT',
           allowNull: false,
           field: 'alert_message',
         },
         severity: {
-          type: 'ENUM("low", "medium", "high", "critical")',
+          type: ENUM("low", "medium", "high", "critical"),
+          // type: 'ENUM("low", "medium", "high", "critical")',
           allowNull: false,
           defaultValue: 'medium',
         },
         isResolved: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,// 'BOOLEAN',
           allowNull: false,
           defaultValue: false,
           field: 'is_resolved',
         },
         resolvedAt: {
-          type: 'DATETIME',
+          type: DATE,//'DATETIME',
           allowNull: true,
           field: 'resolved_at',
         },
         resolvedBy: {
-          type: 'INT',
+          type: INTEGER,// 'INT',
           allowNull: true,
           field: 'resolved_by',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,// 'BOOLEAN',
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,// 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },

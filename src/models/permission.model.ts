@@ -1,5 +1,5 @@
 // src/models/permission.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 
 export default class Permission extends Model {
   public id!: number;
@@ -16,34 +16,34 @@ export default class Permission extends Model {
     return Permission.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         name: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: false,
           unique: true,
         },
         description: {
-          type: 'TEXT',
+          type: STRING,
           allowNull: true,
         },
         module: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: false,
         },
         action: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: false,
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },

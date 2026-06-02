@@ -1,5 +1,5 @@
 // src/models/role.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 import User from './user.model';
 import Agent from './agent.model';
 
@@ -19,37 +19,37 @@ export default class Role extends Model {
     return Role.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         name: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: false,
           unique: true,
         },
         description: {
-          type: 'TEXT',
+          type: STRING,
           allowNull: true,
         },
         level: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           defaultValue: 0,
         },
         isSystem: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: false,
           defaultValue: false,
           field: 'is_system',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
@@ -70,7 +70,7 @@ export default class Role extends Model {
     // });
 
     // Role.belongsTo(Agent, {
-      
+
     // })
     Role.belongsToMany(models.Permission, {
       through: models.RolePermission,
@@ -83,4 +83,4 @@ export default class Role extends Model {
 
 
 
-export interface IRole extends Partial<Role>{}
+export interface IRole extends Partial<Role> { }

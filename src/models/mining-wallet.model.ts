@@ -1,5 +1,5 @@
 // src/models/mining-wallet.model.ts
-import { Model } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 
 export default class MiningWallet extends Model {
   public id!: number;
@@ -19,57 +19,57 @@ export default class MiningWallet extends Model {
     return MiningWallet.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         totalEarnings: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'total_earnings',
         },
         withdrawnAmount: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'withdrawn_amount',
         },
         availableBalance: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'available_balance',
         },
         pendingBalance: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'pending_balance',
         },
         currency: {
-          type: 'VARCHAR(10)',
+          type: STRING(10),
           allowNull: false,
           defaultValue: 'USDT',
         },
         walletAddress: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: true,
           unique: true,
           field: 'wallet_address',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         lastUpdated: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'last_updated',
         },
@@ -98,4 +98,4 @@ export default class MiningWallet extends Model {
 }
 
 
-export interface IMiningWallet extends Partial <MiningWallet> { }
+export interface IMiningWallet extends Partial<MiningWallet> { }

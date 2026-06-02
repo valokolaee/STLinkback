@@ -1,5 +1,5 @@
 // src/models/mining-device.model.ts
-import { Model } from 'sequelize';
+import { BIGINT, BOOLEAN, DATE, DECIMAL, ENUM, INTEGER, Model, STRING } from 'sequelize';
 
 export default class MiningDevice extends Model {
   public id!: number;
@@ -31,90 +31,90 @@ export default class MiningDevice extends Model {
     return MiningDevice.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         userId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'user_id',
         },
         walletId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'wallet_id',
         },
         deviceName: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: false,
           field: 'device_name',
         },
         imei: {
-          type: 'VARCHAR(15)',
+          type: STRING(30),
           allowNull: false,
           unique: true,
         },
         deviceModel: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: false,
           field: 'device_model',
         },
         serialNumber: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: true,
           unique: true,
           field: 'serial_number',
         },
         startDate: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'start_date',
         },
         totalUptimeSeconds: {
-          type: 'BIGINT',
+          type: BIGINT,
           allowNull: false,
           defaultValue: 0,
           field: 'total_uptime_seconds',
         },
         totalRevenue: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
           field: 'total_revenue',
         },
         status: {
-          type: 'ENUM("active", "inactive", "maintenance", "offline", "error")',
+          type: ENUM("active", "inactive", "maintenance", "offline", "error"),
           allowNull: false,
           defaultValue: 'active',
         },
         ipAddress: {
-          type: 'VARCHAR(45)',
+          type: STRING(45),
           allowNull: true,
           field: 'ip_address',
         },
         firmwareVersion: {
-          type: 'VARCHAR(50)',
+          type: STRING(50),
           allowNull: true,
           field: 'firmware_version',
         },
         location: {
-          type: 'VARCHAR(255)',
+          type: STRING(255),
           allowNull: true,
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
 
         updatedAt: {
-          type: 'DATETIME',
+          type: DATE,
           allowNull: true,
           field: 'updated_at',
         },

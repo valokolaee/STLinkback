@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import {  BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 
 export default class Setting extends Model {
   public id!: number;
@@ -13,31 +13,31 @@ export default class Setting extends Model {
     return Setting.init(
       {
         id: {
-          type: DataTypes.INTEGER,// 'INT',
+          type: INTEGER,// 'INT',
           autoIncrement: true,
           primaryKey: true,
         },
         name: {
-          type: DataTypes.STRING(255),// 'VARCHAR(255)',
+          type: STRING(255),// 'VARCHAR(255)',
           allowNull: false,
           unique: true,
         },
         value: {
-          type: DataTypes.STRING(255),// 'VARCHAR(255)',
+          type: STRING(255),// 'VARCHAR(255)',
           allowNull: false,
           unique: true,
         },
         description: {
-          type: DataTypes.STRING(255),//'TEXT',
+          type: STRING(255),//'TEXT',
           allowNull: true,
         },
         softDeleted: {
-          type: DataTypes.BOOLEAN,// 'BOOLEAN',
+          type: BOOLEAN,// 'BOOLEAN',
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: DataTypes.DATE,// 'DATETIME',
+          type: DATE,// 'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },

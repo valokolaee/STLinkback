@@ -1,5 +1,5 @@
 // src/models/device-specification.model.ts
-import { Model } from 'sequelize';
+import { DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 
 export default class DeviceSpecification extends Model {
   public id!: number;
@@ -22,37 +22,37 @@ export default class DeviceSpecification extends Model {
     return DeviceSpecification.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
         deviceId: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: false,
           field: 'device_id',
         },
         processorType: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: true,
           field: 'processor_type',
         },
         processorSpeed: {
-          type: 'DECIMAL(8,2)',
+          type:  DECIMAL(8,2),
           allowNull: true,
           field: 'processor_speed',
         },
         memorySize: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: true,
           field: 'memory_size',
         },
         memoryType: {
-          type: 'VARCHAR(50)',
+          type: STRING(50),
           allowNull: true,
           field: 'memory_type',
         },
         storageSize: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: true,
           field: 'storage_size',
         },
@@ -62,7 +62,7 @@ export default class DeviceSpecification extends Model {
           field: 'power_consumption',
         },
         fanCount: {
-          type: 'INT',
+          type: INTEGER,
           allowNull: true,
           field: 'fan_count',
         },

@@ -1,11 +1,11 @@
 // src/models/device-earning.model.ts
-import { Model } from 'sequelize';
+import {  BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 
 export default class DeviceEarning extends Model {
   public id!: number;
   public deviceId!: number;
   public userId!: number;
-  
+
   public miningSessionId!: number | null;
   public amount!: number;
   public currency!: string;
@@ -23,64 +23,64 @@ export default class DeviceEarning extends Model {
     return DeviceEarning.init(
       {
         id: {
-          type: 'INT',
+          type: INTEGER,// 'INT',
           autoIncrement: true,
           primaryKey: true,
         },
         deviceId: {
-          type: 'INT',
+          type: INTEGER,//'INT',
           allowNull: false,
           field: 'device_id',
         },
         userId: {
-          type: 'INT',
+          type: INTEGER,//'INT',
           allowNull: false,
           field: 'user_id',
         },
         miningSessionId: {
-          type: 'INT',
+          type: INTEGER,// 'INT',
           allowNull: true,
           field: 'mining_session_id',
         },
         amount: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15, 8),// 'DECIMAL(15,8)',
           allowNull: false,
           defaultValue: 0.00000000,
         },
         currency: {
-          type: 'VARCHAR(10)',
+          type: STRING,// 'VARCHAR(10)',
           allowNull: false,
           defaultValue: 'USDT',
         },
         earningDate: {
-          type: 'DATETIME',
+          type: DATE,//'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'earning_date',
         },
         calculatedAt: {
-          type: 'DATETIME',
+          type: DATE,//'DATETIME',
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'calculated_at',
         },
         isSettled: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,//'BOOLEAN',
           allowNull: false,
           defaultValue: false,
           field: 'is_settled',
         },
         transactionHash: {
-          type: 'VARCHAR(255)',
+          type: STRING,//'VARCHAR(255)',
           allowNull: true,
           unique: true,
           field: 'transaction_hash',
         },
         exchangeRate: {
-          type: 'DECIMAL(15,8)',
+          type: DECIMAL(15,8),// 'DECIMAL(15,8)',
           allowNull: true,
           field: 'exchange_rate',
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,// 'BOOLEAN',
           allowNull: true,
           defaultValue: false
         },
@@ -126,4 +126,4 @@ export default class DeviceEarning extends Model {
 
 
 
-export interface IDeviceEarning extends Partial <DeviceEarning>{}
+export interface IDeviceEarning extends Partial<DeviceEarning> { }
