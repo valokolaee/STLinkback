@@ -5,8 +5,9 @@ import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
+import { IMiningSession } from '../models/mining-session.model';
 
- 
+
 
 const service = genericService(models.MiningSession)
 
@@ -88,7 +89,9 @@ export default {
         return
       }
 
-      const createdItem = await service.create(data.data);
+      const ms: IMiningSession = { ...data.data, sessionStart:new Date( data.data.sessionStart) }
+
+      const createdItem = await service.create(ms);
 
 
       if (createdItem.ok) {

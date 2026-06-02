@@ -21,10 +21,10 @@ export default async (data: any) => {
       {
         model: Customer,
         as: 'customer',
-        include: [{
-          model: UserWallet,
-          as: 'defaultWallet'
-        }]
+        // include: [{
+        //   model: UserWallet,
+        //   as: 'defaultWallet'
+        // }]
       }]
   });
 

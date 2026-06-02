@@ -105,6 +105,6 @@ export default class MiningSession extends Model {
 }
 
 
-export interface IMiningSession extends Partial <MediaSession>{
+export interface IMiningSession extends Partial <MiningSession>{
   
 }
