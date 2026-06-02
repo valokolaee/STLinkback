@@ -89,7 +89,7 @@ export default {
         return
       }
 
-      const ms: IMiningSession = { ...data.data, sessionStart:new Date( data.data.sessionStart) }
+      const ms: IMiningSession = { ...data.data, sessionStart: new Date(data.data.sessionStart) }
 
       const createdItem = await service.create(ms);
 

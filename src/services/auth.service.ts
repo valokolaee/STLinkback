@@ -62,12 +62,12 @@ export default class {
     }
 
 
-    const wallet = await UserWallet.create(w)
+    // const wallet = await UserWallet.create(w)
 
     const c: ICustomer = {
       userId: user?.id,
       ranking: 'None',
-      defaultWalletId: wallet?.id
+      // defaultWalletId: wallet?.id
 
     }
     await Customer.create(c)
@@ -83,28 +83,28 @@ export default class {
   static async login(data: any) {
     const { email, password } = data;
 
-    // var where = {};
+    var where = {};
 
-    // if (isValidEmail(email)) {
-    //   where = { email };
-    // } else {
-    //   where = { username: email };
-    // }
+    if (isValidEmail(email)) {
+      where = { email };
+    } else {
+      where = { username: email };
+    }
 
-    // var user = await User.findOne({
-    //   where,
-    //   include: [
-    //     {
-    //       model: Customer,
-    //       as: 'customer',
-    //       include: [{
-    //         model: UserWallet,
-    //         as: 'defaultWallet'
-    //       }]
-    //     }]
-    // });
+    var user = await User.findOne({
+      where,
+      include: [
+        {
+          model: Customer,
+          as: 'customer',
+          include: [{
+            model: UserWallet,
+            as: 'defaultWallet'
+          }]
+        }]
+    });
 
-    const user: IUser | null = await getCustomerInfoService(data);
+    // const user: IUser | null = await getCustomerInfoService(data);
     console.log(user);
 
     if (!user) throw new Error('Invalid credentials');
