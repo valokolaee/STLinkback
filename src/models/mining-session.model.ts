@@ -1,5 +1,5 @@
 // src/models/mining-session.model.ts
-import { BOOLEAN, DATE, DECIMAL, INTEGER, Model } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, ENUM, INTEGER, Model } from 'sequelize';
 
 export default class MiningSession extends Model {
   public id!: number;
@@ -47,22 +47,22 @@ export default class MiningSession extends Model {
           field: 'duration_seconds',
         },
         earnings: {
-          type: DECIMAL(15,8),
+          type: DECIMAL(15, 8),
           allowNull: false,
           defaultValue: 0.00000000,
         },
         status: {
-          type: 'ENUM("running", "completed", "interrupted", "failed")',
+          type: ENUM("running", "completed", "interrupted", "failed"),
           allowNull: false,
           defaultValue: 'running',
         },
         avgHashRate: {
-          type: DECIMAL(12,4),
+          type: DECIMAL(12, 4),
           allowNull: true,
           field: 'avg_hash_rate',
         },
         energyConsumed: {
-          type: DECIMAL(10,4),
+          type: DECIMAL(10, 4),
           allowNull: true,
           field: 'energy_consumed',
         },
@@ -105,6 +105,6 @@ export default class MiningSession extends Model {
 }
 
 
-export interface IMiningSession extends Partial <MiningSession>{
-  
+export interface IMiningSession extends Partial<MiningSession> {
+
 }

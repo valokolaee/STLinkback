@@ -62,12 +62,12 @@ export default class {
     }
 
 
-    // const wallet = await UserWallet.create(w)
+    const wallet = await UserWallet.create(w)
 
     const c: ICustomer = {
       userId: user?.id,
       ranking: 'None',
-      // defaultWalletId: wallet?.id
+      defaultWalletId: wallet?.id || 0
 
     }
     await Customer.create(c)
