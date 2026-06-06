@@ -1,4 +1,5 @@
 import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
+import Customer from './customer.model';
 
 export default class UserWallet extends Model {
   public id!: number;
@@ -90,9 +91,9 @@ export default class UserWallet extends Model {
   }
 
   public static associate(models: any) {
-    UserWallet.belongsTo(models.User, {
+    UserWallet.belongsTo(Customer, {
       foreignKey: 'userId',
-      as: 'user',
+      as: 'customer',
     });
   }
 }

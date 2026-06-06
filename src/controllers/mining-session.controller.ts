@@ -90,11 +90,11 @@ export default {
       }
 
 
-      console.log(data.data);
 
       const ms: IMiningSession = { ...data.data }
 
       const createdItem = await service.create(ms);
+      console.log(createdItem);
 
 
       if (createdItem.ok) {

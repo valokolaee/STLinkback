@@ -4,9 +4,7 @@ export const registerSchema = Joi.object({
   username: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  clientType: Joi.string()
-    .valid('individual', 'financial_entities', 'business')
-    .required(),
+  // clientType: Joi.string().valid('individual', 'financial_entities', 'business').required(),
 });
 
 
@@ -20,8 +18,8 @@ export const createDeviceSchema = Joi.object({
   deviceName: Joi.string().min(1).max(255).required(),
   imei: Joi.string().required(),
   deviceModel: Joi.string().min(1).max(100).required(),
-  serialNumber: Joi.string() 
-  
+  serialNumber: Joi.string()
+
 });
 
 
@@ -39,7 +37,7 @@ export const createDeviceEarningSchema = Joi.object({
 export const createMiningWalletSchema = Joi.object({
   userId: Joi.number().required(),
   walletAddress: Joi.string().required(),
-  currency: Joi.string() 
+  currency: Joi.string()
 });
 
 
@@ -47,7 +45,7 @@ export const createUserWalletSchema = Joi.object({
   userId: Joi.number().required(),
   walletAddress: Joi.string().required(),
   nickname: Joi.string().required(),
-  currency: Joi.string() 
+  currency: Joi.string()
 });
 
 export const createWithdrawalRequestSchema = Joi.object({
@@ -61,7 +59,7 @@ export const createWithdrawalRequestSchema = Joi.object({
 export const createMiningSessionSchema = Joi.object({
   userId: Joi.number().required(),
   deviceId: Joi.number().required(),
- 
+
 });
 
 export const deviceEarningReportSchema = Joi.object({

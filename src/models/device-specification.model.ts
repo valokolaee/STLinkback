@@ -1,5 +1,5 @@
 // src/models/device-specification.model.ts
-import { DECIMAL, INTEGER, Model, STRING } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 
 export default class DeviceSpecification extends Model {
   public id!: number;
@@ -37,7 +37,7 @@ export default class DeviceSpecification extends Model {
           field: 'processor_type',
         },
         processorSpeed: {
-          type:  DECIMAL(8,2),
+          type: DECIMAL(8, 2),
           allowNull: true,
           field: 'processor_speed',
         },
@@ -67,21 +67,21 @@ export default class DeviceSpecification extends Model {
           field: 'fan_count',
         },
         hashRate: {
-          type: 'DECIMAL(12,4)',
+          type: DECIMAL(12, 4),
           allowNull: true,
           field: 'hash_rate',
         },
         algorithm: {
-          type: 'VARCHAR(100)',
+          type: STRING(100),
           allowNull: true,
         },
         softDeleted: {
-          type: 'BOOLEAN',
+          type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
         createdAt: {
-          type: 'DATETIME',
+          type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
