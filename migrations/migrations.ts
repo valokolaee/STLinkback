@@ -54,8 +54,7 @@ module.exports = {
         },
         requestedAt: {
           type: 'DATETIME',
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
-          // defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'requested_at',
         },
         processedAt: {

@@ -9,6 +9,7 @@ import User from '../models/user.model';
 
 
 export default async () => {
+  
   try {
     // console.log('Initializing roles...');
     const _roles: IRole[] = initialRolesList;

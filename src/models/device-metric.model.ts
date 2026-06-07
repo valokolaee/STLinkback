@@ -85,7 +85,7 @@ export default class DeviceMetric extends Model {
         },
         recordedAt: {
           type: DataTypes.DATE ,
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'recorded_at',
         },
         softDeleted: {

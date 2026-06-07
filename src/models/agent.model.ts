@@ -35,8 +35,9 @@ export default class Agent extends Model {
         },
         createdAt: {
           type: DATE,// 'DATETIME',
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
-           field: 'created_at',
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          // defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
         },
         softDeleted: {
           type: BOOLEAN,// 'BOOLEAN',

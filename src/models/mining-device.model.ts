@@ -68,7 +68,7 @@ export default class MiningDevice extends Model {
         },
         startDate: {
           type: DATE,
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'start_date',
         },
         totalUptimeSeconds: {
@@ -109,7 +109,7 @@ export default class MiningDevice extends Model {
         },
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
 

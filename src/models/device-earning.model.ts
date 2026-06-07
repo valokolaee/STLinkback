@@ -54,12 +54,12 @@ export default class DeviceEarning extends Model {
         },
         earningDate: {
           type: DATE,//'DATETIME',
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'earning_date',
         },
         calculatedAt: {
           type: DATE,//'DATETIME',
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'calculated_at',
         },
         isSettled: {

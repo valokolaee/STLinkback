@@ -46,11 +46,12 @@ export default class Role extends Model {
         softDeleted: {
           type: BOOLEAN,
           allowNull: true,
-          defaultValue: false
+          defaultValue: false,
+          field:'soft_deleted'
         },
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'created_at',
         },
       },

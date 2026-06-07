@@ -66,7 +66,7 @@ export default class Transaction extends Model {
         },
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'requested_at',
         },
 
