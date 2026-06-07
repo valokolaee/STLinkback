@@ -90,7 +90,7 @@ export default class {
       where = { username: email };
     }
 
-    var user = await User.findOne({
+    var user: IUser | null = await User.findOne({
       where,
       include: [
         {
@@ -100,11 +100,13 @@ export default class {
             model: UserWallet,
             as: 'defaultWallet'
           }]
-        }]
+        }],
+      raw: true,  // Returns plain object, no Sequelize methods
+      nest: true  // Nests the customer object properly
     });
 
     // const user: IUser | null = await getCustomerInfoService(data);
-    console.log(user);
+    // console.log(user);
 
     if (!user) throw new Error('Invalid credentials');
 
@@ -113,7 +115,11 @@ export default class {
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-    return { accessToken: token, user: user.get!({ plain: true }) };
+
+
+    const _u: IUser = { token, ...user, passwordHash: '' };
+
+    return _u
   }
 
   static async authenticate(token: string) {

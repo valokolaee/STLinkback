@@ -1,4 +1,4 @@
-import {  BOOLEAN, DATE, INTEGER, Model } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model } from 'sequelize';
 import User from './user.model';
 import Role from './role.model';
 
@@ -35,8 +35,8 @@ export default class Agent extends Model {
         },
         createdAt: {
           type: DATE,// 'DATETIME',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-          field: 'created_at',
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+           field: 'created_at',
         },
         softDeleted: {
           type: BOOLEAN,// 'BOOLEAN',
@@ -56,6 +56,12 @@ export default class Agent extends Model {
   }
 
   public static associate(models: any) {
+
+    User.hasOne(Agent, {
+      foreignKey: 'userId',
+      as: 'agent',
+    });
+
 
     Agent.belongsTo(User, {
       foreignKey: 'user_id',

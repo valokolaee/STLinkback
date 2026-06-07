@@ -32,7 +32,7 @@ const publicPath = path.join(__dirname, '../src/public');
 
 // Middlewares
 app.use(cors(
-  // corsOptions
+  corsOptions
 ));
 app.options('*', cors(corsOptions));
 

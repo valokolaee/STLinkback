@@ -1,4 +1,4 @@
-import {  BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
+import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 import User, { IUser } from './user.model';
 import MiningSession from './mining-session.model';
 import MiningWallet from './mining-wallet.model';
@@ -68,7 +68,7 @@ export default class Customer extends Model {
 
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'created_at',
         },
 
@@ -102,6 +102,11 @@ export default class Customer extends Model {
       foreignKey: 'userId',
       as: 'customer',
     });
+
+    // Customer.belongsTo(User, {
+    //   foreignKey: 'user_id',
+    //   as: 'customer'
+    // });
 
     Customer.hasMany(models.MiningDevice, {
       foreignKey: 'userId',
@@ -140,7 +145,8 @@ export default class Customer extends Model {
 
 
 export type ICustomer = Partial<Customer> & {
-  defaultWallet?: IUserWallet;
+  // defaultWallet?: IUserWallet;
+
 }
 
 

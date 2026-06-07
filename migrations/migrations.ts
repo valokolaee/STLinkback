@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface: any, sequelize: any) {
- 
+
     await queryInterface.createWithdrawalRequestSchema(
       {
         id: {
@@ -54,7 +54,8 @@ module.exports = {
         },
         requestedAt: {
           type: 'DATETIME',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
+          // defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'requested_at',
         },
         processedAt: {
@@ -88,11 +89,11 @@ module.exports = {
         ]
       }
     )
-    
+
   },
 
   async down(queryInterface: any, sequelize: any) {
 
-    
+
   },
 };

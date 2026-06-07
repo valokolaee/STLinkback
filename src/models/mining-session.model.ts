@@ -32,7 +32,7 @@ export default class MiningSession extends Model {
         },
         sessionStart: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'session_start',
         },
         sessionEnd: {
@@ -73,7 +73,7 @@ export default class MiningSession extends Model {
         },
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'created_at',
         },
       },

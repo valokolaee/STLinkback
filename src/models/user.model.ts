@@ -97,7 +97,7 @@ export default class User extends Model {
         },
         createdAt: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'created_at',
         },
         softDeleted: {
@@ -122,10 +122,14 @@ export default class User extends Model {
 
   public static associate(models: any) {
 
-    User.hasOne(Agent, {
-      foreignKey: 'userId',
-      as: 'agent',
-    });
+    // User.hasOne(Agent, {
+    //   foreignKey: 'userId',
+    //   as: 'agent',
+    // });
+
+
+
+
   }
 }
 

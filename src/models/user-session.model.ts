@@ -60,7 +60,7 @@ export default class UserSession extends Model {
         },
         createdAt: {
           type: 'DATETIME',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'created_at',
         },
       },

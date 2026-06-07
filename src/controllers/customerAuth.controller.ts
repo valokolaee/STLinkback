@@ -8,13 +8,14 @@ import { validate } from '../utils/validator.utils';
 import Role, { IRole } from '../models/role.model';
 import responserUtils from '../utils/responser.utils';
 import initialRolesList, { agentRoles, customer, customerRoles } from '../utils/initialRolesList';
-import { ICustomer } from '../models/customer.model';
+import Customer, { ICustomer } from '../models/customer.model';
+import { log } from 'console';
 
 export default class {
   static async register(req: Request, res: Response) {
     try {
 
-      var _user: Partial<IUser> = {}
+      var _user: IUser = {}
 
       const data = validate(registerSchema, req.body, res);
       console.log(data);
@@ -22,24 +23,30 @@ export default class {
         return
       }
       const result = await authService.register(data);
-      console.log(result);
+      // console.log(result);
 
       if (typeof result === 'string') {
         return res.status(200).json({
           success: false,
           message: result,
         });
-      } else {
 
+      } else {
         _user = { ...result.user, token: result.accessToken, passwordHash: undefined };
       }
+
+
+      await Customer.create({ userId: _user?.id })
 
       return res.status(201).json({
         success: true,
         message: 'User registered successfully',
-        data: _user
-
+        data: _user,
       });
+
+
+
+
     } catch (error: any) {
       return res.status(400).json({
         success: false,
@@ -59,59 +66,76 @@ export default class {
       const data = req?.body;
       // console.log(req.body);
 
-      const result = await authService.login(data);
+      const _user: IUser | null = await authService.login(data);
+
+log(_user)
+
+      // const _user: ICustomer = { ...result.user, token: result.accessToken, passwordHash: undefined };
 
 
-      const _user: ICustomer = { ...result.user, token: result.accessToken, passwordHash: undefined };
+      // const r = customer;// await Role.findByPk(_user.roleId);
 
 
-      const r = customer;// await Role.findByPk(_user.roleId);
+      // const roleName = r?.name;
+      // const baseUrl = req.baseUrl.toString().split('/');
 
-
-      const roleName = r?.name;
-      const baseUrl = req.baseUrl.toString().split('/');
-
-      const api = baseUrl?.length > 0 ? baseUrl[1] : '';
+      // const api = baseUrl?.length > 0 ? baseUrl[1] : '';
 
       // console.log(api, roleName);
 
 
-      var _rolls: IRole[] = [];
+      // var _rolls: IRole[] = [];
       // console.log(_rolls);
 
 
-      if (api === 'api') {
-        _rolls = customerRoles
-      } else if (api === 'panel') {
-        _rolls = agentRoles;
-      } else {
+      if (_user!?.customer!?.id! < 1) {
+
         responserUtils(res, 401, {
           success: false,
-          message: 'Invalid access route'
+          message: 'Access denied'
         });
-        return;
+
+      } else {
+
+        responserUtils(res, 200, {
+          success: true,
+            message: 'Login successful',
+            data: _user
+        })
+
+
+        // return res.status(200).json({
+        //   success: true,
+        //   message: 'Login successful',
+        //   data: _user
+        // });
+
       }
 
-
-      const _permitted = _rolls.some(obj => obj.name === roleName);
-      if (!_permitted) {
-        responserUtils(res, 403, {
-          success: false,
-          message: 'You do not have permission to access this resource'
-        });
-        return;
-      }
+      // else {
+      //   responserUtils(res, 200, {
+      //     success: false,
+      //     message: 'Invalid access route'
+      //   });
+      //   return;
+      // }
 
 
+      // const _permitted = _rolls.some(obj => obj.name === roleName);
+      // if (!_permitted) {
+      //   responserUtils(res, 403, {
+      //     success: false,
+      //     message: 'You do not have permission to access this resource'
+      //   });
+      //   return;
+      // }
 
 
 
-      return res.status(200).json({
-        success: true,
-        message: 'Login successful',
-        data: _user
 
-      });
+
+
+
     } catch (error: any) {
       responserUtils(res, 400, {
         success: false,

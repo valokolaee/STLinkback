@@ -77,7 +77,7 @@ export default class WithdrawalRequest extends Model {
         },
         requestedAt: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'requested_at',
         },
         processedAt: {

@@ -69,7 +69,7 @@ export default class DeviceAlert extends Model {
         },
         createdAt: {
           type: DATE,// 'DATETIME',
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'created_at',
         },
       },

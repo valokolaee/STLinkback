@@ -77,7 +77,7 @@ export default class UserWallet extends Model {
         },
         lastUpdated: {
           type: DATE,
-          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          defaultValue: sequelize.literal('UTC_TIMESTAMP()'),
           field: 'last_updated',
         },
       },
