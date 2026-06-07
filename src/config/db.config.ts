@@ -13,8 +13,17 @@ const dbConfig: Sequelize.Options = {
   database: process.env.DB_NAME,
   port: parseInt(process.env.DB_PORT as string, 10),
   logging: false,
-  timezone: '+00:00'  // Keeps everything in UTC, no conversion
+  timezone: '+00:00' , // Keeps everything in UTC, no conversion
+  dialectOptions: {
+    dateStrings: true, // THIS IS CRITICAL - forces string dates
+    typeCast: true
+  },
+  define: {
+    timestamps: true,
+    underscored: true
+  },
 
+  
 };
 
 export default dbConfig;

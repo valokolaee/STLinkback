@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import "moment/locale/ar";
+// import "moment/locale/ar";
 
 export const dateDifference = (d1: any, d2: any) => {
   // mrvTxtTest.log(d1, d2);
