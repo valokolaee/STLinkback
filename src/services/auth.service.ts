@@ -12,8 +12,12 @@ import UserWallet, { IUserWallet } from '../models/user-wallet.model';
 import Joi from 'joi';
 import isValidEmail from '../utils/isValidEmail';
 import getCustomerInfoService from './getCustomerInfo.service';
+import serviceResponserUtils from '../utils/serviceResponser.utils';
 
 export default class {
+
+
+
   static async register(data: any) {
     const { username, email, password, clientType } = data.data;
 
@@ -24,62 +28,120 @@ export default class {
 
 
     if (_uName?.id! > 0) {
-      return 'username already taken'
+      return serviceResponserUtils({
+        ok: false,
+        data: {
+          code: 409,
+          msg: 'username already taken'
+        }
+      })
     }
     if (_uEmail?.id! > 0) {
-      return 'email already taken'
+      return serviceResponserUtils({
+        ok: false,
+        data: {
+          code: 409,
+          msg: 'email already taken'
+        }
+      })
     }
 
-    // await initializeRoles();
 
-    // const rolls = await models.Role.findAndCountAll()
+    const transaction = await sequelize.transaction();
 
-    // if (rolls.count < 1) {
+    try {
+
+      const user = await User.create({
+        username,
+        email,
+        passwordHash: hashedPassword,
+      }, { transaction });
+      console.log('user', user);
+
+      const customer = await Customer.create({
+        userId: user.id,
+        ranking: 'None'
+      }, { transaction });
+
+      log('customer', customer)
+
+      await user.update({
+        customerId: customer.id
+      }, { transaction });
+
+      await transaction.commit();
+      // console.log('transaction.commit', transaction);
+      // return this.login({ email, password })
+      // 
 
 
-    //   const _rolls: IRole[] =initialRolesList
+      // const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
+      // // return { accessToken: token, user: user.get({ plain: true }) };
 
-    //   for (let index = 0; index < _rolls.length; index++) {
-    //     const role = await models.Role.create(_rolls[index])
-    //   }
 
+      return serviceResponserUtils({
+        ok: true,
+        data: { email, password }//: user.get({ plain: true })
+      })
+
+    } catch (err) {
+
+      await transaction.rollback();
+      console.error(err);
+
+      // throw err;
+      return serviceResponserUtils({
+        ok: false,
+        data: {
+          code: 500,
+          err
+        }
+      })
+
+    }
+
+
+
+
+    // const user = await User.create({
+    //   username,
+    //   email,
+    //   passwordHash: hashedPassword,
+    //   clientType,
+
+    // });
+    // console.log(user);
+
+
+    // const w: IUserWallet = {
+    //   userId: user.id,
+    //   walletAddress: 'samp',
     // }
-
-
-    const user = await User.create({
-      username,
-      email,
-      passwordHash: hashedPassword,
-      clientType,
-      // roleId: 1,
-    });
-
-
-    const w: IUserWallet = {
-      userId: user.id,
-      walletAddress: 'samp',
-    }
 
 
     //TODO const wallet = await UserWallet.create(w)
 
-    const c: ICustomer = {
-      userId: user?.id,
-      ranking: 'None',
-      // defaultWalletId: wallet?.dataValues?.id || 0
+    // const c: ICustomer = {
+    //   userId: user?.id,
+    //   ranking: 'None',
+    //   // defaultWalletId: wallet?.dataValues?.id || 0
 
-    }
-    await Customer.create(c)
-    console.log('user', user);
+    // }
+    // await Customer.create({
+    //   userId: user?.id,
+    //   ranking: 'None',
+    //   // defaultWalletId: wallet?.dataValues?.id || 0
+
+    // })
+    // console.log('user', user);
 
 
 
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-    return { accessToken: token, user: user.get({ plain: true }) };
   }
 
   static async login(data: any) {
+
     const { email, password } = data;
 
     var where = {};
@@ -106,35 +168,49 @@ export default class {
     });
 
     // const user: IUser | null = await getCustomerInfoService(data);
-    // console.log(user);
+    // console.log('this.login', user);
 
-    if (!user) throw new Error('Invalid credentials');
+    // if (!user) throw new Error('Invalid credentials');
+    if (!user) {
+      console.log('User not found')
+      return serviceResponserUtils({
+        ok: false,
+        data: {
+          code: 500,
+        }
+
+      })
+
+    }
 
 
     const isPasswordValid = await bcrypt.compare(password, user?.passwordHash!);
-    if (!isPasswordValid) throw new Error('Invalid credentials');
+
+    // if (!isPasswordValid) throw new Error('Invalid credentials');
+    if (!isPasswordValid) {
+      console.log('Invalid credentials');
+      return serviceResponserUtils({
+        ok: false,
+        data: {
+          code: 500,
+        }
+      })
+    }
+
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
 
 
     const _u: IUser = { token, ...user, passwordHash: '' };
 
-    return _u
+    return serviceResponserUtils({
+      ok: true,
+      data: _u
+    })
+    // return _u
   }
 
-  static async authenticate(token: string) {
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
-      const user = await models.User.findByPk(decoded.id, {
-        include: [{ model: models.Role, as: 'role' }]
-      });
-
-      if (!user) return null;
-      return user;
-    } catch (error) {
-      return null;
-    }
-  }
+  
 }
 
 

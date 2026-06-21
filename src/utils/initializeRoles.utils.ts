@@ -4,12 +4,12 @@ import Role, { IRole } from '../models/role.model';
 import initialRolesList from './initialRolesList';
 import Agent from '../models/agent.model';
 import User from '../models/user.model';
+import genericService from '../services/generic.service';
 
 
 
 
 export default async () => {
-  
   try {
     // console.log('Initializing roles...');
     const _roles: IRole[] = initialRolesList;
@@ -58,6 +58,7 @@ export default async () => {
           clientType: 'admin',
         }
       );
+      console.log(_adminUser);
 
       const _adminAgent = await Agent.create(
         {
@@ -67,7 +68,9 @@ export default async () => {
         }
       );
 
-      console.log(_adminAgent);
+      await genericService(User).update({ id: _adminUser.id, agentId: _adminAgent.id })
+      console.log(_adminUser);
+
 
       console.log('Admin user created');
     } else {

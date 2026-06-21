@@ -1,7 +1,7 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
 import { registerSchema } from '../dtos/dto';
-import { IUser } from '../models/user.model';
+import User, { IUser } from '../models/user.model';
 import authService from '../services/auth.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { validate } from '../utils/validator.utils';
@@ -10,39 +10,67 @@ import responserUtils from '../utils/responser.utils';
 import initialRolesList, { agentRoles, customer, customerRoles } from '../utils/initialRolesList';
 import Customer, { ICustomer } from '../models/customer.model';
 import { log } from 'console';
+import genericService from '../services/generic.service';
+import IServiceResult from '../interfaces/IServiceResult';
 
 export default class {
   static async register(req: Request, res: Response) {
     try {
 
-      var _user: IUser = {}
 
       const data = validate(registerSchema, req.body, res);
       console.log(data);
       if (!data.ok) {
         return
       }
+
+
+
       const result = await authService.register(data);
-      // console.log(result);
 
-      if (typeof result === 'string') {
-        return res.status(200).json({
-          success: false,
-          message: result,
-        });
+      console.log(result);
 
+
+      if (result!.ok) {
+        const _res = await authService.login(result.data)//this.login(result.data, res)
+        console.log('_res', _res);
+
+        return responserUtils(res, 200,
+          {
+            success: true,
+            message: '',
+            data:
+              _res!.data
+          }
+        )
       } else {
-        _user = { ...result.user, token: result.accessToken, passwordHash: undefined };
+        return responserUtils(res, result!.data?.code, result!.data?.msg)
       }
 
+      // console.log(result);
 
-      await Customer.create({ userId: _user?.id })
+      // if (typeof result === 'string') {
+      //   return res.status(200).json({
+      //     success: false,
+      //     message: result,
+      //   });
 
-      return res.status(201).json({
-        success: true,
-        message: 'User registered successfully',
-        data: _user,
-      });
+      // } else {
+      //   _user = { ...result.data, token: result.data.accessToken, passwordHash: undefined };
+      // }
+
+
+      // const _customerAgent = await Customer.create({ userId: _user?.id })
+
+      // await genericService(User).update({ id: _user.id, customerId: _customerAgent.id })
+
+
+
+      // return res.status(201).json({
+      //   success: true,
+      //   message: 'User registered successfully',
+      //   data: _user,
+      // });
 
 
 
@@ -64,11 +92,11 @@ export default class {
       // const data = validate<Record<string, any>>(loginSchema, req.body);
 
       const data = req?.body;
-      // console.log(req.body);
+      console.log('req.body', req?.body);
 
-      const _user: IUser | null = await authService.login(data);
+      const _user: IServiceResult<IUser> = await authService.login(data);
 
-log(_user)
+      // log(_user)
 
       // const _user: ICustomer = { ...result.user, token: result.accessToken, passwordHash: undefined };
 
@@ -88,7 +116,8 @@ log(_user)
       // console.log(_rolls);
 
 
-      if (_user!?.customer!?.id! < 1) {
+      // if (_user!?.data!.customer!?.id! < 1) {
+      if (!_user.ok) {
 
         responserUtils(res, 401, {
           success: false,
@@ -99,8 +128,8 @@ log(_user)
 
         responserUtils(res, 200, {
           success: true,
-            message: 'Login successful',
-            data: _user
+          message: 'Login successful',
+          data: _user.data
         })
 
 

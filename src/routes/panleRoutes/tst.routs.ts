@@ -3,11 +3,13 @@ import { Router } from 'express';
 import earningsController from '../../controllers/tst.controller';
 import { authenticate } from '../../middleware/auth.middleware';
 
-const router = Router();
+const
+    router = Router();
 
 
 router.get('/', authenticate, earningsController.getAll);
 router.get('/:id', authenticate, earningsController.getOne);
+router.post('/getAllBy', authenticate, earningsController.getAllBy);
 router.post('/getAllBy', authenticate, earningsController.getAllBy);
 
 

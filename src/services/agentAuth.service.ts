@@ -5,12 +5,13 @@ import { models } from '../db';
 import Role from '../models/role.model';
 import Agent from '../models/agent.model';
 import User from '../models/user.model';
+import { log } from 'console';
 
 export default class {
 
   static async login(data: any) {
     const { email, password } = data;
-
+    // log(data)
     const user = await User.findOne({
       where: { username: email },
       include: [
@@ -29,11 +30,11 @@ export default class {
 
 
     if (!user) throw new Error('User not found');
-
     console.log(password, user.passwordHash);
 
+
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    // console.log('isPasswordValid',isPasswordValid);
+    console.log('isPasswordValid',isPasswordValid);
     
     if (!isPasswordValid) throw new Error('Invalid credentials');
 

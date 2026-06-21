@@ -27,6 +27,8 @@ export default class Agent extends Model {
           type: INTEGER,
           allowNull: false,
           field: 'user_id',
+          unique: true
+
         },
         roleId: {
           type: INTEGER,
@@ -58,16 +60,13 @@ export default class Agent extends Model {
 
   public static associate(models: any) {
 
-    User.hasOne(Agent, {
-      foreignKey: 'userId',
-      as: 'agent',
-    });
+ 
 
 
-    Agent.belongsTo(User, {
-      foreignKey: 'user_id',
-      as: 'user'
-    });
+    // Agent.belongsTo(User, {
+    //   foreignKey: 'user_id',
+    //   as: 'user'
+    // });
 
     Agent.belongsTo(Role, {
       foreignKey: 'role_id',

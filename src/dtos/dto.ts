@@ -15,6 +15,7 @@ export const loginSchema = Joi.object({
 
 
 export const createDeviceSchema = Joi.object({
+  userId: Joi.number(),
   deviceName: Joi.string().min(1).max(255).required(),
   imei: Joi.string().required(),
   deviceModel: Joi.string().min(1).max(100).required(),

@@ -167,10 +167,9 @@ https.createServer(options, app).listen(PORT, async () => {
     console.error('Unable to connect to the database:', error);
   }
 
+}
 
-  await initializeRolesUtils();
-
-});
+);
 
 
 export default app;

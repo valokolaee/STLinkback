@@ -42,6 +42,9 @@ export default class Customer extends Model {
         userId: {
           type: INTEGER,
           field: 'user_id',
+          unique: true,
+          allowNull: false
+
         },
 
         defaultWalletId: {
@@ -98,10 +101,6 @@ export default class Customer extends Model {
   public static associate(models: any) {
 
 
-    User.hasOne(Customer, {
-      foreignKey: 'userId',
-      as: 'customer',
-    });
 
     // Customer.belongsTo(User, {
     //   foreignKey: 'user_id',

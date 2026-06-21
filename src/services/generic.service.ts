@@ -47,7 +47,7 @@ export default (model: ModelStatic<Model>) => {
       try {
         foreignKey = buildWhereClause<T>(foreignKey)
         console.log(foreignKey);
-        
+
         const items = await model.findAll({
           where: { ...foreignKey, softDeleted: 0 },
           order,
@@ -100,7 +100,7 @@ export default (model: ModelStatic<Model>) => {
     },
 
     async update(object: any) {
-      console.log(object);
+      console.log('object',object);
 
       try {
 

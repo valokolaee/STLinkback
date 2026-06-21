@@ -1,10 +1,12 @@
 // src/models/user.model.ts
 import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 import Agent, { IAgent } from './agent.model';
-import { ICustomer } from './customer.model';
+import Customer, { ICustomer } from './customer.model';
 
 export default class User extends Model {
   public id!: number;
+  
+
   public username!: string;
   public email!: string;
   public passwordHash!: string;
@@ -32,6 +34,7 @@ export default class User extends Model {
           autoIncrement: true,
           primaryKey: true,
         },
+      
         username: {
           type: STRING(255),
           allowNull: false,
@@ -122,13 +125,15 @@ export default class User extends Model {
 
   public static associate(models: any) {
 
-    // User.hasOne(Agent, {
-    //   foreignKey: 'userId',
-    //   as: 'agent',
-    // });
+    User.hasOne(Customer, {
+      foreignKey: 'userId',
+      as: 'customer',
+    });
 
-
-
+    User.hasOne(Agent, {
+      foreignKey: 'userId',
+      as: 'agent',
+    });
 
   }
 }

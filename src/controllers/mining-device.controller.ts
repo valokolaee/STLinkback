@@ -123,16 +123,16 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReq(req).id;
 
       const data = validate(createDeviceSchema, req?.body, res);
       if (!data.ok) {
         return
       }
+      const userId = data?.data?.userId// getUserByReq(req).id;
 
 
       // TODO walletAddress should be a combination of imei and userid in case the owner changes we can have a new wallet with a new address
-      const _deviceWallet: Partial<IMiningWallet> = { userId: userId!, walletAddress: data?.data?.imei, currency: 'USDT' }
+      const _deviceWallet: Partial<IMiningWallet> = { userId: userId!, walletAddress: `CID${userId}_imei${data?.data?.imei}`, currency: 'USDT' }
 
 
       const createdWallet: IServiceResult<IMiningWallet> = await serviceWallet.create(_deviceWallet);
