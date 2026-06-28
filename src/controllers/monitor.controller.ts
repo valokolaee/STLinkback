@@ -2,17 +2,18 @@ import { Request, Response } from 'express';
 import { models } from '../db';
 import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 import { IDeviceAlert } from '../models/device-alert.model';
 import IServiceResult from '../interfaces/IServiceResult';
-import { IMiningWallet } from '../models/mining-wallet.model';
-import { IMiningDevice } from '../models/mining-device.model';
+import MiningWallet, { IMiningWallet } from '../models/mining-wallet.model';
+import MiningDevice, { IMiningDevice } from '../models/mining-device.model';
 import { IDeviceMetric } from '../models/device-metric.model';
 import { IMiningSession } from '../models/mining-session.model';
 import { IWithdrawalRequest } from '../models/withdrawal-request.model';
 import { IDeviceEarning } from '../models/device-earning.model';
+import responserUtils from '../utils/responser.utils';
+import { log } from 'console';
 
 
 
@@ -30,15 +31,15 @@ export default {
 
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -51,6 +52,22 @@ export default {
       const device: IMiningDevice = req?.body;
       const { id: deviceId, imei: walletAddress } = device || {}
 
+      const _deviceInfo: IMiningDevice = await MiningDevice.findByPk(deviceId, {
+        include: [
+          {
+            model: MiningWallet,
+            as: 'wallet',
+          }
+        ],
+        raw: true,  // Returns plain object, no Sequelize methods
+        nest: true  // Nests the customer object properly
+      }) as IMiningDevice
+
+
+
+
+
+
       const _alerts: IServiceResult<IDeviceAlert[]> = await genericService(models.DeviceAlert).getAllBy({ deviceId }, [['createdAt', 'desc']]);
       var _alert = null;
       if (_alerts?.data!?.length > 0) {
@@ -58,7 +75,7 @@ export default {
 
       }
 
-      const _metrics: IServiceResult<IDeviceMetric[]> = await genericService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']],10);
+      const _metrics: IServiceResult<IDeviceMetric[]> = await genericService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']], 10);
 
       var _metric = null;
       if (_metrics?.data!?.length > 0) {
@@ -72,31 +89,30 @@ export default {
         _currentSession = _sessions?.data![0];
       }
 
- 
-      const _deviceWallet: IServiceResult<IMiningWallet> = await genericService(models.MiningWallet).findOne({ walletAddress });
 
-      const items: IServiceResult<IDeviceEarning[]> = await serviceDeviceEarning.getAllBy({ deviceId }, [['calculatedAt', 'desc']],10);
-      
+      // const _deviceWallet: IServiceResult<IMiningWallet> = await genericService(models.MiningWallet).findOne({ walletAddress });
+      const items: IServiceResult<IDeviceEarning[]> = await serviceDeviceEarning.getAllBy({ deviceId }, [['calculatedAt', 'desc']], 10);
+
 
       const monitorData = {
         alerts: _alert,
         metrics: _metric,
-        wallet: _deviceWallet.data,
+        wallet: _deviceInfo!?.wallet,
         session: _currentSession,
-        lastEarnings:items.data
+        lastEarnings: items.data
       }
 
 
 
-      if (_deviceWallet.ok) {
-        responser(res, 200, { success: true, data: monitorData })
+      if (!!_deviceInfo) {
+        return responserUtils(res, 200, { success: true, data: monitorData })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },

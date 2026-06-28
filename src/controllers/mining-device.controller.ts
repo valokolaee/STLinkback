@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 import IResponse from '../interfaces/IResponse';
 import { IMiningDevice } from '../models/mining-device.model';
 import getUserByReq from '../utils/getUserByReq.utils';
-import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import { createDeviceSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import { models } from '../db';
+import { models, sequelize } from '../db';
 import { IMiningWallet } from '../models/mining-wallet.model';
 import IServiceResult from '../interfaces/IServiceResult';
 import { dateDifference } from '../utils/DateTimeHelper';
+import responserUtils from '../utils/responser.utils';
 
 
 
@@ -24,12 +24,12 @@ export default {
       const devices = await service.getAll();
 
       if (devices.ok) {
-        responser(res, 200, {
+        return responserUtils(res, 200, {
           success: true,
           data: devices.data
         })
       } else {
-        responser(res, 404, {
+        return responserUtils(res, 404, {
           success: false,
         })
       }
@@ -49,12 +49,12 @@ export default {
 
       const devices = await service.getOne(id)
       if (devices.ok) {
-        responser(res, 200, {
+        return responserUtils(res, 200, {
           success: true,
           data: devices.data
         })
       } else {
-        responser(res, 404, {
+        return responserUtils(res, 404, {
           success: false,
         })
 
@@ -72,42 +72,33 @@ export default {
   async getAllBy(req: Request, res: Response) {
     try {
 
-      const userId = req.body.userId
-      console.log('fired');
+      const userId = req.body?.userId
 
-      // return responser(res, 200, {
-      //   success: true,
-      //   data: [{}]
-      // })
 
       const devices: IServiceResult<IMiningDevice[]> = await service.getAllBy({ userId });
 
-      // console.log(devices.data);
+
 
 
       var _devs: IMiningDevice[] = []
 
       devices?.data?.forEach(element => {
-        // console.log(
 
-        //   dateDifference(new Date(), element.updatedAt)
-        // );
         _devs.push({
           ...element.dataValues,
           status: (dateDifference(new Date(), element.updatedAt) > 300 || dateDifference(new Date(), element.updatedAt) < 0) ? 'offline' : 'active'
         })
       });
 
-      // console.log(_devs);
 
 
       if (devices.ok) {
-        responser(res, 200, {
+        return responserUtils(res, 200, {
           success: true,
           data: _devs// devices.data
         })
       } else {
-        responser(res, 404, {
+        return responserUtils(res, 404, {
           success: false,
         })
 
@@ -121,38 +112,50 @@ export default {
   },
 
   async create(req: Request, res: Response) {
-
+    // TODO this should be by transaction
+    const transaction = await sequelize.transaction()
     try {
 
       const data = validate(createDeviceSchema, req?.body, res);
       if (!data.ok) {
-        return
+        return data.data
       }
-      const userId = data?.data?.userId// getUserByReq(req).id;
 
 
-      // TODO walletAddress should be a combination of imei and userid in case the owner changes we can have a new wallet with a new address
+
+
+      const userId = data?.data?.userId
+
+
       const _deviceWallet: Partial<IMiningWallet> = { userId: userId!, walletAddress: `CID${userId}_imei${data?.data?.imei}`, currency: 'USDT' }
 
 
-      const createdWallet: IServiceResult<IMiningWallet> = await serviceWallet.create(_deviceWallet);
+      const createdWallet: IServiceResult<IMiningWallet> = await serviceWallet.create(_deviceWallet, { transaction });
       console.log('createdWallet', createdWallet);
+
+
 
       if (!createdWallet.ok) {
         const _res: IResponse<IMiningDevice> = {
           success: false,
           message: 'device create failed due to issue in creating corresponding wallet'
         }
-        responser(res, 400, _res)
+        return responserUtils(res, 400, _res)
 
       }
 
-      const d = data.data
-      const _device: IMiningDevice = { userId: createdWallet.data?.userId, walletId: createdWallet.data?.id, deviceModel: d.deviceModel, serialNumber: d.serialNumber, deviceName: d.deviceName, imei: d.imei }
+      const _dev = data.data
+      const _device: IMiningDevice = { userId: createdWallet.data?.userId, walletId: createdWallet.data?.id, deviceModel: _dev?.deviceModel, serialNumber: _dev?.serialNumber, deviceName: _dev?.deviceName, imei: _dev?.imei }
 
-      const createdDevice = await service.create(_device);
+      const createdDevice = await service.create(_device, { transaction });
 
 
+
+
+      await transaction.commit()
+
+
+      
       if (createdDevice.ok) {
         const device = createdDevice.data
         const wallet = createdWallet.data
@@ -162,10 +165,10 @@ export default {
           data: { device, wallet: wallet! }
         }
 
-        responser(res, 200, _res)
+        return responserUtils(res, 200, _res)
 
       } else {
-        responser(res, 400, {
+        return responserUtils(res, 400, {
           success: false,
           message: 'we regret to inform fail'
         })
@@ -195,10 +198,10 @@ export default {
           data: createdDevice.data
         }
 
-        responser(res, 200, _res)
+        return responserUtils(res, 200, _res)
 
       } else {
-        responser(res, 400, {
+        return responserUtils(res, 400, {
           success: false,
           data: createdDevice.data
         })
@@ -230,12 +233,12 @@ export default {
           message: `${deletedDevice.data} devices were deleted`
         }
 
-        responser(res, 200, _res)
+        return responserUtils(res, 200, _res)
 
       } else {
 
 
-        responser(res, 400, {
+        return responserUtils(res, 400, {
           success: false,
           data: deletedDevice.data
         })

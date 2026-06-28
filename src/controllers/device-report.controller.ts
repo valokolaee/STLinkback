@@ -31,7 +31,7 @@ export default class DeviceReportController {
 
       const result = await deviceReportService.recordEarning({
         ...req.body,
-        
+
         clientIP,
       });
 

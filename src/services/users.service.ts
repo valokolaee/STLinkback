@@ -19,7 +19,6 @@ export default class {
     
     const users = await User.findAll({
       where: {
-        // customerId: { [Op.gt]: 0 },
 
         [Op.or]: [
           { username: { [Op.like]: `%${searchTerm || ''}%` } },
@@ -40,10 +39,6 @@ export default class {
       raw: true,  // Returns plain object, no Sequelize methods
       nest: true  // Nests the customer object properly
     });
-
-    const cs = await Customer.findAll({
-      raw: true
-    })
 
     return serviceResponserUtils({
       ok: true,

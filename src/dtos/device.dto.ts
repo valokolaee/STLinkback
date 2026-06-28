@@ -3,6 +3,7 @@
 import Joi from 'joi';
 
 export const deviceEarningReportSchema = Joi.object({
+  amount: Joi.number().positive().required(),
   imei: Joi.string().length(30).pattern(/^[0-9a-fA-F]+$/).required(),
   currency: Joi.string().min(2).max(10).required(),
   ipAddress: Joi.string().ip({ version: ['ipv4', 'ipv6'] }).optional(),

@@ -1,18 +1,13 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { sequelize, models } from '../db';
-import { UserService } from './user.service';
-import { log } from 'console';
-import Role, { IRole } from '../models/role.model';
-import initialRolesList from '../utils/initialRolesList';
+import { sequelize } from '../db';
+import Customer from '../models/customer.model';
+import UserWallet from '../models/user-wallet.model';
 import User, { IUser } from '../models/user.model';
-import Customer, { ICustomer } from '../models/customer.model';
-import UserWallet, { IUserWallet } from '../models/user-wallet.model';
-import Joi from 'joi';
 import isValidEmail from '../utils/isValidEmail';
-import getCustomerInfoService from './getCustomerInfo.service';
 import serviceResponserUtils from '../utils/serviceResponser.utils';
+import { UserService } from './user.service';
 
 export default class {
 
@@ -56,32 +51,25 @@ export default class {
         email,
         passwordHash: hashedPassword,
       }, { transaction });
-      console.log('user', user);
 
+ 
       const customer = await Customer.create({
         userId: user.id,
         ranking: 'None'
       }, { transaction });
 
-      log('customer', customer)
-
+ 
       await user.update({
         customerId: customer.id
       }, { transaction });
 
       await transaction.commit();
-      // console.log('transaction.commit', transaction);
-      // return this.login({ email, password })
-      // 
 
-
-      // const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-      // // return { accessToken: token, user: user.get({ plain: true }) };
 
 
       return serviceResponserUtils({
         ok: true,
-        data: { email, password }//: user.get({ plain: true })
+        data: { email, password }
       })
 
     } catch (err) {
@@ -89,8 +77,7 @@ export default class {
       await transaction.rollback();
       console.error(err);
 
-      // throw err;
-      return serviceResponserUtils({
+       return serviceResponserUtils({
         ok: false,
         data: {
           code: 500,
@@ -210,7 +197,7 @@ export default class {
     // return _u
   }
 
-  
+
 }
 
 

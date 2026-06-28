@@ -1,4 +1,4 @@
-import { Model, ModelStatic, Order, WhereOptions } from 'sequelize';
+import { Model, ModelStatic, Order, TransactionOptions, WhereOptions } from 'sequelize';
 import serviceResponser from '../utils/serviceResponser.utils';
 import buildWhereClause from '../utils/buildWhereClause';
 
@@ -84,10 +84,10 @@ export default (model: ModelStatic<Model>) => {
     },
 
 
-    async create(object: any) {
+    async create(object: any, tr: TransactionOptions) {
 
       try {
-        const item = await model.create(object);
+        const item = await model.create(object,tr);
 
         return serviceResponser({ ok: true, data: item })
 

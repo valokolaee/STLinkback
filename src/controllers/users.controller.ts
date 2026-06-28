@@ -48,7 +48,7 @@ export default {
       const users = await usersService.search({searchTerm});
       responser(res, 200, {
         // message: 'thanks',
-        data: users,
+        data: users.data,
         success: true
 
       })

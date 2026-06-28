@@ -1,5 +1,6 @@
 // src/models/mining-device.model.ts
 import { BIGINT, BOOLEAN, DATE, DECIMAL, ENUM, INTEGER, Model, STRING } from 'sequelize';
+import MiningWallet, { IMiningWallet } from './mining-wallet.model';
 
 export default class MiningDevice extends Model {
   public id!: number;
@@ -134,7 +135,7 @@ export default class MiningDevice extends Model {
       as: 'user',
     });
 
-    MiningDevice.belongsTo(models.MiningWallet, {
+    MiningDevice.belongsTo(MiningWallet, {
       foreignKey: 'walletId',
       as: 'wallet',
     });
@@ -168,4 +169,6 @@ export default class MiningDevice extends Model {
 
 
 
-export interface IMiningDevice extends Partial<MiningDevice> { }
+export interface IMiningDevice extends Partial<MiningDevice> {
+  wallet?:IMiningWallet
+ }
