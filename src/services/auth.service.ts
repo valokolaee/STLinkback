@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { sequelize } from '../db';
-import Customer from '../models/customer.model';
-import UserWallet from '../models/user-wallet.model';
-import User, { IUser } from '../models/user.model';
+import { sequelize } from '../db/db';
+import Customer from '../db/models/customer.model';
+import UserWallet from '../db/models/user-wallet.model';
+import User, { IUser } from '../db/models/user.model';
 import isValidEmail from '../utils/isValidEmail';
 import serviceResponserUtils from '../utils/serviceResponser.utils';
 import { UserService } from './user.service';
@@ -52,13 +52,13 @@ export default class {
         passwordHash: hashedPassword,
       }, { transaction });
 
- 
+
       const customer = await Customer.create({
         userId: user.id,
         ranking: 'None'
       }, { transaction });
 
- 
+
       await user.update({
         customerId: customer.id
       }, { transaction });
@@ -77,7 +77,7 @@ export default class {
       await transaction.rollback();
       console.error(err);
 
-       return serviceResponserUtils({
+      return serviceResponserUtils({
         ok: false,
         data: {
           code: 500,
@@ -145,10 +145,10 @@ export default class {
         {
           model: Customer,
           as: 'customer',
-          include: [{
-            model: UserWallet,
-            as: 'defaultWallet'
-          }]
+          // include: [{
+          //   model: UserWallet,
+          //   as: 'defaultWallet'
+          // }]
         }],
       raw: true,  // Returns plain object, no Sequelize methods
       nest: true  // Nests the customer object properly

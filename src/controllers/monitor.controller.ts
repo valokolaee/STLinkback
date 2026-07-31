@@ -1,17 +1,17 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
+import { models } from '../db/db';
 import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
-import { IDeviceAlert } from '../models/device-alert.model';
+import { IDeviceAlert } from '../db/models/device-alert.model';
 import IServiceResult from '../interfaces/IServiceResult';
-import MiningWallet, { IMiningWallet } from '../models/mining-wallet.model';
-import MiningDevice, { IMiningDevice } from '../models/mining-device.model';
-import { IDeviceMetric } from '../models/device-metric.model';
-import { IMiningSession } from '../models/mining-session.model';
-import { IWithdrawalRequest } from '../models/withdrawal-request.model';
-import { IDeviceEarning } from '../models/device-earning.model';
+import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
+import { IDeviceMetric } from '../db/models/device-metric.model';
+import { IMiningSession } from '../db/models/mining-session.model';
+import { IWithdrawalRequest } from '../db/models/withdrawal-request.model';
+import { IDeviceEarning } from '../db/models/device-earning.model';
 import responserUtils from '../utils/responser.utils';
 import { log } from 'console';
 
@@ -50,13 +50,13 @@ export default {
     try {
 
       const device: IMiningDevice = req?.body;
-      const { id: deviceId, imei: walletAddress } = device || {}
+      const { id: deviceId, } = device || {}
 
       const _deviceInfo: IMiningDevice = await MiningDevice.findByPk(deviceId, {
         include: [
           {
-            model: MiningWallet,
-            as: 'wallet',
+            model: DeviceEarningPot,
+            as: 'currentPot',
           }
         ],
         raw: true,  // Returns plain object, no Sequelize methods
@@ -90,14 +90,14 @@ export default {
       }
 
 
-      // const _deviceWallet: IServiceResult<IMiningWallet> = await genericService(models.MiningWallet).findOne({ walletAddress });
+
       const items: IServiceResult<IDeviceEarning[]> = await serviceDeviceEarning.getAllBy({ deviceId }, [['calculatedAt', 'desc']], 10);
 
 
       const monitorData = {
         alerts: _alert,
         metrics: _metric,
-        wallet: _deviceInfo!?.wallet,
+        wallet: _deviceInfo!?.currentPot,
         session: _currentSession,
         lastEarnings: items.data
       }

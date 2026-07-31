@@ -1,13 +1,13 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { sequelize, models } from '../db';
+import { sequelize, models } from '../db/db';
 import { UserService } from './user.service';
 import { log } from 'console';
 import getUserByReq from '../utils/getUserByReq.utils';
 import IServiceResult from '../interfaces/IServiceResult';
 import serviceResponser from '../utils/serviceResponser.utils';
-import { IDeviceEarning } from '../models/device-earning.model';
+import { IDeviceEarning } from '../db/models/device-earning.model';
 
 export default class {
 

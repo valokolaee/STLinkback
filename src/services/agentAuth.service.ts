@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { models } from '../db';
-import Role from '../models/role.model';
-import Agent from '../models/agent.model';
-import User from '../models/user.model';
+import { models } from '../db/db';
+import Role from '../db/models/role.model';
+import Agent from '../db/models/agent.model';
+import User from '../db/models/user.model';
 import { log } from 'console';
 
 export default class {
@@ -34,8 +34,8 @@ export default class {
 
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    console.log('isPasswordValid',isPasswordValid);
-    
+    console.log('isPasswordValid', isPasswordValid);
+
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });

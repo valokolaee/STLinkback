@@ -1,7 +1,7 @@
 // src/middleware/auth.middleware.ts
 import { Request, Response } from 'express';
-import Role, { IRole } from '../models/role.model';
-import { IUser } from '../models/user.model';
+import Role, { IRole } from '../db/models/role.model';
+import { IUser } from '../db/models/user.model';
 import { agentRoles, customerRoles } from './initialRolesList';
 import responserUtils from './responser.utils';
 
@@ -29,7 +29,7 @@ export default async (req: Request, res: Response, user: IUser) => {
       });
       return;
     }
-    
+
 
 
     const _permitted = _rolls.some(obj => obj.name === roleName);

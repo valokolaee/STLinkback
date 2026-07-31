@@ -4,7 +4,7 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import corsOptions from './config/cors.options';
-import { sequelize } from './db';
+import { sequelize } from './db/db';
 
 import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
@@ -16,6 +16,7 @@ import customerRouts from './routes/customerRoutes';
 import panelRouts from './routes/panleRoutes';
 import mxRoutes from './routes/mxRoutes';
 import initializeRolesUtils from './utils/initializeRoles.utils';
+import { resetDatabase } from './db/db.init';
 // import './cron/cleanup.cron';
 
 
@@ -58,7 +59,6 @@ app.use('/mx', mxRoutes);
 // app.use('/api/mining-devicesReport', miningDeviceReportRoutes);
 // app.use('/api/mining-devices', miningDeviceRoutes);
 
-// app.use('/api/mining-wallet', miningWalletRoutes);
 // app.use('/api/user-wallet', userWalletRoutes);
 // app.use('/api/mining-session', miningSessionRoutes);
 // app.use('/api/device-earnings', deviceEarningsRoutes);
@@ -155,15 +155,15 @@ const options = {
 
 https.createServer(options, app).listen(PORT, async () => {
   try {
+    // await resetDatabase()
+
     await sequelize.authenticate();
+
     console.log('Database connection established successfully.');
     console.log(`Server is running on http://localhost:${PORT}`);
     console.log(`Backend URL: https://w.bankon.click`);
 
-  }
-
-
-  catch (error) {
+  } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
 

@@ -1,14 +1,14 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
 import { registerSchema } from '../dtos/dto';
-import User, { IUser } from '../models/user.model';
+import User, { IUser } from '../db/models/user.model';
 import authService from '../services/auth.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { validate } from '../utils/validator.utils';
-import Role, { IRole } from '../models/role.model';
+import Role, { IRole } from '../db/models/role.model';
 import responserUtils from '../utils/responser.utils';
 import initialRolesList, { agentRoles, customer, customerRoles } from '../utils/initialRolesList';
-import Customer, { ICustomer } from '../models/customer.model';
+import Customer, { ICustomer } from '../db/models/customer.model';
 import { log } from 'console';
 import genericService from '../services/generic.service';
 import IServiceResult from '../interfaces/IServiceResult';
@@ -183,7 +183,7 @@ export default class {
       if (!!!user) {
         return
       }
-      const role = user.role ? user.role.name : null;
+      // const role = user.role ? user.role.name : null;
 
       return res.status(200).json({
         success: true,

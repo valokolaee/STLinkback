@@ -50,7 +50,7 @@ export default class DeviceReportController {
 
 
     } catch (error) {
-      log(error)
+
     }
   }
 

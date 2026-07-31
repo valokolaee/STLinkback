@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
+import { models } from '../db/db';
 import { createDeviceEarningSchema } from '../dtos/dto';
 import IServiceResult from '../interfaces/IServiceResult';
-import { IDeviceEarning } from '../models/device-earning.model';
-import MiningWallet, { IMiningWallet } from '../models/mining-wallet.model';
+import { IDeviceEarning } from '../db/models/device-earning.model';
+import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 import genericService from '../services/generic.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
@@ -11,7 +11,7 @@ import { validate } from '../utils/validator.utils';
 
 
 const service = genericService(models.DeviceEarning)
-const serviceWallet = genericService(models.MiningWallet)
+const serviceWallet = genericService(models.DeviceEarningPot)
 
 export default {
 
@@ -103,7 +103,7 @@ export default {
 
         const mwID = walletId
 
-        var mw: IMiningWallet = (await serviceWallet.getOne(mwID)).data
+        var mw: IDeviceEarningPot = (await serviceWallet.getOne(mwID)).data
 
         const newBalance =
           parseFloat(mw.availableBalance!.toString())

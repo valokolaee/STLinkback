@@ -1,5 +1,5 @@
 // src/seeds/role-seed.ts
-import { Role } from '../models/Role';
+import { Role } from '../db/models/Role';
 
 export const seedRoles = async () => {
   await Role.bulkCreate([

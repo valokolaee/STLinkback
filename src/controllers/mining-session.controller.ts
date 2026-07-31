@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
+import { models } from '../db/db';
 import { createMiningSessionSchema, createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
-import { IMiningSession } from '../models/mining-session.model';
+import { IMiningSession } from '../db/models/mining-session.model';
 
 
 

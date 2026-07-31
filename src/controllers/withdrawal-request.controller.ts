@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
+import { models } from '../db/db';
 import { createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
@@ -7,20 +7,21 @@ import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import miningWalletService from '../services/miningWallet.service';
 import IServiceResult from '../interfaces/IServiceResult';
-import { IMiningWallet } from '../models/mining-wallet.model';
-import { IWithdrawalRequest } from '../models/withdrawal-request.model';
+import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import { IWithdrawalRequest } from '../db/models/withdrawal-request.model';
 import { safeParseFloat } from '../utils/math.utils';
-import { IUserWallet } from '../models/user-wallet.model';
+import { IUserWallet } from '../db/models/user-wallet.model';
 import userWalletService from '../services/userWallet.service';
-import { IUser } from '../models/user.model';
+import { IUser } from '../db/models/user.model';
 import IWithdrawalRequestWithUser from '../interfaces/IWithdrawalRequest';
+import responserUtils from '../utils/responser.utils';
 
 
 
 
 const userService = genericService(models.User)
-const service = genericService(models.WithdrawalRequest)
-const serviceMiningWallet = genericService(models.MiningWallet)
+const withdrawalRequestService = genericService(models.WithdrawalRequest)
+const serviceMiningWallet = genericService(models.DeviceEarningPot)
 const serviceUserWallet = genericService(models.UserWallet)
 
 
@@ -29,7 +30,7 @@ export default {
   async getAll(req: Request, res: Response) {
     try {
 
-      const items = await service.getAll([['requestedAt', 'DESC']]);
+      const items = await withdrawalRequestService.getAll([['requestedAt', 'DESC']]);
       // console.log(items.data);
 
 
@@ -68,7 +69,7 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const items = await service.getOne(id)
+      const items = await withdrawalRequestService.getOne(id)
 
       if (items.ok) {
 
@@ -94,7 +95,7 @@ export default {
       const { userId, miningWalletAddress, status } = req.body as IWithdrawalRequest;
       // console.log(req.body);
 
-      const items: IServiceResult<IWithdrawalRequest[]> = await service.getAllBy<IWithdrawalRequest>({ userId, status, miningWalletAddress, }, [['requestedAt', 'desc']]);
+      const items: IServiceResult<IWithdrawalRequest[]> = await withdrawalRequestService.getAllBy<IWithdrawalRequest>({ userId, status, miningWalletAddress, }, [['requestedAt', 'desc']]);
 
 
       if (items.ok) {
@@ -137,9 +138,9 @@ export default {
       }
 
 
-      const _mw: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress!)
+      const _mw: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress!)
 
-      const _MW_newBalance = _mw?.data?.availableBalance! - data?.data?.amount!
+      const _MW_newBalance = 0//_mw?.data?.availableBalance! - data?.data?.amount!
 
       if (_MW_newBalance < 0) {
         responser(res, 400, { success: false, message: 'request amount more than available balance' })
@@ -147,7 +148,7 @@ export default {
         return
       }
 
-      const createdItem: IServiceResult<IWithdrawalRequest> = await service.create(data.data);
+      const createdItem: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.create(data.data);
 
 
       if (createdItem.ok) {
@@ -195,7 +196,7 @@ export default {
 
       const _withDraw: IWithdrawalRequest = req.body
 
-      const previous: IServiceResult<IWithdrawalRequest> = await service.getOne(_withDraw.id!)
+      const previous: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.getOne(_withDraw.id!)
 
       switch (previous.data!.status) {
 
@@ -204,16 +205,15 @@ export default {
         case 'rejected':
         case 'failed':
 
-          responser(res, 400, { success: true, message: 'This request is finalized and CAN NOT be altered' })
-          return
+          return responserUtils(res, 400, { success: true, message: 'This request is finalized and CAN NOT be altered' })
       }
 
 
-      const updatedItems = await service.update(_withDraw);
+      const updatedItems = await withdrawalRequestService.update(_withDraw);
 
-      if (updatedItems.ok) {
+      if (updatedItems?.ok) {
 
-        const _miningWallet: IServiceResult<IMiningWallet> = await miningWalletService.getOneByAddress(_withDraw.miningWalletAddress!)
+        const _miningWallet: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(_withDraw.miningWalletAddress!)
 
         const _userWallet: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(_withDraw!?.userWalletAddress!)
 
@@ -309,7 +309,7 @@ export default {
       const id = parseInt(req?.params.id || '0')
       console.log(id);
 
-      const deletedItems = await service.delete(id);
+      const deletedItems = await withdrawalRequestService.delete(id);
 
       if (deletedItems.ok) {
 

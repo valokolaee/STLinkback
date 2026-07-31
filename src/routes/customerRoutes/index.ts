@@ -2,6 +2,7 @@ import express from 'express';
 import authRoutes from './auth.routes';
 import deviceEarningsRoutes from './device-earning.routes';
 import miningDeviceRoutes from './mining-device.routes';
+import transactionsRoutes from './transactions.routes';
 import miningWalletRoutes from './mining-wallet.routes';
 import userWalletRoutes from './user-wallet.routes';
 import userRoutes from './user.routes';
@@ -40,6 +41,7 @@ customer.use('/role', roleRoutes);
 
 customer.use('/monitor', monitor);
 customer.use('/mining-devices', miningDeviceRoutes);
+customer.use('/transactions', transactionsRoutes);
 
 
 

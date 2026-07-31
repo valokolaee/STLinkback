@@ -1,7 +1,7 @@
 // src/controllers/auth.controller.ts
 import { Request, Response } from 'express';
-import { IAgent } from '../models/agent.model';
-import { IRole } from '../models/role.model';
+import { IAgent } from '../db/models/agent.model';
+import { IRole } from '../db/models/role.model';
 import agentAuthService from '../services/agentAuth.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { agentRoles, customerRoles } from '../utils/initialRolesList';

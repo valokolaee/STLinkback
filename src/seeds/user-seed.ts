@@ -1,5 +1,5 @@
 // src/seeds/user-seed.ts
-import { User } from '../models/User';
+import { User } from '../db/models/User';
 import bcrypt from 'bcryptjs';
 
 export const seedUsers = async () => {

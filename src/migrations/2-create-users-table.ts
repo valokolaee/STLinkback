@@ -1,6 +1,6 @@
 // src/migrations/2-create-users-table.ts
 import { DataTypes } from 'sequelize';
-import { sequelize } from '../db';
+import { sequelize } from '../db/db';
 
 export const up = async () => {
   await sequelize.getQueryInterface().createTable('users', {

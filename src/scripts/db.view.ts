@@ -1,5 +1,5 @@
 // scripts/db_view.ts
-import { sequelize, models } from '../db';
+import { sequelize, models } from '../db/db';
 
 (async () => {
   try {

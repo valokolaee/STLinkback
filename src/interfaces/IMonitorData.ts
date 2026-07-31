@@ -1,9 +1,9 @@
 
-import { IDeviceAlert } from '../models/device-alert.model';
-import { IDeviceEarning } from '../models/device-earning.model';
-import { IDeviceMetric } from '../models/device-metric.model';
-import { IMiningSession } from '../models/mining-session.model';
-import { IMiningWallet } from '../models/mining-wallet.model';
+import { IDeviceAlert } from '../db/models/device-alert.model';
+import { IDeviceEarning } from '../db/models/device-earning.model';
+import { IDeviceMetric } from '../db/models/device-metric.model';
+import { IMiningSession } from '../db/models/mining-session.model';
+import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 
 
 
@@ -13,9 +13,9 @@ import { IMiningWallet } from '../models/mining-wallet.model';
 export interface IMonitorData {
   alerts?: IDeviceAlert[];
   metrics?: IDeviceMetric[];
-  wallet?: IMiningWallet;
+  wallet?: IDeviceEarningPot;
   session?: IMiningSession;
-  lastEarnings?:IDeviceEarning[]
+  lastEarnings?: IDeviceEarning[]
 
 }
 

@@ -1,8 +1,8 @@
 // src/cron/cleanup.cron.ts
 import cron from 'node-cron';
 import { Op } from 'sequelize';
-import DeviceMetric from '../models/device-metric.model';
-import DeviceEarning from '../models/device-earning.model';
+import DeviceMetric from '../db/models/device-metric.model';
+import DeviceEarning from '../db/models/device-earning.model';
 
 const KEEP_LIMIT = 1000;
 

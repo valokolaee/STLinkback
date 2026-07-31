@@ -1,6 +1,6 @@
-import { IUser } from '../models/user.model';
+import User, { IUser } from '../db/models/user.model';
 import IRequest from '../interfaces/IRequest';
-import { ICustomer } from '../models/customer.model';
-import { IAgent } from '../models/agent.model';
- 
-export default (req: IRequest) =>  req!?.user!.get({ plain: true })
+import { ICustomer } from '../db/models/customer.model';
+import { IAgent } from '../db/models/agent.model';
+
+export default (req: IRequest):User => req!?.user!.get({ plain: true })

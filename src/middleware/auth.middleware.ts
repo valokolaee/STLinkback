@@ -2,13 +2,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { models } from '../db';
+import { models } from '../db/db';
 import responserUtils from '../utils/responser.utils';
-import Role, { IRole } from '../models/role.model';
+import Role, { IRole } from '../db/models/role.model';
 import genericService from '../services/generic.service';
 import initialRolesList, { agentRoles, customerRoles } from '../utils/initialRolesList';
-import Agent from '../models/agent.model';
-import User from '../models/user.model';
+import Agent from '../db/models/agent.model';
+import User from '../db/models/user.model';
 
 export const authenticate = async (
   req: Request,
@@ -79,7 +79,7 @@ export const authenticate = async (
       const roleName = r?.name;
       _rolls = agentRoles;
       const _permitted = _rolls.some(obj => obj.name === roleName);
-      
+
       if (!_permitted) {
         responserUtils(res, 403, {
           success: false,

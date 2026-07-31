@@ -15,7 +15,7 @@ export const validate = (schema: Joi.ObjectSchema, data: any, res: Response) => 
     })
 
     return serviceResult({
-      ok: false
+      ok: false,
     })
 
   }

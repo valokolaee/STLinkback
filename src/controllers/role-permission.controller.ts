@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
+import { models } from '../db/db';
 import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
@@ -61,8 +61,8 @@ export default {
   async getAllBy(req: Request, res: Response) {
     try {
 
-      const userId =getUserByReqUtils(req).id;
-   return   responser(res, 200, { success: true, data:{userId} })
+      const userId = getUserByReqUtils(req).id;
+      return responser(res, 200, { success: true, data: { userId } })
 
       const items = await service.getAllBy({ userId });
 

@@ -1,20 +1,20 @@
 //src/services/onEarningRecorded.service.ts
 
 import { DATE, Model, ModelStatic } from 'sequelize';
-import { models } from '../db';
-import MiningSession, { IMiningSession } from '../models/mining-session.model';
+import { models } from '../db/db';
+import MiningSession, { IMiningSession } from '../db/models/mining-session.model';
 import { safeParseFloat } from '../utils/math.utils';
 import genericService from './generic.service';
-import MiningWallet, { IMiningWallet } from '../models/mining-wallet.model';
-import MiningDevice, { IMiningDevice } from '../models/mining-device.model';
+import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
 
 class OnEarningRecordedService {
-  async updateWallet(wallet: MiningWallet, device: MiningDevice, amount: number, session: MiningSession) {
+  async updateWallet(pot: DeviceEarningPot, device: MiningDevice, amount: number, session: MiningSession) {
 
-    if (!wallet) throw new Error('Wallet not found');
+    if (!pot) throw new Error('Wallet not found');
 
-    const newAvailableBalance = safeParseFloat(wallet.availableBalance) + safeParseFloat(amount);
-    const newTotalEarnings = safeParseFloat(wallet.totalEarnings) + safeParseFloat(amount);
+    const newAvailableBalance = safeParseFloat(pot.availableBalance) + safeParseFloat(amount);
+    const newTotalEarnings = safeParseFloat(pot.totalEarnings) + safeParseFloat(amount);
     const newSessionEarnings = safeParseFloat(session.earnings) + safeParseFloat(amount);
 
 
@@ -30,7 +30,7 @@ class OnEarningRecordedService {
     } as IMiningSession)
 
 
-    await wallet.update({
+    await pot.update({
       availableBalance: newAvailableBalance,
       totalEarnings: newTotalEarnings,
       lastUpdated: new Date(),

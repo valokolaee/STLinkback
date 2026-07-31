@@ -1,5 +1,5 @@
 import { extend } from "joi";
-import User from "../models/user.model";
+import User from "../db/models/user.model";
 import { Request, Response } from 'express';
 
 export default interface IRequest<T = any> extends Request {

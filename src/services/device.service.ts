@@ -1,9 +1,9 @@
-import { models } from '../db';
-import { IMiningDevice } from '../models/mining-device.model';
+import { models } from '../db/db';
+import { IMiningDevice } from '../db/models/mining-device.model';
 import serviceResponser from '../utils/serviceResponser.utils';
 import genericService from './generic.service';
 
- 
+
 export default class <T> {
 
 

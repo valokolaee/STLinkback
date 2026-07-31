@@ -1,6 +1,6 @@
-import Customer from '../models/customer.model';
-import UserWallet from '../models/user-wallet.model';
-import User, { IUser } from '../models/user.model';
+import Customer from '../db/models/customer.model';
+import UserWallet from '../db/models/user-wallet.model';
+import User, { IUser } from '../db/models/user.model';
 import isValidEmail from '../utils/isValidEmail';
 
 

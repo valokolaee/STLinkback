@@ -1,16 +1,19 @@
 import { Request, Response } from 'express';
-import { models } from '../db';
 import { createMiningWalletSchema, createUserWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
-import { IUserWallet } from '../models/user-wallet.model';
 import IServiceResult from '../interfaces/IServiceResult';
+import { models } from '../db/db';
+ import responserUtils from '../utils/responser.utils';
+import getUserByReqUtils from '../utils/getUserByReq.utils';
+import { log } from 'console';
+import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
 
 
 
 
-const service = genericService(models.UserWallet)
+const service = genericService(UserWallet)
 
 export default {
 
@@ -79,30 +82,31 @@ export default {
   },
 
   async create(req: Request, res: Response) {
-
+    const userId = getUserByReqUtils(req).id
+    log('userId', userId)
     try {
 
       const data: IServiceResult<IUserWallet> = validate(createUserWalletSchema, req?.body, res);
 
       if (!data.ok) {
-        return
+        return responserUtils(res, 400, data)
       }
 
-      const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId: data.data!.userId });
+      const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId });
       // console.log(w);
       if (w.data!?.id! > 0) {
         responser(res, 400, { success: false, message: 'Wallet address already exists' })
         return
       }
 
-      const w2 = await service.findOne({ nickname: data.data!.nickname, userId: data.data!.userId });
+      const w2 = await service.findOne({ nickname: data.data!.nickname, userId });
       // console.log(w);
       if (w2.data!?.id! > 0) {
 
         return responser(res, 400, { success: false, message: 'Wallet nickname already exists' })
       }
 
-      const createdItem = await service.create(data.data);
+      const createdItem = await service.create({ ...data.data, userId });
 
 
       if (createdItem.ok) {

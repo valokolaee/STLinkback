@@ -1,0 +1,17 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: stlink-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: stlink_dev
+      MYSQL_USER: stlink
+      MYSQL_PASSWORD: stlink_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - stlink_mysql_data:/var/lib/mysql
+
+volumes:
+  stlink_mysql_data:

@@ -1,6 +1,6 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
-import controller from '../../controllers/mining-wallet.controller';
+import controller from '../../controllers/device-earning-pot.controller';
 import { authenticate } from '../../middleware/auth.middleware';
 
 const router = Router();

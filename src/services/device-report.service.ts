@@ -1,6 +1,6 @@
 //src/services/device-report.service.ts
 
-import { models } from '../db';
+import { models } from '../db/db';
 import serviceResponser from '../utils/serviceResponser.utils';
 import onEarningRecordedService from './onEarningRecorded.service';
 
@@ -47,7 +47,7 @@ class DeviceReportService {
       return serviceResponser({ ok: false, }, 'Device not found or inactive');
     }
 
-    const wallet = await models.MiningWallet.findByPk(device.walletId);
+    const wallet = await models.DeviceEarningPot.findByPk(device.currentPotId);
     if (!wallet) {
       return serviceResponser({ ok: false, }, 'Associated wallet not found');
     }
@@ -75,7 +75,7 @@ class DeviceReportService {
       // Save earning
       await models.DeviceEarning.create({
         deviceId: device.id,
-        userId: device.userId,
+        userId: 1,//device.userId,
         miningSessionId: session.id,
         amount,
         currency,

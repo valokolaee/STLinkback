@@ -1,6 +1,6 @@
 // src/controllers/database.controller.ts
 import { Request, Response } from 'express';
-import { models } from '../models';
+import { models } from '../db/models';
 import { validateTableData } from '../utils/validate-table-data.utils';
 
 type TableNames = keyof typeof models;

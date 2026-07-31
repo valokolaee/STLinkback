@@ -1,4 +1,4 @@
-import { IRole } from "../models/role.model";
+import { IRole } from "../db/models/role.model";
 
 const admin: IRole = { name: 'admin' };
 const agent: IRole = { name: 'agent' };

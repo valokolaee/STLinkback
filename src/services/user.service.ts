@@ -1,6 +1,6 @@
 // src/services/user.service.ts
-import { models } from '../db';
-import { IUser } from '../models/user.model';
+import { models } from '../db/db';
+import { IUser } from '../db/models/user.model';
 
 export class UserService {
   /**
@@ -44,13 +44,13 @@ export class UserService {
       return null;
     }
   }
-  
+
   /**
    * @param username 
    */
   static async getUserByEmail(email: string) {
     try {
-      const user = await models.User.findOne({ where: { email }}) 
+      const user = await models.User.findOne({ where: { email } })
 
       return user;
 
@@ -64,7 +64,7 @@ export class UserService {
    */
   static async getUserByUserName(username: string) {
     try {
-      const user = await models.User.findOne({ where: { username }}) 
+      const user = await models.User.findOne({ where: { username } })
 
       return user;
 
@@ -89,8 +89,8 @@ export class UserService {
       return null;
     }
   }
-  
-  
+
+
   /**
    * @param userId 
    */
@@ -147,7 +147,7 @@ export class UserService {
    * @param userId 
    * @param updateData 
    */
-  static async updateUser(userId: number, updateData:IUser) {
+  static async updateUser(userId: number, updateData: IUser) {
 
     try {
 

@@ -1,0 +1,6 @@
+add to all models:
+  public recType!: string;
+     recType: {
+          type: STRING(20),
+        },
+
