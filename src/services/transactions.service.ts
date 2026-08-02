@@ -155,8 +155,6 @@ export default () => {
 
         const { fromDevicePotId, fromWalletId, toWalletId, amount } = object || {}
 
-
-
         if (fromDevicePotId! > 0) {
 
           const pot = await DeviceEarningPot.findByPk(fromDevicePotId)
@@ -178,7 +176,7 @@ export default () => {
           const fromWalletBalance = decimalMinus(fromWallet?.availableBalance!, amount!)
           await fromWallet?.update({ availableBalance: fromWalletBalance }, { transaction })
 
-// device wallet changed to pot with assignment and transactions between 
+
         }
 
 
