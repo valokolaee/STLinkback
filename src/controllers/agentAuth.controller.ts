@@ -47,22 +47,20 @@ export default class {
         _rolls = agentRoles;
       } else {
 
-        responserUtils(res, 401, {
+        return responserUtils(res, 401, {
           success: false,
           message: 'Invalid access route'
         });
 
-        return;
       }
 
 
       const _permitted = _rolls.some(obj => obj.name === roleName);
       if (!_permitted) {
-        responserUtils(res, 403, {
+        return responserUtils(res, 403, {
           success: false,
           message: 'You do not have permission to access this resource'
         });
-        return;
       }
 
 
@@ -76,7 +74,7 @@ export default class {
     } catch (error: any) {
       console.log(error);
 
-      responserUtils(res, 400, {
+      return responserUtils(res, 400, {
         success: false,
         message: 'Authentication failed',
       }, error);

@@ -23,22 +23,20 @@ export default async (req: Request, res: Response, user: IUser) => {
       _rolls = agentRoles;
     } else {
 
-      responserUtils(res, 401, {
+      return responserUtils(res, 401, {
         success: false,
         message: 'Invalid access route'
       });
-      return;
     }
 
 
 
     const _permitted = _rolls.some(obj => obj.name === roleName);
     if (!_permitted) {
-      responserUtils(res, 403, {
+      return responserUtils(res, 403, {
         success: false,
         message: 'You do not have permission to access this resource'
       });
-      return;
     }
 
   } catch (error: any) {

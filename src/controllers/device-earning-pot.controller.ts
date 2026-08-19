@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { models } from '../db/db';
 import { createMiningWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import responser from '../utils/responser.utils';
+import  responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 
@@ -20,15 +20,15 @@ export default {
 
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        return responser(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responser(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -42,17 +42,17 @@ export default {
 
       if (items.ok) {
 
-        responser(res, 200, { success: true, data: items.data })
+        return responser(res, 200, { success: true, data: items.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+        return responser(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -64,22 +64,22 @@ export default {
       const walletAddress = req.body.walletAddress
       // console.log(id);
 
-      // return responser(res, 200, { data: { yes: 'thanks' } })
+      // return return responser(res, 200, { data: { yes: 'thanks' } })
       const items = await service.findOne<IDeviceEarningPot>({  })
 
       if (items.ok) {
 
-        responser(res, 200, { success: true, data: items.data })
+        return responser(res, 200, { success: true, data: items.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+        return responser(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -93,14 +93,14 @@ export default {
       const items = await service.getAllBy({ userId });
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        return responser(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responser(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -122,17 +122,17 @@ export default {
 
       if (createdItem.ok) {
 
-        responser(res, 200, { success: true, data: createdItem.data })
+        return responser(res, 200, { success: true, data: createdItem.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdItem.data })
+        return responser(res, 400, { success: false, data: createdItem.data })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -147,16 +147,16 @@ export default {
 
       if (updatedItems.ok) {
 
-        responser(res, 200, { success: true, data: updatedItems.data })
+        return responser(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: updatedItems.data })
+        return responser(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
     }
   },
 
@@ -170,18 +170,18 @@ export default {
 
       if (deletedItems.ok) {
 
-        responser(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
+        return responser(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
 
       } else {
 
-        responser(res, 400, { success: false, data: deletedItems.data })
+        return responser(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 400, { success: false }, error)
+      return responser(res, 400, { success: false }, error)
 
     }
   }

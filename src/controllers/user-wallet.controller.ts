@@ -1,14 +1,13 @@
 import { Request, Response } from 'express';
 import { createMiningWalletSchema, createUserWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import responser from '../utils/responser.utils';
-import { validate } from '../utils/validator.utils';
+ import { validate } from '../utils/validator.utils';
 import IServiceResult from '../interfaces/IServiceResult';
 import { models } from '../db/db';
- import responserUtils from '../utils/responser.utils';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
+ import getUserByReqUtils from '../utils/getUserByReq.utils';
 import { log } from 'console';
 import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
+import responserUtils from '../utils/responser.utils';
 
 
 
@@ -24,15 +23,15 @@ export default {
 
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+       return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+       return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+     return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -46,17 +45,17 @@ export default {
 
       if (items.ok) {
 
-        responser(res, 200, { success: true, data: items.data })
+       return responserUtils(res, 200, { success: true, data: items.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+       return responserUtils(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+     return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -69,14 +68,14 @@ export default {
       const items = await service.getAllBy({ userId });
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+       return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+       return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+     return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -96,14 +95,14 @@ export default {
       // console.log(w);
       if (w.data!?.id! > 0) {
       
-        return        responser(res, 400, { success: false, message: 'Wallet address already exists' })
+        return        responserUtils(res, 400, { success: false, message: 'Wallet address already exists' })
       }
 
       const w2 = await service.findOne({ nickname: data.data!.nickname, userId });
       // console.log(w);
       if (w2.data!?.id! > 0) {
 
-        return responser(res, 400, { success: false, message: 'Wallet nickname already exists' })
+        return responserUtils(res, 400, { success: false, message: 'Wallet nickname already exists' })
       }
 
       const createdItem = await service.create({ ...data.data, userId });
@@ -111,17 +110,17 @@ export default {
 
       if (createdItem.ok) {
 
-       return responser(res, 200, { success: true, data: createdItem.data })
+       return responserUtils(res, 200, { success: true, data: createdItem.data })
 
       } else {
 
-       return responser(res, 400, { success: false, data: createdItem.data })
+       return responserUtils(res, 400, { success: false, data: createdItem.data })
 
       }
 
     } catch (error) {
 
-     return responser(res, 500, { success: false, }, error)
+     return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -136,16 +135,16 @@ export default {
 
       if (updatedItems.ok) {
 
-        return responser(res, 200, { success: true, data: updatedItems.data })
+        return responserUtils(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-        return responser(res, 400, { success: false, data: updatedItems.data })
+        return responserUtils(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-      return responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
     }
   },
 
@@ -159,18 +158,18 @@ export default {
 
       if (deletedItems.ok) {
 
-        return responser(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
+        return responserUtils(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
 
       } else {
 
-        return responser(res, 400, { success: false, data: deletedItems.data })
+        return responserUtils(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-      return responser(res, 400, { success: false }, error)
+      return responserUtils(res, 400, { success: false }, error)
 
     }
   }

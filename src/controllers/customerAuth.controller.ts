@@ -119,14 +119,14 @@ export default class {
       // if (_user!?.data!.customer!?.id! < 1) {
       if (!_user.ok) {
 
-        responserUtils(res, 401, {
+        return responserUtils(res, 401, {
           success: false,
           message: 'Access denied'
         });
 
       } else {
 
-        responserUtils(res, 200, {
+        return responserUtils(res, 200, {
           success: true,
           message: 'Login successful',
           data: _user.data
@@ -142,7 +142,7 @@ export default class {
       }
 
       // else {
-      //   responserUtils(res, 200, {
+      //    responserUtils(res, 200, {
       //     success: false,
       //     message: 'Invalid access route'
       //   });
@@ -152,7 +152,7 @@ export default class {
 
       // const _permitted = _rolls.some(obj => obj.name === roleName);
       // if (!_permitted) {
-      //   responserUtils(res, 403, {
+      //    responserUtils(res, 403, {
       //     success: false,
       //     message: 'You do not have permission to access this resource'
       //   });
@@ -166,7 +166,7 @@ export default class {
 
 
     } catch (error: any) {
-      responserUtils(res, 400, {
+    return  responserUtils(res, 400, {
         success: false,
         message: 'user not found',
       }, error);

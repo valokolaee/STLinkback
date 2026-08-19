@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import { models } from '../db/db';
 import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import responser from '../utils/responser.utils';
-import { validate } from '../utils/validator.utils';
+ import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
+import responserUtils from '../utils/responser.utils';
 
 
 
@@ -21,15 +21,15 @@ export default {
 
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -43,17 +43,17 @@ export default {
 
       if (items.ok) {
 
-        responser(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -66,14 +66,14 @@ export default {
       const items = await service.getAllBy({ userId });
 
       if (items.ok) {
-        responser(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -95,17 +95,17 @@ export default {
 
       if (createdItem.ok) {
 
-        responser(res, 200, { success: true, data: createdItem.data })
+        return responserUtils(res, 200, { success: true, data: createdItem.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdItem.data })
+        return responserUtils(res, 400, { success: false, data: createdItem.data })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -120,16 +120,16 @@ export default {
 
       if (updatedItems.ok) {
 
-        responser(res, 200, { success: true, data: updatedItems.data })
+        return responserUtils(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: updatedItems.data })
+        return responserUtils(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
     }
   },
 
@@ -143,18 +143,18 @@ export default {
 
       if (deletedItems.ok) {
 
-        responser(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
+        return responserUtils(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
 
       } else {
 
-        responser(res, 400, { success: false, data: deletedItems.data })
+        return responserUtils(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 400, { success: false }, error)
+      return responserUtils(res, 400, { success: false }, error)
 
     }
   }

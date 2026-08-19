@@ -6,8 +6,8 @@ import { IDeviceEarning } from '../db/models/device-earning.model';
 import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 import genericService from '../services/generic.service';
 import getUserByReq from '../utils/getUserByReq.utils';
-import responser from '../utils/responser.utils';
-import { validate } from '../utils/validator.utils';
+ import { validate } from '../utils/validator.utils';
+import responserUtils from '../utils/responser.utils';
 
 
 const service = genericService(models.DeviceEarning)
@@ -22,15 +22,15 @@ export default {
 
 
       if (devices.ok) {
-        responser(res, 200, { success: true, data: devices.data })
+        return responserUtils(res, 200, { success: true, data: devices.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -44,17 +44,17 @@ export default {
 
       if (devices.ok) {
 
-        responser(res, 200, { success: true, data: devices.data })
+        return responserUtils(res, 200, { success: true, data: devices.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -67,14 +67,14 @@ export default {
       const devices = await service.getAllBy({ deviceId });
 
       if (devices.ok) {
-        responser(res, 200, { success: true, data: devices.data })
+        return responserUtils(res, 200, { success: true, data: devices.data })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -117,17 +117,17 @@ export default {
         })
 
 
-        responser(res, 200, { success: true, data: createdDeviceEarning.data })
+        return responserUtils(res, 200, { success: true, data: createdDeviceEarning.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdDeviceEarning.data })
+        return responserUtils(res, 400, { success: false, data: createdDeviceEarning.data })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -142,16 +142,16 @@ export default {
 
       if (createdDevice.ok) {
 
-        responser(res, 200, { success: true, data: createdDevice.data })
+        return responserUtils(res, 200, { success: true, data: createdDevice.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdDevice.data })
+        return responserUtils(res, 400, { success: false, data: createdDevice.data })
 
       }
 
     } catch (error) {
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
     }
   },
 
@@ -165,18 +165,18 @@ export default {
 
       if (deletedDevice.ok) {
 
-        responser(res, 200, { success: true, message: `${deletedDevice.data} earnings were deleted` })
+        return responserUtils(res, 200, { success: true, message: `${deletedDevice.data} earnings were deleted` })
 
       } else {
 
-        responser(res, 400, { success: false, data: deletedDevice.data })
+        return responserUtils(res, 400, { success: false, data: deletedDevice.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 400, { success: false }, error)
+      return responserUtils(res, 400, { success: false }, error)
 
     }
   }

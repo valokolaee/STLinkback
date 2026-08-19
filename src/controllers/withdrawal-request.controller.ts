@@ -3,7 +3,6 @@ import { models } from '../db/db';
 import { createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
-import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import miningWalletService from '../services/miningWallet.service';
 import IServiceResult from '../interfaces/IServiceResult';
@@ -15,6 +14,7 @@ import userWalletService from '../services/userWallet.service';
 import { IUser } from '../db/models/user.model';
 import IWithdrawalRequestWithUser from '../interfaces/IWithdrawalRequest';
 import responserUtils from '../utils/responser.utils';
+
 
 
 
@@ -51,15 +51,15 @@ export default {
 
         console.log(nList);
 
-        responser(res, 200, { success: true, data: nList })
+        return responserUtils(res, 200, { success: true, data: nList })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -73,17 +73,17 @@ export default {
 
       if (items.ok) {
 
-        responser(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
 
       } else {
 
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -113,14 +113,14 @@ export default {
 
         }
 
-        responser(res, 200, { success: true, data: _withdraws })
+        return responserUtils(res, 200, { success: true, data: _withdraws })
       } else {
-        responser(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -143,7 +143,7 @@ export default {
       const _MW_newBalance = 0//_mw?.data?.availableBalance! - data?.data?.amount!
 
       if (_MW_newBalance < 0) {
-        responser(res, 400, { success: false, message: 'request amount more than available balance' })
+        return responserUtils(res, 400, { success: false, message: 'request amount more than available balance' })
 
         return
       }
@@ -173,18 +173,18 @@ export default {
           requestedAt: createdItem.data?.requestedAt
         }
 
-        responser(res, 200, { success: true, data: _res })
+        return responserUtils(res, 200, { success: true, data: _res })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdItem.data })
+        return responserUtils(res, 400, { success: false, data: createdItem.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -285,16 +285,16 @@ export default {
 
 
 
-        responser(res, 200, { success: true, data: updatedItems.data })
+        return responserUtils(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: updatedItems.data })
+        return responserUtils(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-      responser(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
     }
   },
 
@@ -313,18 +313,18 @@ export default {
 
       if (deletedItems.ok) {
 
-        responser(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
+        return responserUtils(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
 
       } else {
 
-        responser(res, 400, { success: false, data: deletedItems.data })
+        return responserUtils(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 400, { success: false }, error)
+      return responserUtils(res, 400, { success: false }, error)
 
     }
   }

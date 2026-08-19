@@ -4,9 +4,9 @@ import { Request, Response } from 'express';
 import { validate } from '../utils/validator.utils';
 import { deviceEarningReportSchema } from '../dtos/device.dto';
 // import deviceReportService from '../services/device-report.service';
-import responser from '../utils/responser.utils';
-import deviceReportService from '../services/device-report.service';
+ import deviceReportService from '../services/device-report.service';
 import { log } from 'console';
+import responserUtils from '../utils/responser.utils';
 
 function getClientIP(req: Request): string {
   return (
@@ -36,13 +36,13 @@ export default class DeviceReportController {
       });
 
       if (!result.ok) {
-        return responser(res, 400, {
+        return responserUtils(res, 400, {
           success: false,
           message: result.ok || 'Failed to record data',
         });
       }
 
-      return responser(res, 201, {
+      return responserUtils(res, 201, {
         success: true,
         message: 'Data recorded successfully',
       });
