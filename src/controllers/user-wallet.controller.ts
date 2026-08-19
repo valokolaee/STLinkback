@@ -95,8 +95,8 @@ export default {
       const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId });
       // console.log(w);
       if (w.data!?.id! > 0) {
-        responser(res, 400, { success: false, message: 'Wallet address already exists' })
-        return
+      
+        return        responser(res, 400, { success: false, message: 'Wallet address already exists' })
       }
 
       const w2 = await service.findOne({ nickname: data.data!.nickname, userId });
@@ -111,17 +111,17 @@ export default {
 
       if (createdItem.ok) {
 
-        responser(res, 200, { success: true, data: createdItem.data })
+       return responser(res, 200, { success: true, data: createdItem.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: createdItem.data })
+       return responser(res, 400, { success: false, data: createdItem.data })
 
       }
 
     } catch (error) {
 
-      responser(res, 500, { success: false, }, error)
+     return responser(res, 500, { success: false, }, error)
 
     }
   },
@@ -136,16 +136,16 @@ export default {
 
       if (updatedItems.ok) {
 
-        responser(res, 200, { success: true, data: updatedItems.data })
+        return responser(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-        responser(res, 400, { success: false, data: updatedItems.data })
+        return responser(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-      responser(res, 500, { success: false, }, error)
+      return responser(res, 500, { success: false, }, error)
     }
   },
 
@@ -159,18 +159,18 @@ export default {
 
       if (deletedItems.ok) {
 
-        responser(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
+        return responser(res, 200, { success: true, message: `${deletedItems.data} wallets were deleted` })
 
       } else {
 
-        responser(res, 400, { success: false, data: deletedItems.data })
+        return responser(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-      responser(res, 400, { success: false }, error)
+      return responser(res, 400, { success: false }, error)
 
     }
   }
