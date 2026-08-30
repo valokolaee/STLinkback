@@ -8,7 +8,9 @@ import Role, { IRole } from '../db/models/role.model';
 import genericService from '../services/generic.service';
 import initialRolesList, { agentRoles, customerRoles } from '../utils/initialRolesList';
 import Agent from '../db/models/agent.model';
-import User from '../db/models/user.model';
+import User, { IUser } from '../db/models/user.model';
+import Customer from '../db/models/customer.model';
+import { log } from 'console';
 
 export const authenticate = async (
   req: Request,
@@ -16,10 +18,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
 
-  // console.log('path', req.path);
-  // console.log('originalUrl', req.originalUrl);
-  // console.log('url', req.url);
-  // console.log('baseUrl', req.baseUrl);
+
 
   try {
 
@@ -33,96 +32,69 @@ export const authenticate = async (
 
 
     const token = authHeader.split(' ')[1];
-    // console.log('token', token);
 
+    
     // Verify token
     const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
+
+
+
+
     // console.log(decoded);
 
     // Find user
-    const user = await models.User.findByPk(decoded.id, {
-      // include: [{ model: models.Role, as: 'role' }]
-    });
+    const user: IUser = await User.findByPk(decoded.id, {
+      include: [
+        {
+          model: Agent,
+          as: 'agent'
+        },
+        {
+          model: Customer,
+          as: 'customer'
+        },
+      ],
 
+
+      raw: true,  // Returns plain object, no Sequelize methods
+      nest: true  // Nests the customer object properly
+    }) as IUser;
 
     if (!user) {
-      return res.status(401).json({
+
+      return responserUtils(res, 401, {
+        message: 'User not found',
         success: false,
-        error: 'User not found'
-      });
+      })
+
+
+      
     }
 
-    // console.log(user.roleId);
-    // const r = await Role.findByPk(1)
-    // r?.update({ name: 'customer' })
+
+
 
     const baseUrl = req.baseUrl.toString().split('/');
 
-    const api = baseUrl.length > 0 ? baseUrl[1] : '';
+    const apiRout = baseUrl.length > 0 ? baseUrl[1] : '';
 
-    // console.log(api, roleName);
+    const _isCustomer = user.customer?.id! > 0;
+    const _isApi = apiRout === 'api';
 
+    const _isAgent = user.agent?.id! > 0;
+    const _isPanel = apiRout === 'panel'
 
-    var _rolls: IRole[] = [];
-    // console.log(_rolls);
+    log(apiRout, _isCustomer, _isApi, _isAgent, _isPanel)
 
+    if (!((_isCustomer && _isApi) || (_isAgent && _isPanel))) {
 
-    if (api === 'api') {
-      // _rolls = customerRoles
-    } else if (api === 'panel') {
-      // const _agent = await Agent.findByPk(decoded.id, {
-      //   include: [{ model: models.Role, as: 'role' }]
-      // });
-
-      const _agent = await Agent.findByPk(user.id);
-      const r = await Role.findByPk(_agent!.roleId);
-      const roleName = r?.name;
-      _rolls = agentRoles;
-      const _permitted = _rolls.some(obj => obj.name === roleName);
-
-      if (!_permitted) {
-        responserUtils(res, 403, {
-          success: false,
-          message: 'You do not have permission to access this resource'
-        });
-        return;
-      }
-
-    } else {
-      responserUtils(res, 401, {
+      responserUtils(res, 403, {
         success: false,
-        message: 'Invalid access route'
+        message: 'Access Denied'
       });
       return;
+
     }
-
-
-
-
-
-    // console.log(roleName, api, _permitted);
-
-    // const _permitted = _rolls.some(obj => obj.name === 'Bob');
-
-
-    // const customerPermitted = api === 'api' && roleName === 'customer';
-    // const userPermitted = api === 'api' && roleName === 'customer';
-    //  const _rolls: IRole[] =initialRolesList
-
-    // for (let index = 0; index < agentRoles.length; index++) {
-    //   const role = await models.Role.create(agentRoles[index])
-    // }
-    // console.log((await Role.findAll()));
-
-    // check if user has permission to access the route
-    // genericService(models.User).update({
-    //   id: user.id, roleId: 2
-    // });
-    // responserUtils(res, 400, {});
-    // return res.status(401).json({
-    //   success: false,
-    //   error: 'User not found'
-    // });
 
 
     // Attach user to request
@@ -133,15 +105,14 @@ export const authenticate = async (
 
   } catch (error: any) {
 
-    console.log(error);
-
+ 
     if (error.name === 'JsonWebTokenError') {
       return responserUtils(res, 401, {
         success: false,
         message: 'Invalid token format; please login'
       })
-
     }
+
 
     if (error.name === 'TokenExpiredError') {
       return responserUtils(res, 401, {
@@ -150,6 +121,9 @@ export const authenticate = async (
       })
     }
 
+
+
+    
     return responserUtils(res, 401, {
       success: false,
       message: 'Invalid token; please login'

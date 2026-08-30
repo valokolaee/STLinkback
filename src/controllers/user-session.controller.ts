@@ -81,7 +81,7 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReqUtils(req).id;
+      const userId = getUserByReqUtils(req)?.id;
 
       const data = validate(createWithdrawalRequestSchema, { userId, ...req?.body }, res);
 

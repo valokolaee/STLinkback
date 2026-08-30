@@ -53,8 +53,8 @@ export const createWithdrawalRequestSchema = Joi.object({
   userId: Joi.number().required(),
   amount: Joi.number().required(),
   currency: Joi.string().required(),
-  miningWalletAddress: Joi.string().required(),
-  userWalletAddress: Joi.string().required(),
+  userWalletId: Joi.number().required(),
+  externalWalletAddress: Joi.string().required(),
 });
 
 export const createMiningSessionSchema = Joi.object({

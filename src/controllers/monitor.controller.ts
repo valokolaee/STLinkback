@@ -1,19 +1,14 @@
 import { Request, Response } from 'express';
 import { models } from '../db/db';
-import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { validate } from '../utils/validator.utils';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
 import { IDeviceAlert } from '../db/models/device-alert.model';
-import IServiceResult from '../interfaces/IServiceResult';
-import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
-import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
-import { IDeviceMetric } from '../db/models/device-metric.model';
-import { IMiningSession } from '../db/models/mining-session.model';
-import { IWithdrawalRequest } from '../db/models/withdrawal-request.model';
+import DeviceEarningPot from '../db/models/device-earning-pot.model';
 import { IDeviceEarning } from '../db/models/device-earning.model';
+import { IDeviceMetric } from '../db/models/device-metric.model';
+import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
+import { IMiningSession } from '../db/models/mining-session.model';
+import IServiceResult from '../interfaces/IServiceResult';
+import genericService from '../services/generic.service';
 import responserUtils from '../utils/responser.utils';
-import { log } from 'console';
 
 
 

@@ -6,6 +6,7 @@ import agentAuthService from '../services/agentAuth.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { agentRoles, customerRoles } from '../utils/initialRolesList';
 import responserUtils from '../utils/responser.utils';
+import { IUser } from '../db/models/user.model';
 
 export default class {
 
@@ -78,34 +79,25 @@ export default class {
         success: false,
         message: 'Authentication failed',
       }, error);
-      // return res.status(404).json({
-      //   success: false,
-      //   message: 'user not found',
-      // });
+
+      
     }
   }
 
   static async getMe(req: Request, res: Response) {
     try {
-      const user: IAgent = getUserByReq(req,);
+      const user: IUser = getUserByReq(req,)!;
       if (!!!user) {
         return
       }
-      const role = user.role ? user.role.name : null;
 
+      
       return res.status(200).json({
         success: true,
         data: user
-        // data: {
-        //   id: user.id,
-        //   username: user.username,
-        //   email: user.email,
-        //   clientType: user.clientType,
-        //   role,
-        //   roleId: user.roleId,
-        //   profileImage:user.profileImage
-        // },
       });
+
+
     } catch (error) {
       return res.status(500).json({
         success: false,

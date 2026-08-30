@@ -12,7 +12,7 @@ export class UserController {
   static async updateProfileImage(req: Request, res: Response) {
     try {
       // const { userId } = req.params;
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       const { profileImage } = req.body;
 
@@ -53,7 +53,7 @@ export class UserController {
   static async getUserProfile(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -91,7 +91,7 @@ export class UserController {
 
     try {
 
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -131,7 +131,7 @@ export class UserController {
   static async getUserReferrals(req: Request, res: Response) {
     // res.send('getUserInvestments ok');
     try {
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -168,7 +168,7 @@ export class UserController {
   static async getUserLoans(req: Request, res: Response) {
     // res.send('getUserInvestments ok');
     try {
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -206,7 +206,7 @@ export class UserController {
   static async getBankAffiliations(req: Request, res: Response) {
     // res.send('getUserInvestments ok');
     try {
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
 
       if (userId === undefined) {
         res.status(400).json({
@@ -239,7 +239,7 @@ export class UserController {
 
   // Single file upload
   static updateUserAvatar = async (req: Request, res: Response): Promise<void> => {
-    const userId = getUserByReq(req)!.id;
+    const userId = getUserByReq(req)?.id;
     try {
       if (!req.file) {
         const response: UploadResponse = {
@@ -288,7 +288,7 @@ export class UserController {
 
   // Single file upload
   static updateUserLogo = async (req: Request, res: Response): Promise<void> => {
-    const userId = getUserByReq(req)!.id;
+    const userId = getUserByReq(req)?.id;
     try {
       if (!req.file) {
         const response: UploadResponse = {
@@ -339,7 +339,7 @@ export class UserController {
    */
   static async updateUserProfile(req: Request, res: Response) {
     try {
-      const userId = getUserByReq(req)!.id;
+      const userId = getUserByReq(req)?.id;
       const updateData = req.body;
 
       const success = await UserService.updateUser(userId!, updateData);

@@ -111,7 +111,7 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReq(req).id;
+      const userId = getUserByReq(req)?.id;
       const walletId = req.body.walletId!;
 
       const data = validate(createDeviceEarningSchema, req?.body, res);

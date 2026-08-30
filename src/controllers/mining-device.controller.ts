@@ -137,7 +137,7 @@ export default {
 
   async create(req: Request, res: Response) {
 
-    const creatorId = getUserByReq(req).id
+    const creatorId = getUserByReq(req)?.id
     const transaction = await sequelize.transaction();
 
     try {

@@ -15,7 +15,7 @@ sequelize.sync({
     // alter:true
 })
     .then((e) => {
-        // initializeRolesUtils();
+        initializeRolesUtils();
     })
     .catch((e) => { console.log(e) });
 

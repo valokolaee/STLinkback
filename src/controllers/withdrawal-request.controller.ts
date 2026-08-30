@@ -14,13 +14,14 @@ import userWalletService from '../services/userWallet.service';
 import { IUser } from '../db/models/user.model';
 import IWithdrawalRequestWithUser from '../interfaces/IWithdrawalRequest';
 import responserUtils from '../utils/responser.utils';
+import withdrawalRequestSrvc from '../services/withdrawal-request.service';
 
 
 
 
 
 const userService = genericService(models.User)
-const withdrawalRequestService = genericService(models.WithdrawalRequest)
+const withdrawalRequestService = withdrawalRequestSrvc(models.WithdrawalRequest)
 const serviceMiningWallet = genericService(models.DeviceEarningPot)
 const serviceUserWallet = genericService(models.UserWallet)
 
@@ -92,10 +93,10 @@ export default {
     try {
 
       // const userId = req.body.userId
-      const { userId, miningWalletAddress, status } = req.body as IWithdrawalRequest;
+      const { userId, status } = req.body as IWithdrawalRequest;
       // console.log(req.body);
 
-      const items: IServiceResult<IWithdrawalRequest[]> = await withdrawalRequestService.getAllBy<IWithdrawalRequest>({ userId, status, miningWalletAddress, }, [['requestedAt', 'desc']]);
+      const items: IServiceResult<IWithdrawalRequest[]> = await withdrawalRequestService.getAllBy<IWithdrawalRequest>({ userId, status}, [['requestedAt', 'desc']]);
 
 
       if (items.ok) {
@@ -105,9 +106,7 @@ export default {
 
           const element = items.data![index]
 
-          const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletAddress!);
-
-
+          const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletId!);
 
           _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
 
@@ -128,7 +127,7 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReqUtils(req).id;
+      const userId = getUserByReqUtils(req)?.id;
 
       const currency = 'USDT'
       const data: IServiceResult<IWithdrawalRequest> = validate(createWithdrawalRequestSchema, { userId, currency, ...req?.body }, res);
@@ -138,14 +137,13 @@ export default {
       }
 
 
-      const _mw: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(data?.data!?.miningWalletAddress!)
+      const _mw: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(data?.data!?.userWalletId!)
 
       const _MW_newBalance = 0//_mw?.data?.availableBalance! - data?.data?.amount!
 
       if (_MW_newBalance < 0) {
         return responserUtils(res, 400, { success: false, message: 'request amount more than available balance' })
 
-        return
       }
 
       const createdItem: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.create(data.data);
@@ -153,7 +151,7 @@ export default {
 
       if (createdItem.ok) {
 
-        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(data?.data!?.userWalletAddress!)
+        const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(data?.data!?.userWalletId!)
 
         const _UW_newBalance = safeParseFloat(_uw?.data?.pendingBalance!) + safeParseFloat(data?.data?.amount!)
 
@@ -169,7 +167,7 @@ export default {
           deviceName: ' _mw.data?.walletAddress,',
           status: createdItem.data?.status,
           userWalletNickname: _uw.data?.nickname,
-          miningWalletAddress: createdItem.data?.miningWalletAddress,
+          userWalletId: createdItem.data?.userWalletId,
           requestedAt: createdItem.data?.requestedAt
         }
 
@@ -213,9 +211,9 @@ export default {
 
       if (updatedItems?.ok) {
 
-        const _miningWallet: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(_withDraw.miningWalletAddress!)
+        const _miningWallet: IServiceResult<IDeviceEarningPot> = await miningWalletService.getOneByAddress(_withDraw.userWalletId!)
 
-        const _userWallet: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(_withDraw!?.userWalletAddress!)
+        const _userWallet: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(_withDraw!?.userWalletId!)
 
 
 

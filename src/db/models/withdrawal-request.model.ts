@@ -1,14 +1,15 @@
 // src/models/withdrawal-request.model.ts
-import { BOOLEAN, DATE, DECIMAL, DOUBLE, ENUM, INTEGER, Model, STRING } from 'sequelize';
+import { BOOLEAN, DATE, DECIMAL, DOUBLE, ENUM, INTEGER, Model, NUMBER, STRING } from 'sequelize';
 import { MONEY_TYPE } from './constants/MONEY_DECIMAL';
+import UserWallet from './user-wallet.model';
 
 export default class WithdrawalRequest extends Model {
   public id!: number;
   public userId!: number;
   public amount!: string;
   public currency!: string;
-  public miningWalletAddress!: string;
-  public userWalletAddress!: string;
+  public userWalletId!: string;
+  public externalWalletAddress!: string;
   public transactionHash!: string | null;
   public status!: 'pending' | 'processing' | 'completed' | 'rejected' | 'approved' | 'failed' | 'cancelled';
   public networkFee!: number;
@@ -47,13 +48,15 @@ export default class WithdrawalRequest extends Model {
           allowNull: false,
           defaultValue: 'USDT',
         },
-        miningWalletAddress: {
+
+        externalWalletAddress: {
           type: STRING(255),
           allowNull: false,
-          field: 'device_earning_pot_address',
+          field: 'external_wallet_address',
         },
-        userWalletAddress: {
-          type: STRING(255),
+
+        userWalletId: {
+          type: NUMBER,
           allowNull: false,
           field: 'user_wallet_address',
         },
@@ -122,6 +125,11 @@ export default class WithdrawalRequest extends Model {
     WithdrawalRequest.belongsTo(models.User, {
       foreignKey: 'user_id',
       as: 'user',
+    });
+
+    WithdrawalRequest.belongsTo(UserWallet, {
+      foreignKey: 'user_wallet_address',
+      as: 'userWallet',
     });
 
     WithdrawalRequest.belongsTo(models.User, {

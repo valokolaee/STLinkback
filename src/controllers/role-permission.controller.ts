@@ -61,7 +61,7 @@ export default {
   async getAllBy(req: Request, res: Response) {
     try {
 
-      const userId = getUserByReqUtils(req).id;
+      const userId = getUserByReqUtils(req)?.id;
         responserUtils(res, 200, { success: true, data: { userId } })
 
       const items = await service.getAllBy({ userId });
@@ -82,7 +82,7 @@ export default {
   async create(req: Request, res: Response) {
 
     try {
-      const userId = getUserByReqUtils(req).id;
+      const userId = getUserByReqUtils(req)?.id;
 
       const data = validate(createWithdrawalRequestSchema, { userId, ...req?.body }, res);
 
