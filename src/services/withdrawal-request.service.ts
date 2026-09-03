@@ -1,13 +1,15 @@
-import { Model, ModelStatic, Order, TransactionOptions, WhereOptions } from 'sequelize';
-import serviceResponser from '../utils/serviceResponser.utils';
-import buildWhereClause from '../utils/buildWhereClause';
 import { log } from 'console';
- import UserWallet from '../db/models/user-wallet.model';
+import { Model, ModelStatic, Order, Transaction, WhereOptions } from 'sequelize';
+import UserWallet from '../db/models/user-wallet.model';
+import buildWhereClause from '../utils/buildWhereClause';
+import serviceResponser from '../utils/serviceResponser.utils';
+import WithdrawalRequest from '../db/models/withdrawal-request.model';
+import User from '../db/models/user.model';
 
 
 
-export default (model: ModelStatic<Model>) => {
-
+export default () => {
+  const model = WithdrawalRequest;
   return {
 
     async getAll(
@@ -16,7 +18,22 @@ export default (model: ModelStatic<Model>) => {
     ) {
       try {
 
-        const items = await model.findAll({ order });
+        const items = await model.findAll(
+          {
+            order,
+            include: [
+              {
+                model: UserWallet,
+                as: 'userWallet'
+              },
+              {
+                model: User,
+                as: 'owner'
+              }
+            ]
+          },
+
+        );
 
         return serviceResponser({ ok: true, data: items })
 
@@ -96,10 +113,10 @@ export default (model: ModelStatic<Model>) => {
     },
 
 
-    async create(object: any, tr?: TransactionOptions) {
+    async create(object: any, transaction?: Transaction) {
 
       try {
-        const item = await model.create(object, tr);
+        const item = await model.create(object, { transaction });
 
         return serviceResponser({ ok: true, data: item })
 
@@ -111,21 +128,19 @@ export default (model: ModelStatic<Model>) => {
 
     },
 
-    async update(object: any, tr?: TransactionOptions) {
-      console.log('object', object);
 
+    async update(object: any, transaction?: Transaction) {
       try {
+        const numOfUpdated = await model.update(
+          object,
+          { where: { id: object.id }, transaction },
+        );
 
-        const numOfUpdated = await model.update(object, { where: { id: object.id } });
-
-        return serviceResponser({ ok: true, data: numOfUpdated })
+        return serviceResponser({ ok: true, data: numOfUpdated });
 
       } catch (error) {
-
-        return serviceResponser({ ok: false }, error)
-
+        return serviceResponser({ ok: false }, error);
       }
-
     },
 
 

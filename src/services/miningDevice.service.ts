@@ -1,4 +1,4 @@
-import { Model, ModelStatic, Order, TransactionOptions, WhereOptions } from 'sequelize';
+import { Model, ModelStatic, Order, Transaction, WhereOptions } from 'sequelize';
 import serviceResponser from '../utils/serviceResponser.utils';
 import buildWhereClause from '../utils/buildWhereClause';
 import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
@@ -146,10 +146,10 @@ export default () => {
     },
 
 
-    async create(object: any, tr?: TransactionOptions) {
+    async create(object: any, transaction?: Transaction) {
 
       try {
-        const item = await miningDevice.create(object, tr);
+        const item = await miningDevice.create(object, {transaction});
 
         return serviceResponser({ ok: true, data: item })
 
@@ -161,7 +161,7 @@ export default () => {
 
     },
 
-    async update(object: any, tr?: TransactionOptions) {
+    async update(object: any, transaction?: Transaction) {
       console.log('object', object);
 
       try {

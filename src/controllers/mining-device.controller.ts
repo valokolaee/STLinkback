@@ -154,20 +154,20 @@ export default {
 
 
       const _pot: Partial<IDeviceEarningPot> = { userId: userId!, currency: 'USDT' }
-      const createdPot: IServiceResult<IDeviceEarningPot> = await serviceDeviceEarningPot.create(_pot, { transaction });
+      const createdPot: IServiceResult<IDeviceEarningPot> = await serviceDeviceEarningPot.create(_pot,  transaction);
 
       if (!createdPot.ok) { throw new Error("Pot Failed "); }
 
 
       const _device: IMiningDevice = { creatorId, currentPotId: createdPot.data?.id, deviceModel: _deviceData?.deviceModel, serialNumber: _deviceData?.serialNumber, deviceName: _deviceData?.deviceName, imei: _deviceData?.imei }
-      const createdDevice: IServiceResult<IMiningDevice> = await miningDeviceService.create(_device, { transaction });
+      const createdDevice: IServiceResult<IMiningDevice> = await miningDeviceService.create(_device,  transaction);
 
       if (!createdDevice.ok) { throw new Error("Device Failed "); }
 
 
       const _devicePotAssignment: IDevicePotAssignment = { deviceId: createdDevice.data?.id, potId: createdPot.data?.id, }
       log('_devicePotAssignment', _devicePotAssignment)
-      const _join: IServiceResult<DevicePotAssignment> = await serviceDeviceJoinPot.create(_devicePotAssignment, { transaction })
+      const _join: IServiceResult<DevicePotAssignment> = await serviceDeviceJoinPot.create(_devicePotAssignment,  transaction)
 
       if (!_join.ok) { throw new Error("Device Pot Assignment Failed "); }
 

@@ -84,7 +84,7 @@ export const authenticate = async (
     const _isAgent = user.agent?.id! > 0;
     const _isPanel = apiRout === 'panel'
 
-    log(apiRout, _isCustomer, _isApi, _isAgent, _isPanel)
+    // log(apiRout, _isCustomer, _isApi, _isAgent, _isPanel)
 
     if (!((_isCustomer && _isApi) || (_isAgent && _isPanel))) {
 

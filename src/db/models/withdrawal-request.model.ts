@@ -1,14 +1,15 @@
 // src/models/withdrawal-request.model.ts
 import { BOOLEAN, DATE, DECIMAL, DOUBLE, ENUM, INTEGER, Model, NUMBER, STRING } from 'sequelize';
 import { MONEY_TYPE } from './constants/MONEY_DECIMAL';
-import UserWallet from './user-wallet.model';
+import UserWallet, { IUserWallet } from './user-wallet.model';
+import { IUser } from './user.model';
 
 export default class WithdrawalRequest extends Model {
   public id!: number;
   public userId!: number;
   public amount!: string;
   public currency!: string;
-  public userWalletId!: string;
+  public userWalletId!: number;
   public externalWalletAddress!: string;
   public transactionHash!: string | null;
   public status!: 'pending' | 'processing' | 'completed' | 'rejected' | 'approved' | 'failed' | 'cancelled';
@@ -58,7 +59,7 @@ export default class WithdrawalRequest extends Model {
         userWalletId: {
           type: NUMBER,
           allowNull: false,
-          field: 'user_wallet_address',
+          field: 'user_wallet_id',
         },
         transactionHash: {
           type: STRING(255),
@@ -124,11 +125,11 @@ export default class WithdrawalRequest extends Model {
   public static associate(models: any) {
     WithdrawalRequest.belongsTo(models.User, {
       foreignKey: 'user_id',
-      as: 'user',
+      as: 'owner',
     });
 
     WithdrawalRequest.belongsTo(UserWallet, {
-      foreignKey: 'user_wallet_address',
+      foreignKey: 'user_wallet_id',
       as: 'userWallet',
     });
 
@@ -142,5 +143,9 @@ export default class WithdrawalRequest extends Model {
 
 export interface IWithdrawalRequest extends Partial<WithdrawalRequest> {
   userWalletNickname?: string
-  deviceName?: string
+  deviceName?: string;
+  userWallet?: IUserWallet;
+  owner: IUser;
+
+
 }

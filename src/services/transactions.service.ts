@@ -1,4 +1,4 @@
-import { Includeable, Model, ModelStatic, Op, Order, TransactionOptions, WhereOptions } from 'sequelize';
+import { Includeable, Model, ModelStatic, Op, Order, WhereOptions, Transaction as sequelizeTransaction } from 'sequelize';
 import serviceResponser from '../utils/serviceResponser.utils';
 import buildWhereClause from '../utils/buildWhereClause';
 import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
@@ -9,7 +9,7 @@ import User from '../db/models/user.model';
 import Transaction, { ITransaction } from '../db/models/transaction.model';
 import UserWallet from '../db/models/user-wallet.model';
 import { sequelize } from '../db/db';
-import { decimalLessThan, decimalMinus, decimalPlus } from '../utils/decimalConvertor';
+import { decimalLessThan, decimalMinus, decimalPlus } from '../utils/decimal.utils';
 
 
 const transactionModel: ModelStatic<Model> = Transaction
@@ -146,9 +146,11 @@ export default () => {
     },
 
 
-    async create(object: ITransaction, tr?: TransactionOptions) {
+    async create(object: ITransaction, transactionE?: sequelizeTransaction) {
 
-      const transaction = await sequelize.transaction()
+      const isExternalTransaction = !!transactionE;
+
+      const transaction = transactionE || await sequelize.transaction()
 
 
       try {
@@ -180,19 +182,30 @@ export default () => {
         }
 
 
+        if (toWalletId && toWalletId > 0) {
 
-        const destWallet = await UserWallet.findByPk(toWalletId)
-        const destWalletBalance = decimalPlus(destWallet?.availableBalance!, amount!)
-        await destWallet?.update({ availableBalance: destWalletBalance }, { transaction })
+          const destWallet = await UserWallet.findByPk(toWalletId)
+          const destWalletBalance = decimalPlus(destWallet?.availableBalance!, amount!)
+          await destWallet?.update({ availableBalance: destWalletBalance }, { transaction })
 
+        }
 
         const item = await Transaction.create(object as any, { transaction });
 
-        await transaction.commit()
+
+        if (!isExternalTransaction) {
+          await transaction.commit();
+        }
+        // await transaction.commit()
+
+
         return serviceResponser({ ok: true, data: item })
 
       } catch (error) {
-        await transaction.rollback()
+
+        if (!isExternalTransaction) {
+          await transaction.rollback();
+        }
 
         return serviceResponser({ ok: false }, error)
 
@@ -200,7 +213,7 @@ export default () => {
 
     },
 
-    async update(object: any, tr?: TransactionOptions) {
+    async update(object: any, tr?: Transaction) {
       console.log('object', object);
 
       try {

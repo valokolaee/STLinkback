@@ -7,7 +7,7 @@ export default class UserWallet extends Model {
   public id!: number;
   public userId!: number;
 
-  public totalEarnings!: string;
+
   public availableBalance!: string;
   public pendingBalance!: string;
   public withdrawnAmount!: string;
@@ -17,6 +17,7 @@ export default class UserWallet extends Model {
   public nickname!: string;
   public softDeleted!: boolean;
   public lastUpdated!: Date;
+  public createdAt!: Date;
   public recType!: string;
 
   public readonly user?: any;
@@ -37,12 +38,8 @@ export default class UserWallet extends Model {
           allowNull: false,
           field: 'user_id',
         },
-        totalEarnings: {
-          type: MONEY_TYPE,
-          allowNull: false,
-          defaultValue: 0.00000000,
-          field: 'total_earnings',
-        },
+
+        
         withdrawnAmount: {
           type: MONEY_TYPE,
           allowNull: false,
@@ -87,6 +84,11 @@ export default class UserWallet extends Model {
           type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
           field: 'last_updated',
+        },
+        createdAt: {
+          type: DATE,
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
         },
       },
       {

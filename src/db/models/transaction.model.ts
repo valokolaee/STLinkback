@@ -21,11 +21,11 @@ export default class Transaction extends Model {
 
   public withdrawId!: number;
 
-  public amount!: number;
+  public amount!: string;
   public currency!: string;
   public recType!: string;
 
-  public approverAgentId?: number | null;
+  public approverAgentId?: number  ;
 
   public createdAt!: Date;
 
@@ -101,17 +101,19 @@ export default class Transaction extends Model {
 
         toWalletId: {
           type: INTEGER,
-          allowNull: false,
+          allowNull: true,
           field: 'to_wallet_id',
         },
 
         toWalletType: {
           type: STRING,
-          allowNull: false,
+          allowNull: true,
           field: 'to_wallet_type',
         },
 
 
+
+        
         withdrawId: {
           type: INTEGER,
           allowNull: true,
@@ -119,6 +121,8 @@ export default class Transaction extends Model {
            field: 'withdrawal_request_id',
         },
 
+
+        
         createdAt: {
           type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -158,10 +162,10 @@ export default class Transaction extends Model {
       as: 'toUserWallet'
     })
 
-    // Transaction.belongsTo(WithdrawalRequest, {
-    //   foreignKey: 'withdrawId',
-    //   as: 'withdraw',
-    // });
+    Transaction.belongsTo(WithdrawalRequest, {
+      foreignKey: 'withdrawId',
+      as: 'withdraw',
+    });
   }
 }
 

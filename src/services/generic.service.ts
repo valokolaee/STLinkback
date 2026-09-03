@@ -1,7 +1,7 @@
-import { Model, ModelStatic, Order, TransactionOptions, WhereOptions } from 'sequelize';
-import serviceResponser from '../utils/serviceResponser.utils';
-import buildWhereClause from '../utils/buildWhereClause';
 import { log } from 'console';
+import { Model, ModelStatic, Order, Transaction, WhereOptions } from 'sequelize';
+import buildWhereClause from '../utils/buildWhereClause';
+import serviceResponser from '../utils/serviceResponser.utils';
 
 
 
@@ -85,10 +85,10 @@ export default (model: ModelStatic<Model>) => {
     },
 
 
-    async create(object: any, tr?: TransactionOptions) {
+    async create(object: any, transaction?: Transaction) {
 
       try {
-        const item = await model.create(object, tr);
+        const item = await model.create(object, {transaction});
 
         return serviceResponser({ ok: true, data: item })
 
@@ -100,12 +100,12 @@ export default (model: ModelStatic<Model>) => {
 
     },
 
-    async update(object: any, tr?: TransactionOptions) {
+    async update(object: any, transaction?: Transaction) {
       console.log('object', object);
 
       try {
 
-        const numOfUpdated = await model.update(object, { where: { id: object.id } });
+        const numOfUpdated = await model.update(object, { where: { id: object.id } ,transaction});
 
         return serviceResponser({ ok: true, data: numOfUpdated })
 

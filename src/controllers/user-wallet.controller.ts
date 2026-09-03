@@ -101,7 +101,11 @@ export default {
         return responserUtils(res, 400, { success: false, message: 'Wallet nickname already exists' })
       }
 
-      const createdItem = await service.create({ ...data.data, userId });
+      const createdItem = await service.create({
+        ...data.data,
+        // availableBalance: 1000,
+        userId
+      });
 
 
       if (createdItem.ok) {

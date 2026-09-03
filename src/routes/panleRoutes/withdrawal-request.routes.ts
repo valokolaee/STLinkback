@@ -1,10 +1,9 @@
-// src/routes/auth.routes.ts
 import { Router } from 'express';
 import controller from '../../controllers/withdrawal-request.controller';
 import { authenticate } from '../../middleware/auth.middleware';
 
-const router = Router();
 
+const router = Router();
 
 
 router.get('/', authenticate, controller.getAll);
