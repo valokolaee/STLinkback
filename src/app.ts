@@ -5,19 +5,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import corsOptions from './config/cors.options';
 import { sequelize } from './db/db';
-
 import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
-
-
 import { dirList } from './config/constants';
 import { errorHandler } from './middleware/error.middleware';
 import customerRouts from './routes/customerRoutes';
-import panelRouts from './routes/panleRoutes';
 import mxRoutes from './routes/mxRoutes';
-import initializeRolesUtils from './utils/initializeRoles.utils';
+import panelRouts from './routes/panleRoutes';
 import { resetDatabase } from './db/db.init';
-// import './cron/cleanup.cron';
+
 
 
 const https = require('https');

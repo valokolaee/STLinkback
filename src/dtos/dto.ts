@@ -44,7 +44,7 @@ export const createMiningWalletSchema = Joi.object({
 
 export const createUserWalletSchema = Joi.object({
   // userId: Joi.number().required(),
-  walletAddress: Joi.string().required(),
+  // walletAddress: Joi.string().required(),
   nickname: Joi.string().required(),
   currency: Joi.string()
 });

@@ -8,6 +8,7 @@ import getUserByReqUtils from '../utils/getUserByReq.utils';
 import { log } from 'console';
 import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
 import responserUtils from '../utils/responser.utils';
+import { generateWalletAddress } from '../utils/generateWalletAddress.utils';
 
 
 
@@ -91,9 +92,9 @@ export default {
 
       if (!data.ok) { return }
 
-      const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId });
+      // const w = await service.findOne({ walletAddress: data.data!.walletAddress, userId });
 
-      if (w.data!?.id! > 0) { return responserUtils(res, 400, { success: false, message: 'Wallet address already exists' }) }
+      // if (w.data!?.id! > 0) { return responserUtils(res, 400, { success: false, message: 'Wallet address already exists' }) }
 
       const w2 = await service.findOne({ nickname: data.data!.nickname, userId });
 
@@ -101,15 +102,25 @@ export default {
         return responserUtils(res, 400, { success: false, message: 'Wallet nickname already exists' })
       }
 
+
+
+
+
       const createdItem = await service.create({
         ...data.data,
         // availableBalance: 1000,
+
         userId
       });
 
 
       if (createdItem.ok) {
 
+        console.log('createdItem', createdItem);
+
+        await createdItem.data.update({
+          walletAddress: generateWalletAddress(createdItem.data.id)
+        })
         return responserUtils(res, 200, { success: true, data: createdItem.data })
 
       } else {

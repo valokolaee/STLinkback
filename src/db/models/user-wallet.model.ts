@@ -71,8 +71,7 @@ export default class UserWallet extends Model {
         },
         nickname: {
           type: STRING(255),
-          allowNull: true,
-          unique: true,
+          //  unique: true,
           field: 'nickname',
         },
         softDeleted: {
@@ -96,6 +95,13 @@ export default class UserWallet extends Model {
         modelName: 'UserWallet',
         tableName: 'user_wallets',
         timestamps: false,
+        indexes: [
+          {
+            unique: true,
+            fields: ["user_id", "nickname"],
+            name: "unique_nickname_per_user", // اسم دلخواه برای ایندکس
+          },
+        ],
       }
     );
   }
