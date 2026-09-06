@@ -26,22 +26,33 @@ export default (model: ModelStatic<Model>) => {
       }
     },
 
-
-    async getOne(id: number) {
-
+    async getOne(id: number, options?: { transaction?: Transaction; lock?: boolean | Transaction['LOCK'][keyof Transaction['LOCK']] }) {
       try {
-
-        const item = await model.findByPk(id)
+        const item = await model.findByPk(id, {
+          transaction: options?.transaction,
+          lock: options?.lock,
+        })
 
         return serviceResponser({ ok: true, data: item })
-
       } catch (error) {
-
         return serviceResponser({ ok: false }, error)
-
       }
-
     },
+    // async getOne(id: number,) {
+
+    //   try {
+
+    //     const item = await model.findByPk(id)
+
+    //     return serviceResponser({ ok: true, data: item })
+
+    //   } catch (error) {
+
+    //     return serviceResponser({ ok: false }, error)
+
+    //   }
+
+    // },
 
     async getAllBy<T = any>(foreignKey: WhereOptions<T>, order?: Order, limit?: number,) {
 

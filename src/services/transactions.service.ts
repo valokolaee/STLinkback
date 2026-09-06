@@ -10,6 +10,7 @@ import Transaction, { ITransaction } from '../db/models/transaction.model';
 import UserWallet from '../db/models/user-wallet.model';
 import { sequelize } from '../db/db';
 import { decimalLessThan, decimalMinus, decimalPlus } from '../utils/decimal.utils';
+import WithdrawalRequest from '../db/models/withdrawal-request.model';
 
 
 const transactionModel: ModelStatic<Model> = Transaction
@@ -91,6 +92,11 @@ export default () => {
               ]
             }
           ]
+        },
+        
+        {
+          model: WithdrawalRequest,
+          as: 'withdraw'
         }
 
       ]
@@ -146,11 +152,11 @@ export default () => {
     },
 
 
-    async create(object: ITransaction, transactionE?: sequelizeTransaction) {
+    async create(object: ITransaction, transaction: sequelizeTransaction) {
 
-      const isExternalTransaction = !!transactionE;
+      // const isExternalTransaction = !!transactionE;
 
-      const transaction = transactionE || await sequelize.transaction()
+      // const transaction = transactionE || await sequelize.transaction()
 
 
       try {
@@ -170,13 +176,13 @@ export default () => {
 
         } else {
 
-          const fromWallet = await UserWallet.findByPk(fromWalletId)
-          if (decimalLessThan(fromWallet?.availableBalance!, amount!)) {
-            return serviceResponser({ ok: false, message: 'Insufficient balance' })
-          }
+          // const fromWallet = await UserWallet.findByPk(fromWalletId)
+          // if (decimalLessThan(fromWallet?.availableBalance!, amount!)) {
+          //   return serviceResponser({ ok: false, message: 'Insufficient balance' })
+          // }
 
-          const fromWalletBalance = decimalMinus(fromWallet?.availableBalance!, amount!)
-          await fromWallet?.update({ availableBalance: fromWalletBalance }, { transaction })
+          // const fromWalletBalance = decimalMinus(fromWallet?.availableBalance!, amount!)
+          // await fromWallet?.update({ availableBalance: fromWalletBalance }, { transaction })
 
 
         }
@@ -193,9 +199,9 @@ export default () => {
         const item = await Transaction.create(object as any, { transaction });
 
 
-        if (!isExternalTransaction) {
-          await transaction.commit();
-        }
+        // if (!isExternalTransaction) {
+        // await transaction.commit();
+        // }
         // await transaction.commit()
 
 
@@ -203,9 +209,9 @@ export default () => {
 
       } catch (error) {
 
-        if (!isExternalTransaction) {
-          await transaction.rollback();
-        }
+        // if (!isExternalTransaction) {
+        // await transaction.rollback();
+        // }
 
         return serviceResponser({ ok: false }, error)
 

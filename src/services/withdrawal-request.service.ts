@@ -45,11 +45,11 @@ export default () => {
     },
 
 
-    async getOne(id: number) {
+    async getOne(id: number, options?: { transaction?: Transaction; lock?: boolean | Transaction['LOCK'][keyof Transaction['LOCK']] }) {
 
       try {
 
-        const item = await model.findByPk(id)
+        const item = await model.findByPk(id,options)
 
         return serviceResponser({ ok: true, data: item })
 
@@ -74,7 +74,8 @@ export default () => {
           include: [{
             model: UserWallet,
             as: 'userWallet'
-          }]
+          }
+          ]
 
         });
 

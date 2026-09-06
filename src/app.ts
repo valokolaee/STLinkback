@@ -13,7 +13,7 @@ import customerRouts from './routes/customerRoutes';
 import mxRoutes from './routes/mxRoutes';
 import panelRouts from './routes/panleRoutes';
 import { resetDatabase } from './db/db.init';
-
+// import './cron/cleanup.cron';
 
 
 const https = require('https');

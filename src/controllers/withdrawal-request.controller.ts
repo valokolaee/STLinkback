@@ -88,19 +88,19 @@ export default {
 
 
       if (items.ok) {
-        var _withdraws: IWithdrawalRequest[] = [];
+        // var _withdraws: IWithdrawalRequest[] = [];
 
-        for (let index = 0; index < items.data!.length; index++) {
+        // for (let index = 0; index < items.data!.length; index++) {
 
-          const element = items.data![index]
+        //   const element = items.data![index]
 
-          const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletId!);
+        //   const _uw: IServiceResult<IUserWallet> = await userWalletService.getOneByAddress(element.dataValues.userWalletId!);
 
-          _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
+        //   _withdraws.push({ ...element.dataValues, userWalletNickname: _uw.data?.nickname });
 
-        }
+        // }
 
-        return responserUtils(res, 200, { success: true, data: _withdraws })
+        return responserUtils(res, 200, { success: true, data: items?.data })
       } else {
         return responserUtils(res, 404, { success: false, })
       }
@@ -113,83 +113,200 @@ export default {
   },
 
   async create(req: Request, res: Response) {
-
-
     try {
       const userId = getUserByReqUtils(req)?.id;
 
-      const currency = 'USDT'
-      const reqData: IServiceResult<IWithdrawalRequest> = validate(createWithdrawalRequestSchema, { userId, currency, ...req?.body }, res);
+      if (!userId) {
+        return responserUtils(res, 401, { success: false, message: 'Unauthorized' });
+      }
+
+      const currency = 'USDT';
+      const reqData: IServiceResult<IWithdrawalRequest> = validate(
+        createWithdrawalRequestSchema,
+        { userId, currency, ...req?.body },
+        res
+      );
 
       if (!reqData.ok) {
-        return
+        return;
       }
-
-
-      const _userWallet: IServiceResult<IUserWallet> = await serviceUserWallet.getOne(reqData.data?.userWalletId!)
-      console.log(_userWallet);
-
-      if (!_userWallet.ok) {
-        return responserUtils(res, 400, { success: false, message: 'Wallet Not Found' })
-
-      }
-
-      if (decimalGreaterThan(reqData.data?.amount!, _userWallet.data?.availableBalance!)) {
-        return responserUtils(res, 400, { success: false, message: 'Insufficient Balance' })
-      }
-
 
       const transaction = await sequelize.transaction();
 
       try {
+        // Fetch + lock the wallet row *inside* the transaction so a concurrent
+        // withdrawal request can't read the same stale balance (TOCTOU race).
+        const _userWallet: IServiceResult<IUserWallet> = await serviceUserWallet.getOne(
+          reqData.data?.userWalletId!,
+          {
+            transaction,
+            lock: transaction.LOCK.UPDATE
+          }
+        );
 
+        if (!_userWallet.ok || !_userWallet.data) {
+          await transaction.rollback();
+          return responserUtils(res, 400, { success: false, message: 'Wallet Not Found' });
+        }
 
-        const createdItem: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.create(reqData.data, transaction);
+        if (decimalGreaterThan(reqData.data?.amount!, _userWallet.data.availableBalance!)) {
+          await transaction.rollback();
+          return responserUtils(res, 400, { success: false, message: 'Insufficient Balance' });
+        }
 
+        const createdItem: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.create(
+          reqData.data,
+          transaction
+        );
 
-        const _user_wallet_new_availableBalance = decimalMinus(_userWallet?.data?.availableBalance!, reqData?.data?.amount!)
-        const _user_wallet_new_pendingBalance = decimalPlus(_userWallet?.data?.pendingBalance!, reqData?.data?.amount!)
+        if (!createdItem.ok) {
+          await transaction.rollback();
+          return responserUtils(res, 400, {
+            success: false,
+            message: createdItem.message || 'Failed to create withdrawal request',
+          });
+        }
 
-        const newWall = { id: _userWallet.data?.id!, availableBalance: _user_wallet_new_availableBalance, pendingBalance: _user_wallet_new_pendingBalance }
+        const _user_wallet_new_availableBalance = decimalMinus(
+          _userWallet.data.availableBalance!,
+          reqData.data?.amount!
+        );
+        const _user_wallet_new_pendingBalance = decimalPlus(
+          _userWallet.data.pendingBalance!,
+          reqData.data?.amount!
+        );
 
-        console.log(newWall);
+        const newWall = {
+          id: _userWallet.data.id!,
+          availableBalance: _user_wallet_new_availableBalance,
+          pendingBalance: _user_wallet_new_pendingBalance,
+        };
 
-        await serviceUserWallet.update(newWall, transaction)
+        const updatedWallet: IServiceResult<IUserWallet> = await serviceUserWallet.update(
+          newWall,
+          transaction
+        );
 
+        if (!updatedWallet.ok) {
+          await transaction.rollback();
+          return responserUtils(res, 400, {
+            success: false,
+            message: updatedWallet.message || 'Failed to update wallet balance',
+          });
+        }
 
-        await transaction.commit()
+        await transaction.commit();
+
         return responserUtils(res, 200, {
           success: true,
-          message: 'Your withdrawal request has been submitted successfully. We will review it and notify you once processed.'
-
-        })
-
+          message:
+            'Your withdrawal request has been submitted successfully. We will review it and notify you once processed.',
+        });
       } catch (e) {
-        await transaction.rollback()
+        await transaction.rollback();
+        console.error('Withdrawal request transaction failed:', e);
 
         return responserUtils(res, 400, {
           success: false,
-          message: 'Something went wrong while creating the withdrawal request'
-        })
-
+          message: 'Something went wrong while creating the withdrawal request',
+        });
       }
-
-
     } catch (error) {
+      console.error('Withdrawal request creation failed:', error);
 
-      return responserUtils(res, 500, { success: false, }, error)
-
+      return responserUtils(res, 500, {
+        success: false,
+        message: 'Something went wrong. Please try again later.',
+      });
     }
   },
 
+
+  // async create(req: Request, res: Response) {
+
+
+  //   try {
+  //     const userId = getUserByReqUtils(req)?.id;
+
+  //     const currency = 'USDT'
+  //     const reqData: IServiceResult<IWithdrawalRequest> = validate(createWithdrawalRequestSchema, { userId, currency, ...req?.body }, res);
+
+  //     if (!reqData.ok) {
+  //       return
+  //     }
+
+
+  //     const _userWallet: IServiceResult<IUserWallet> = await serviceUserWallet.getOne(reqData.data?.userWalletId!)
+  //     console.log(_userWallet);
+
+  //     if (!_userWallet.ok) {
+  //       return responserUtils(res, 400, { success: false, message: 'Wallet Not Found' })
+
+  //     }
+
+  //     if (decimalGreaterThan(reqData.data?.amount!, _userWallet.data?.availableBalance!)) {
+  //       return responserUtils(res, 400, { success: false, message: 'Insufficient Balance' })
+  //     }
+
+
+  //     const transaction = await sequelize.transaction();
+
+  //     try {
+
+
+  //       const createdItem: IServiceResult<IWithdrawalRequest> = await withdrawalRequestService.create(reqData.data, transaction);
+
+
+  //       const _user_wallet_new_availableBalance = decimalMinus(_userWallet?.data?.availableBalance!, reqData?.data?.amount!)
+  //       const _user_wallet_new_pendingBalance = decimalPlus(_userWallet?.data?.pendingBalance!, reqData?.data?.amount!)
+
+  //       const newWall = { id: _userWallet.data?.id!, availableBalance: _user_wallet_new_availableBalance, pendingBalance: _user_wallet_new_pendingBalance }
+
+  //       console.log(newWall);
+
+  //       await serviceUserWallet.update(newWall, transaction)
+
+
+  //       await transaction.commit()
+  //       return responserUtils(res, 200, {
+  //         success: true,
+  //         message: 'Your withdrawal request has been submitted successfully. We will review it and notify you once processed.'
+
+  //       })
+
+  //     } catch (e) {
+  //       await transaction.rollback()
+
+  //       return responserUtils(res, 400, {
+  //         success: false,
+  //         message: 'Something went wrong while creating the withdrawal request'
+  //       })
+
+  //     }
+
+
+  //   } catch (error) {
+
+  //     return responserUtils(res, 500, { success: false, }, error)
+
+  //   }
+  // },
+
   async update(req: Request, res: Response) {
+    const transaction = await sequelize.transaction();
+
     try {
       const _withDraw: IWithdrawalRequest = req.body;
       const userId = getUserByReqUtils(req)?.id;
 
       // Get existing withdrawal
       const existingWithdraw: IServiceResult<IWithdrawalRequest> =
-        await withdrawalRequestService.getOne(_withDraw.id!);
+        await withdrawalRequestService.getOne(_withDraw.id!,
+       {
+          transaction,
+          lock: transaction.LOCK.UPDATE,
+}
+        );
 
       if (!existingWithdraw.ok || !existingWithdraw.data) {
         return responserUtils(res, 404, {
@@ -211,7 +328,6 @@ export default {
       }
 
       // Start transaction
-      const transaction = await sequelize.transaction();
 
       try {
         /*

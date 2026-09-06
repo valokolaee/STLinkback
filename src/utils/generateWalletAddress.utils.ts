@@ -50,6 +50,9 @@ function deobfuscateId(obfuscatedStr: string): number {
     return Number(original);
 }
 
+export function simple_generateWalletAddress(id: number): string {
+    return `${PROJECT_CODE}000000${1000 + id}`
+}
 export function generateWalletAddress(id: number): string {
     const accountNumber = obfuscateId(id);
 
@@ -58,6 +61,8 @@ export function generateWalletAddress(id: number): string {
     const remainder = mod97(numeric);
     const checkDigits = String(98 - remainder).padStart(2, "0");
 
+
+    return simple_generateWalletAddress(id)
     return `${PROJECT_CODE}${checkDigits}${accountNumber}`;
 }
 
