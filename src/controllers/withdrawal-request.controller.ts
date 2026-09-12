@@ -136,7 +136,7 @@ export default {
       try {
         // Fetch + lock the wallet row *inside* the transaction so a concurrent
         // withdrawal request can't read the same stale balance (TOCTOU race).
-        const _userWallet: IServiceResult<IUserWallet> = await serviceUserWallet.getOne(
+        const _userWallet: IServiceResult<IUserWallet> = await serviceUserWallet.getOneByPk(
           reqData.data?.userWalletId!,
           {
             transaction,
@@ -302,10 +302,10 @@ export default {
       // Get existing withdrawal
       const existingWithdraw: IServiceResult<IWithdrawalRequest> =
         await withdrawalRequestService.getOne(_withDraw.id!,
-       {
-          transaction,
-          lock: transaction.LOCK.UPDATE,
-}
+          {
+            transaction,
+            lock: transaction.LOCK.UPDATE,
+          }
         );
 
       if (!existingWithdraw.ok || !existingWithdraw.data) {
@@ -352,7 +352,7 @@ export default {
          * to use the transaction in the current design.
          */
         const _userWallet: IServiceResult<IUserWallet> =
-          await serviceUserWallet.getOne(
+          await serviceUserWallet.getOneByPk(
             _withDraw.userWalletId!
           );
 
@@ -412,8 +412,8 @@ export default {
            * pendingBalance   -= amount
            * withdrawnAmount  += amount
            */
-            
-            
+
+
           case 'completed': {
             const newPendingBalance = decimalMinus(
               _userWallet.data.pendingBalance!,

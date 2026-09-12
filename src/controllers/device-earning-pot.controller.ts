@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { models } from '../db/db';
 import { createMiningWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
-import  responser from '../utils/responser.utils';
+import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 
@@ -38,7 +38,7 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const items = await service.getOne(id)
+      const items = await service.getOneByPk(id)
 
       if (items.ok) {
 
@@ -65,7 +65,7 @@ export default {
       // console.log(id);
 
       // return return responser(res, 200, { data: { yes: 'thanks' } })
-      const items = await service.findOne<IDeviceEarningPot>({  })
+      const items = await service.findOne<IDeviceEarningPot>({})
 
       if (items.ok) {
 

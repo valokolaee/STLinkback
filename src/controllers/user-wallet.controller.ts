@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
-import { createMiningWalletSchema, createUserWalletSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { validate } from '../utils/validator.utils';
-import IServiceResult from '../interfaces/IServiceResult';
-import { models } from '../db/db';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
-import { log } from 'console';
 import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
-import responserUtils from '../utils/responser.utils';
+import { createUserWalletSchema } from '../dtos/dto';
+import IServiceResult from '../interfaces/IServiceResult';
+import genericService from '../services/generic.service';
 import { generateWalletAddress } from '../utils/generateWalletAddress.utils';
+import getUserByReqUtils from '../utils/getUserByReq.utils';
+import responserUtils from '../utils/responser.utils';
+import { validate } from '../utils/validator.utils';
+import { log } from 'console';
+import User, { IUser } from '../db/models/user.model';
 
 
 
@@ -42,7 +42,7 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const items = await service.getOne(id)
+      const items = await service.getOneByPk(id)
 
       if (items.ok) {
 
@@ -102,14 +102,8 @@ export default {
         return responserUtils(res, 400, { success: false, message: 'Wallet nickname already exists' })
       }
 
-
-
-
-
       const createdItem = await service.create({
         ...data.data,
-        // availableBalance: 1000,
-
         userId
       });
 
@@ -183,6 +177,50 @@ export default {
       return responserUtils(res, 400, { success: false }, error)
 
     }
+  },
+
+  async getOneByObject(req: Request, res: Response) {
+
+    // const walletAddress = 'ST0000001001' //req.body
+    const walletAddress = req.body
+
+
+
+    const re = await service.findOne(walletAddress)
+    // console.log(re);
+
+    if (re.ok) {
+      if (re.data) {
+
+        const wallet: UserWallet = await re.data;
+        const w: IUserWallet = await UserWallet.findByPk(wallet.id, {
+          include: [
+            {
+              model: User,
+              as: 'owner'
+            }
+          ]
+        }) as IUserWallet
+        // console.log(w);
+
+        const owner: IUser = { email: w.owner?.email, firstName: w.owner?.firstName, }
+        const data = { id: wallet.id, walletAddress: wallet.walletAddress, owner }
+
+        return responserUtils(res, 200, {
+          success:true,
+          data
+        });
+      } else {
+
+        return responserUtils(res, 200, {
+          success:true
+        });
+      }
+
+    } else {
+      return responserUtils(res, 400)
+    }
+
   }
 
 }

@@ -26,7 +26,7 @@ export default (model: ModelStatic<Model>) => {
       }
     },
 
-    async getOne(id: number, options?: { transaction?: Transaction; lock?: boolean | Transaction['LOCK'][keyof Transaction['LOCK']] }) {
+    async getOneByPk(id: number, options?: { transaction?: Transaction; lock?: boolean | Transaction['LOCK'][keyof Transaction['LOCK']] }) {
       try {
         const item = await model.findByPk(id, {
           transaction: options?.transaction,
@@ -99,7 +99,7 @@ export default (model: ModelStatic<Model>) => {
     async create(object: any, transaction?: Transaction) {
 
       try {
-        const item = await model.create(object, {transaction});
+        const item = await model.create(object, { transaction });
 
         return serviceResponser({ ok: true, data: item })
 
@@ -116,7 +116,7 @@ export default (model: ModelStatic<Model>) => {
 
       try {
 
-        const numOfUpdated = await model.update(object, { where: { id: object.id } ,transaction});
+        const numOfUpdated = await model.update(object, { where: { id: object.id }, transaction });
 
         return serviceResponser({ ok: true, data: numOfUpdated })
 

@@ -3,7 +3,7 @@ import IResponse from '../interfaces/IResponse';
 import { IMiningDevice } from '../db/models/mining-device.model';
 import getUserByReq from '../utils/getUserByReq.utils';
 import { validate } from '../utils/validator.utils';
-import { createDeviceSchema } from '../dtos/dto';
+import { createDeviceSchema, createTransactionSchema, createUserWalletSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
 import { models, sequelize } from '../db/db';
 import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
@@ -107,13 +107,21 @@ export default {
   },
 
 
-  // Transactioncontroller.fixed · TS
+
   async create(req: Request, res: Response) {
+
+
+    const data: IServiceResult<ITransaction> = validate(createTransactionSchema, req?.body, res);
+
+    if (!data.ok) {
+      return
+    }
     const transaction = await sequelize.transaction();
 
     try {
       const object: ITransaction = req?.body;
       const { fromDevicePotId, fromWalletId, toWalletId, amount } = object || {};
+
 
       // ---- Input validation ----
       if (!amount || Number(amount) <= 0) {

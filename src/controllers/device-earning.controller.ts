@@ -6,7 +6,7 @@ import { IDeviceEarning } from '../db/models/device-earning.model';
 import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
 import genericService from '../services/generic.service';
 import getUserByReq from '../utils/getUserByReq.utils';
- import { validate } from '../utils/validator.utils';
+import { validate } from '../utils/validator.utils';
 import responserUtils from '../utils/responser.utils';
 
 
@@ -40,7 +40,7 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const devices = await service.getOne(id)
+      const devices = await service.getOneByPk(id)
 
       if (devices.ok) {
 
@@ -98,7 +98,7 @@ export default {
 
         const mwID = walletId
 
-        var mw: IDeviceEarningPot = (await serviceWallet.getOne(mwID)).data
+        var mw: IDeviceEarningPot = (await serviceWallet.getOneByPk(mwID)).data
 
         const newBalance =
           parseFloat(mw.availableBalance!.toString())

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { models } from '../db/db';
 import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
 import genericService from '../services/generic.service';
- import { validate } from '../utils/validator.utils';
+import { validate } from '../utils/validator.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 import responserUtils from '../utils/responser.utils';
 
@@ -39,7 +39,7 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const items = await service.getOne(id)
+      const items = await service.getOneByPk(id)
 
       if (items.ok) {
 

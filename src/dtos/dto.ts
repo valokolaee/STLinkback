@@ -42,6 +42,28 @@ export const createMiningWalletSchema = Joi.object({
 });
 
 
+
+
+export const createTransactionSchema = Joi.object({
+  fromDevicePotId: Joi.number().integer().positive().label('Device Pot'),
+  fromWalletId: Joi.number().integer().positive().label('Source Wallet'),
+  toWalletId: Joi.number().integer().positive().required().label('Destination Wallet')
+
+    .disallow(Joi.ref('fromWalletId'))
+    .messages({
+      'any.invalid': 'Source Wallet must be different from Destination Wallet',
+    }),
+  amount: Joi.number().positive().precision(2).required().label('Amount'),
+})
+  .xor('fromDevicePotId', 'fromWalletId')
+  .messages({
+    'object.missing': 'Either Device Pot or Source Wallet is required',
+    'object.xor': 'Provide either Device Pot or Source Wallet, not both',
+  })
+  .unknown(false);
+
+
+
 export const createUserWalletSchema = Joi.object({
   // userId: Joi.number().required(),
   // walletAddress: Joi.string().required(),

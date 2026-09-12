@@ -10,6 +10,7 @@ const router = Router();
 router.get('/', authenticate, controller.getAll);
 router.get('/:id', authenticate, controller.getOne);
 router.post('/getAllBy', authenticate, controller.getAllBy);
+router.post('/getOneByObject', authenticate, controller.getOneByObject);
 
 
 router.post('/', authenticate, controller.create);

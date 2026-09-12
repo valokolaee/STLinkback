@@ -1,7 +1,7 @@
 import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
 import Customer from './customer.model';
 import { MONEY_TYPE } from './constants/MONEY_DECIMAL';
-import User from './user.model';
+import User, { IUser } from './user.model';
 
 export default class UserWallet extends Model {
   public id!: number;
@@ -115,4 +115,6 @@ export default class UserWallet extends Model {
 }
 
 
-export interface IUserWallet extends Partial<UserWallet> { }
+export interface IUserWallet extends Partial<UserWallet> { 
+  owner?: IUser; 
+}

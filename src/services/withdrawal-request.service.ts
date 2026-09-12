@@ -49,7 +49,7 @@ export default () => {
 
       try {
 
-        const item = await model.findByPk(id,options)
+        const item = await model.findByPk(id, options)
 
         return serviceResponser({ ok: true, data: item })
 
@@ -68,21 +68,16 @@ export default () => {
         console.log(foreignKey);
 
         const items = await model.findAll({
+
           where: { ...foreignKey, softDeleted: 0 },
           order,
           limit,
           include: [{
             model: UserWallet,
             as: 'userWallet'
-          }
-          ]
+          }]
 
         });
-
-
-
-
-
 
 
 

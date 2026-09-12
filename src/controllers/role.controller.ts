@@ -21,15 +21,15 @@ export default {
 
 
       if (items.ok) {
-      return  responserUtils(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-      return  responserUtils(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
 
     } catch (error) {
 
-    return  responserUtils(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -39,21 +39,21 @@ export default {
     try {
       const id = parseInt(req?.params.id || '0')
 
-      const items = await service.getOne(id)
+      const items = await service.getOneByPk(id)
 
       if (items.ok) {
 
-      return  responserUtils(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
 
       } else {
 
-      return  responserUtils(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
 
       }
 
     } catch (error) {
 
-    return  responserUtils(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -66,14 +66,14 @@ export default {
       const items = await service.getAllBy({ userId });
 
       if (items.ok) {
-      return  responserUtils(res, 200, { success: true, data: items.data })
+        return responserUtils(res, 200, { success: true, data: items.data })
       } else {
-      return  responserUtils(res, 404, { success: false, })
+        return responserUtils(res, 404, { success: false, })
       }
 
     } catch (error) {
 
-    return  responserUtils(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -94,17 +94,17 @@ export default {
 
       if (createdItem.ok) {
 
-      return  responserUtils(res, 200, { success: true, data: createdItem.data })
+        return responserUtils(res, 200, { success: true, data: createdItem.data })
 
       } else {
 
-      return  responserUtils(res, 400, { success: false, data: createdItem.data })
+        return responserUtils(res, 400, { success: false, data: createdItem.data })
 
       }
 
     } catch (error) {
 
-    return  responserUtils(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
 
     }
   },
@@ -119,16 +119,16 @@ export default {
 
       if (updatedItems.ok) {
 
-      return  responserUtils(res, 200, { success: true, data: updatedItems.data })
+        return responserUtils(res, 200, { success: true, data: updatedItems.data })
 
       } else {
 
-      return  responserUtils(res, 400, { success: false, data: updatedItems.data })
+        return responserUtils(res, 400, { success: false, data: updatedItems.data })
 
       }
 
     } catch (error) {
-    return  responserUtils(res, 500, { success: false, }, error)
+      return responserUtils(res, 500, { success: false, }, error)
     }
   },
 
@@ -142,18 +142,18 @@ export default {
 
       if (deletedItems.ok) {
 
-      return  responserUtils(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
+        return responserUtils(res, 200, { success: true, message: `${deletedItems.data} items were deleted` })
 
       } else {
 
-      return  responserUtils(res, 400, { success: false, data: deletedItems.data })
+        return responserUtils(res, 400, { success: false, data: deletedItems.data })
 
       }
 
 
     } catch (error) {
 
-    return  responserUtils(res, 400, { success: false }, error)
+      return responserUtils(res, 400, { success: false }, error)
 
     }
   }
