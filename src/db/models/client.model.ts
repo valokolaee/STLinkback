@@ -1,16 +1,16 @@
 import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
-import User, { IUser } from './user.model';
-import MiningSession from './mining-session.model';
 import DeviceEarningPot from './device-earning-pot.model';
-import WithdrawalRequest from './withdrawal-request.model';
 import MiningDevice from './mining-device.model';
+import MiningSession from './mining-session.model';
+import User from './user.model';
+import WithdrawalRequest from './withdrawal-request.model';
 
 
-export default class Customer extends Model {
+export default class Client extends Model {
 
   public id!: number;
   public userId!: number;
-   public totalIncome!: number;
+  public totalIncome!: number;
   public totalAvailableBalance!: number;
   public ranking!: 'None' | 'Bronze' | 'Silver' | 'Gold' | 'VIP';
   //TODO public activeStatus!: 'active' | 'suspended' 
@@ -29,8 +29,8 @@ export default class Customer extends Model {
   public readonly miningWallets?: DeviceEarningPot[];
   public readonly withdrawalRequests?: WithdrawalRequest[];
 
-  public static initModel(sequelize: any): typeof Customer {
-    return Customer.init(
+  public static initModel(sequelize: any): typeof Client {
+    return Client.init(
       {
 
         id: {
@@ -50,7 +50,7 @@ export default class Customer extends Model {
 
         },
 
-     
+
         totalIncome: {
           type: INTEGER,
           field: 'total_income',
@@ -89,8 +89,8 @@ export default class Customer extends Model {
       },
       {
         sequelize,
-        modelName: 'Customer',
-        tableName: 'customers',
+        modelName: 'Client',
+        tableName: 'clients',
         timestamps: false,
       }
     );
@@ -100,32 +100,32 @@ export default class Customer extends Model {
   public static associate(models: any) {
 
 
- 
 
-    Customer.hasMany(models.MiningDevice, {
+
+    Client.hasMany(models.MiningDevice, {
       foreignKey: 'userId',
       as: 'miningDevices',
     });
 
- 
 
 
-    Customer.hasMany(DeviceEarningPot, {
+
+    Client.hasMany(DeviceEarningPot, {
       foreignKey: 'userId',
       as: 'miningWallets',
     });
 
-    Customer.hasMany(models.WithdrawalRequest, {
+    Client.hasMany(models.WithdrawalRequest, {
       foreignKey: 'userId',
       as: 'withdrawalRequests',
     });
 
-    Customer.hasMany(models.DeviceAlert, {
+    Client.hasMany(models.DeviceAlert, {
       foreignKey: 'resolvedBy',
       as: 'resolvedAlerts',
     });
 
-    Customer.hasMany(models.WithdrawalRequest, {
+    Client.hasMany(models.WithdrawalRequest, {
       foreignKey: 'processedBy',
       as: 'processedWithdrawals',
     });
@@ -135,7 +135,7 @@ export default class Customer extends Model {
 
 
 
-export type ICustomer = Partial<Customer> & {
+export type IClient = Partial<Client> & {
   // defaultWallet?: IUserWallet;
 
 }

@@ -1,20 +1,13 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../config/env.config';
-import { sequelize, models } from '../db/db';
-import { UserService } from './user.service';
-import { log } from 'console';
-import getUserByReq from '../utils/getUserByReq.utils';
-import IServiceResult from '../interfaces/IServiceResult';
+import { models } from '../db/db';
+import DeviceEarning, { IDeviceEarning } from '../db/models/device-earning.model';
 import serviceResponser from '../utils/serviceResponser.utils';
-import { IDeviceEarning } from '../db/models/device-earning.model';
 
 export default class {
 
   static async getAll() {
 
     try {
-      const devices = await models.DeviceEarning.findAll();
+      const devices = await DeviceEarning.findAll();
 
       return serviceResponser({
         ok: true,

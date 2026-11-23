@@ -1,31 +1,33 @@
-import { Request, Response } from 'express';
-import IResponse from '../interfaces/IResponse';
-import { IMiningDevice } from '../db/models/mining-device.model';
-import getUserByReq from '../utils/getUserByReq.utils';
-import { validate } from '../utils/validator.utils';
-import { createDeviceSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { models, sequelize } from '../db/db';
-import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
-import IServiceResult from '../interfaces/IServiceResult';
-import { dateDifference } from '../utils/DateTimeHelper';
-import responserUtils from '../utils/responser.utils';
-import MiningDeviceService from '../services/miningDevice.service';
-import DevicePotAssignment, { IDevicePotAssignment } from '../db/models/device-pot-assignment';
 import { log } from 'console';
+import { Request, Response } from 'express';
+import { sequelize } from '../db/db';
+import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import DevicePotAssignment, { IDevicePotAssignment } from '../db/models/device-pot-assignment';
+import { IMiningDevice } from '../db/models/mining-device.model';
+import { createDeviceSchema } from '../dtos/dto';
+import IResponse from '../interfaces/IResponse';
+import IServiceResult from '../interfaces/IServiceResult';
+import DeviceEarningPotService from '../services/DeviceEarningPot.service';
+import DevicePotAssignmentService from '../services/DevicePotAssignment.service';
+import MiningDeviceService from '../services/miningDevice.service';
+import getUserByReq from '../utils/getUserByReq.utils';
+import responserUtils from '../utils/responser.utils';
 import statusCalculator from '../utils/statusCalculator';
+import { validate } from '../utils/validator.utils';
 
 
 
 
 const miningDeviceService = MiningDeviceService()
-const serviceDeviceEarningPot = genericService(DeviceEarningPot)
-const serviceDeviceJoinPot = genericService(DevicePotAssignment)
+const serviceDeviceEarningPot = DeviceEarningPotService()
+const serviceDeviceJoinPot = DevicePotAssignmentService(DevicePotAssignment)
 
 export default {
 
   async getAll(req: Request, res: Response) {
     try {
+
+
       const devices: IServiceResult<IMiningDevice[]> = await miningDeviceService.getAll();
 
 
@@ -138,36 +140,50 @@ export default {
   async create(req: Request, res: Response) {
 
     const creatorId = getUserByReq(req)?.id
+
     const transaction = await sequelize.transaction();
 
     try {
 
-      const data = validate(createDeviceSchema, req?.body, res);
+      const b = { ...req?.body, userId: req?.body?.userId || creatorId }
+      const data = validate(createDeviceSchema, b, res);
+
+
       if (!data.ok) {
         return
       }
 
 
       const _deviceData = data?.data
-      const userId = _deviceData?.userId // data?.data?.userId
+      const userId = _deviceData?.userId || creatorId//// it is when no owner has bee specified which will make the admin the owner
 
 
 
       const _pot: Partial<IDeviceEarningPot> = { userId: userId!, currency: 'USDT' }
-      const createdPot: IServiceResult<IDeviceEarningPot> = await serviceDeviceEarningPot.create(_pot,  transaction);
 
-      if (!createdPot.ok) { throw new Error("Pot Failed "); }
+
+      // return responserUtils(res, 400, {
+      //   success: false,
+      //   message: `createdDevice.message || 'we regret to inform fail'`,
+      //   data: _pot
+      // })
+      const createdPot: IServiceResult<IDeviceEarningPot> = await serviceDeviceEarningPot.create(_pot, transaction);
+
+      if (!createdPot.ok) { throw new Error(createdPot?.message); }
 
 
       const _device: IMiningDevice = { creatorId, currentPotId: createdPot.data?.id, deviceModel: _deviceData?.deviceModel, serialNumber: _deviceData?.serialNumber, deviceName: _deviceData?.deviceName, imei: _deviceData?.imei }
-      const createdDevice: IServiceResult<IMiningDevice> = await miningDeviceService.create(_device,  transaction);
+      const createdDevice: IServiceResult<IMiningDevice> = await miningDeviceService.create(_device, transaction);
 
-      if (!createdDevice.ok) { throw new Error("Device Failed "); }
+      if (!createdDevice?.ok) {
+        throw new Error(createdDevice?.message);
+      
+      }
 
 
-      const _devicePotAssignment: IDevicePotAssignment = { deviceId: createdDevice.data?.id, potId: createdPot.data?.id, }
+      const _devicePotAssignment: IDevicePotAssignment = { deviceId: createdDevice.data?.id, potId: createdPot.data?.id,creatorId:userId }
       log('_devicePotAssignment', _devicePotAssignment)
-      const _join: IServiceResult<DevicePotAssignment> = await serviceDeviceJoinPot.create(_devicePotAssignment,  transaction)
+      const _join: IServiceResult<DevicePotAssignment> = await serviceDeviceJoinPot.create(_devicePotAssignment, transaction)
 
       if (!_join.ok) { throw new Error("Device Pot Assignment Failed "); }
 
@@ -189,24 +205,21 @@ export default {
       } else {
         return responserUtils(res, 400, {
           success: false,
-          message: 'we regret to inform fail'
+          message: createdDevice.message || 'we regret to inform fail'
         })
 
       }
 
 
-    } catch (error) {
+    } catch (error: any) {
 
       await transaction.rollback()
 
+
       return responserUtils(res, 400, {
         success: false,
-        message: 'we regret to inform fail'
+        message: error.message || 'we regret to inform fail'
       })
-
-      // return res.status(500).json({
-      //   success: false,
-      // });
 
     }
   },

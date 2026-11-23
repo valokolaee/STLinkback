@@ -6,7 +6,7 @@ export default (res: Response, status: number, body?: IResponse<any>, error?: an
 
     if (error !== undefined) {
 
-        errorHandlerUtils(error)
+        return errorHandlerUtils(error)
     }
 
     return res.status(status).json(body)

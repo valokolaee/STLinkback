@@ -1,6 +1,7 @@
 import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 import MiningDevice, { IMiningDevice } from './mining-device.model';
 import DeviceEarningPot, { IDeviceEarningPot } from './device-earning-pot.model';
+import User from './user.model';
 
 export default class DevicePotAssignment extends Model {
 
@@ -12,7 +13,9 @@ export default class DevicePotAssignment extends Model {
   public softDeleted!: boolean;
   public assignedAt!: Date;
   public unassignedAt!: Date;
-   
+  public createdAt!: Date; 
+  public creatorId!: number;//creator Id: the agent who created this device at the first place
+
   
   public static initModel(sequelize: any): typeof DevicePotAssignment {
 
@@ -33,7 +36,10 @@ export default class DevicePotAssignment extends Model {
             key: 'id',
           },
         },
-
+        creatorId: {
+          type: INTEGER,
+          allowNull: false,
+        },
         potId: {
           type: INTEGER,
           allowNull: false,
@@ -62,13 +68,19 @@ export default class DevicePotAssignment extends Model {
           allowNull: true,
         },
 
+        createdAt: {
+          type: DATE,
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
+        },
+
         softDeleted: {
           type: BOOLEAN,
           allowNull: true,
           defaultValue: false,
         },
-
       },
+      
       {
         sequelize,
         modelName: 'DevicePotAssignment',
@@ -96,7 +108,10 @@ export default class DevicePotAssignment extends Model {
   }
 
   public static associate(models: any) {
-
+    DevicePotAssignment.belongsTo(User, {
+      foreignKey: 'creatorId',
+      as: 'creator',
+    });
 
     DevicePotAssignment.belongsTo(MiningDevice, {
       foreignKey: 'deviceId',

@@ -3,16 +3,16 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { dirList } from './config/constants';
 import corsOptions from './config/cors.options';
-import { sequelize } from './db/db';
+import { resetDatabase } from './db/db.init';
+import { errorHandler } from './middleware/error.middleware';
+import clientRouts from './routes/clientRoutes';
 import databaseRoutes from './routes/database.routes';
 import imagesRoutes from './routes/images.rout';
-import { dirList } from './config/constants';
-import { errorHandler } from './middleware/error.middleware';
-import customerRouts from './routes/customerRoutes';
 import mxRoutes from './routes/mxRoutes';
-import panelRouts from './routes/panleRoutes';
-import { resetDatabase } from './db/db.init';
+import panelRouts from './routes/panelRoutes';
+import { sequelize } from './db/db';
 // import './cron/cleanup.cron';
 
 
@@ -44,32 +44,11 @@ app.use(express.json());
 app.use('/api/db', databaseRoutes);
 app.use('/uploads', imagesRoutes);
 
-app.use('/api', customerRouts);
+app.use('/api', clientRouts);
 app.use('/panel', panelRouts);
 app.use('/mx', mxRoutes);
 
-// app.use('/api/auth', authRoutes);
-// app.use('/api/user-session', userSessionRoutes);
-// app.use('/api/users', userRoutes);
 
-// app.use('/api/mining-devicesReport', miningDeviceReportRoutes);
-// app.use('/api/mining-devices', miningDeviceRoutes);
-
-// app.use('/api/user-wallet', userWalletRoutes);
-// app.use('/api/mining-session', miningSessionRoutes);
-// app.use('/api/device-earnings', deviceEarningsRoutes);
-
-// app.use('/api/withdrawal-request', withdrawalRequestRoutes);
-
-// app.use('/api/device-alert', deviceAlertRoutes);
-// app.use('/api/device-specification', deviceSpecificationRoutes);
-
-// app.use('/api/role', roleRoutes);
-// app.use('/api/permission', permissionRoutes);
-// app.use('/api/role-permission', rolePermissionRoutes);
-
-// app.use('/api/monitor', monitor);
-// app.use('/panel/monitor', monitor);
 
 
 // Serve static files
@@ -128,18 +107,8 @@ dirList.forEach((el) => {
 app.use(errorHandler);
 
 // Start Server
-// const PORT = process.env.PORT || 3002;
+
 const PORT = 3002;
-// app.listen(PORT, async () => {
-//   try {
-//     await sequelize.authenticate();
-//     console.log('Database connection established successfully.');
-//     console.log(`Server is running on http://localhost:${PORT}`);
-//     console.log(`Backend URL: https://w.bankon.click`);
-//   } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-//   }
-// });
 
 
 
@@ -151,7 +120,8 @@ const options = {
 
 https.createServer(options, app).listen(PORT, async () => {
   try {
-    // await resetDatabase()
+
+    // await resetDatabase();
 
     await sequelize.authenticate();
 

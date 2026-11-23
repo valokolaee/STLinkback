@@ -13,14 +13,38 @@ export default () => {
 
   return {
 
-    async getAll(
-      order?: Order
-
-    ) {
+    async getAll(order?: Order) {
       try {
 
-        const items = await miningDevice.findAll({
-          order,
+        // const items = await miningDevice.findAll({
+        //   order,
+        //   include: [
+        //     {
+        //       model: DeviceEarningPot,
+        //       as: 'currentPot',
+        //       required: true,
+        //       where: {
+        //         // userId,
+        //         softDeleted: false,
+        //       },
+        //       include: [
+        //         {
+        //           model: User,
+        //           as: 'owner'
+        //         }
+        //       ]
+
+
+        //     },
+        //   ],
+
+        // },);
+
+
+
+        const items = await MiningDevice.findAll({
+
+
           include: [
             {
               model: DeviceEarningPot,
@@ -32,19 +56,58 @@ export default () => {
               },
               include: [
                 {
-                  model: User,
-                  as: 'owner'
-                }
+                  model: DevicePotAssignment,
+                  as: 'potAssignment',
+                  required: true,
+                  where: {
+                    softDeleted: false,
+                  },
+
+
+                },
               ]
-
-
             },
           ],
-          
-        },);
 
 
 
+          // include: [
+          //   {
+          //     model: DevicePotAssignment,
+          //     as: 'assignments',
+          //     required: true,
+          //     where: {
+          //       unassignedAt: null,
+          //       softDeleted: false,
+          //     },
+          //     include: [
+          //       {
+          //         model: DeviceEarningPot,
+          //         as: 'pot',
+          //         required: true,
+          //         where: {
+          //           userId,
+          //           softDeleted: false,
+          //         },
+          //         include: [
+          //           {
+          //             model: DevicePotAssignment,
+          //             as: 'pot',
+          //             required: true,
+          //             where: {
+          //               userId,
+          //               softDeleted: false,
+          //             },
+          //             include: [
+
+          //             ]
+          //           },
+          //         ]
+          //       },
+          //     ],
+          //   },
+          // ],
+        });
 
 
 
@@ -93,28 +156,70 @@ export default () => {
       try {
 
         const devices = await MiningDevice.findAll({
+
+
           include: [
             {
-              model: DevicePotAssignment,
-              as: 'assignments',
+              model: DeviceEarningPot,
+              as: 'currentPot',
               required: true,
               where: {
-                unassignedAt: null,
+                userId,
                 softDeleted: false,
               },
               include: [
                 {
-                  model: DeviceEarningPot,
-                  as: 'pot',
+                  model: DevicePotAssignment,
+                  as: 'potAssignment',
                   required: true,
                   where: {
-                    userId,
                     softDeleted: false,
                   },
+                 
+                  
                 },
-              ],
+              ]
             },
           ],
+
+
+
+          // include: [
+          //   {
+          //     model: DevicePotAssignment,
+          //     as: 'assignments',
+          //     required: true,
+          //     where: {
+          //       unassignedAt: null,
+          //       softDeleted: false,
+          //     },
+          //     include: [
+          //       {
+          //         model: DeviceEarningPot,
+          //         as: 'pot',
+          //         required: true,
+          //         where: {
+          //           userId,
+          //           softDeleted: false,
+          //         },
+          //         include: [
+          //           {
+          //             model: DevicePotAssignment,
+          //             as: 'pot',
+          //             required: true,
+          //             where: {
+          //               userId,
+          //               softDeleted: false,
+          //             },
+          //             include: [
+
+          //             ]
+          //           },
+          //         ]
+          //       },
+          //     ],
+          //   },
+          // ],
         });
 
 
@@ -149,7 +254,7 @@ export default () => {
     async create(object: any, transaction?: Transaction) {
 
       try {
-        const item = await miningDevice.create(object, {transaction});
+        const item = await miningDevice.create(object, { transaction });
 
         return serviceResponser({ ok: true, data: item })
 

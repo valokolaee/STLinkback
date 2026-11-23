@@ -10,15 +10,17 @@ export default class DeviceEarningPot extends Model {
   public totalEarnings!: string;
   public withdrawnAmount!: string;
   public availableBalance!: string;
-  // public pendingBalance!: string;
   public currency!: string;
   public softDeleted!: boolean;
   public lastUpdated!: Date;
-  public recType!: string;
+  public recType!: 'deviceEarning' | 'affiliate';
+  public createdAt!: Date;
 
   public readonly user?: any;
 
   public static initModel(sequelize: any): typeof DeviceEarningPot {
+
+
     return DeviceEarningPot.init(
       {
         id: {
@@ -26,6 +28,7 @@ export default class DeviceEarningPot extends Model {
           autoIncrement: true,
           primaryKey: true,
         },
+
         recType: {
           type: STRING(20),
         },
@@ -57,24 +60,25 @@ export default class DeviceEarningPot extends Model {
           defaultValue: 0.00000000,
           field: 'available_balance',
         },
-        // pendingBalance: {
-        //   type: MONEY_TYPE,
-        //   allowNull: false,
-        //   defaultValue: 0.00000000,
-        //   field: 'pending_balance',
-        // },
+
         currency: {
           type: STRING(10),
           allowNull: false,
           defaultValue: 'USDT',
         },
 
+        createdAt: {
+          type: DATE,
+          defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+          field: 'created_at',
+        },
 
         softDeleted: {
           type: BOOLEAN,
           allowNull: true,
           defaultValue: false
         },
+
         lastUpdated: {
           type: DATE,
           defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
@@ -86,12 +90,7 @@ export default class DeviceEarningPot extends Model {
         modelName: 'DeviceEarningPot',
         tableName: 'device_earning_pots',
         timestamps: false,
-        // indexes: [
-        //   {
-        //     unique: true,
-        //     fields: ['walletAddress']
-        //   }
-        // ]
+
       }
     );
   }
@@ -121,4 +120,4 @@ export default class DeviceEarningPot extends Model {
 export interface IDeviceEarningPot extends Partial<DeviceEarningPot> {
   owner?: IUser;
   potAssignment: IDevicePotAssignment;
- }
+}

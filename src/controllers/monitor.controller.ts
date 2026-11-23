@@ -7,15 +7,17 @@ import { IDeviceMetric } from '../db/models/device-metric.model';
 import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
 import { IMiningSession } from '../db/models/mining-session.model';
 import IServiceResult from '../interfaces/IServiceResult';
-import genericService from '../services/generic.service';
+import DeviceEarningService from '../services/DeviceEarning.service';
+ import RolePermissionService from '../services/RolePermission.service';
 import responserUtils from '../utils/responser.utils';
+import DeviceAlertService from '../services/DeviceAlert.service';
 
 
 
 
-const serviceRolePermission = genericService(models.RolePermission)
+const serviceRolePermission = RolePermissionService(models.RolePermission)
 
-const serviceDeviceEarning = genericService(models.DeviceEarning)
+const serviceDeviceEarning = DeviceEarningService(models.DeviceEarning)
 
 export default {
 
@@ -55,7 +57,7 @@ export default {
           }
         ],
         raw: true,  // Returns plain object, no Sequelize methods
-        nest: true  // Nests the customer object properly
+        nest: true  // Nests the client object properly
       }) as IMiningDevice
 
 
@@ -63,21 +65,21 @@ export default {
 
 
 
-      const _alerts: IServiceResult<IDeviceAlert[]> = await genericService(models.DeviceAlert).getAllBy({ deviceId }, [['createdAt', 'desc']]);
+      const _alerts: IServiceResult<IDeviceAlert[]> = await DeviceAlertService(models.DeviceAlert).getAllBy({ deviceId }, [['createdAt', 'desc']]);
       var _alert = null;
       if (_alerts?.data!?.length > 0) {
         _alert = _alerts.data!;
 
       }
 
-      const _metrics: IServiceResult<IDeviceMetric[]> = await genericService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']], 10);
+      const _metrics: IServiceResult<IDeviceMetric[]> = await DeviceAlertService(models.DeviceMetric).getAllBy({ deviceId }, [['recordedAt', 'desc']], 10);
 
       var _metric = null;
       if (_metrics?.data!?.length > 0) {
         _metric = _metrics?.data!;
       }
 
-      const _sessions: IServiceResult<IMiningSession[]> = await genericService(models.MiningSession).getAllBy({ deviceId }, [['createdAt', 'desc']]);
+      const _sessions: IServiceResult<IMiningSession[]> = await DeviceAlertService(models.MiningSession).getAllBy({ deviceId }, [['createdAt', 'desc']]);
 
       var _currentSession: IMiningSession = {}
       if (_metrics?.data!?.length > 0) {

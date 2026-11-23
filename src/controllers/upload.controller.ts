@@ -26,7 +26,7 @@ export class UploadController {
 
       // Construct file URL
       const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
-      const success = await UserService.updateUser(userId, { profileImage: fileUrl });
+      const success = await UserService.updateUser(userId, { profileImageUrl: fileUrl });
 
       const response: UploadResponse = {
         success: true,

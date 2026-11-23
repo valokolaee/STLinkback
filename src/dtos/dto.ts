@@ -20,7 +20,17 @@ export const createDeviceSchema = Joi.object({
   imei: Joi.string().required(),
   deviceModel: Joi.string().min(1).max(100).required(),
   serialNumber: Joi.string()
+});
 
+
+export const createDeviceAffiliateSchema = Joi.object({
+  // userId: Joi.number(),
+  potAssignmentId: Joi.number(),
+  affiliateId: Joi.number(),
+  percent: Joi.number().min(1).max(100).required(),
+  // imei: Joi.string().required(),
+  // deviceModel: Joi.string().min(1).max(100).required(),
+  // serialNumber: Joi.string()
 });
 
 

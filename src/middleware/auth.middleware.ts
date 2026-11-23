@@ -1,16 +1,11 @@
 // src/middleware/auth.middleware.ts
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { models } from '../db/db';
-import responserUtils from '../utils/responser.utils';
-import Role, { IRole } from '../db/models/role.model';
-import genericService from '../services/generic.service';
-import initialRolesList, { agentRoles, customerRoles } from '../utils/initialRolesList';
 import Agent from '../db/models/agent.model';
+import Client from '../db/models/client.model';
 import User, { IUser } from '../db/models/user.model';
-import Customer from '../db/models/customer.model';
-import { log } from 'console';
+import responserUtils from '../utils/responser.utils';
 
 export const authenticate = async (
   req: Request,
@@ -33,7 +28,7 @@ export const authenticate = async (
 
     const token = authHeader.split(' ')[1];
 
-    
+
     // Verify token
     const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
 
@@ -50,14 +45,14 @@ export const authenticate = async (
           as: 'agent'
         },
         {
-          model: Customer,
-          as: 'customer'
+          model: Client,
+          as: 'client'
         },
       ],
 
 
       raw: true,  // Returns plain object, no Sequelize methods
-      nest: true  // Nests the customer object properly
+      nest: true  // Nests the client object properly
     }) as IUser;
 
     if (!user) {
@@ -68,7 +63,7 @@ export const authenticate = async (
       })
 
 
-      
+
     }
 
 
@@ -78,15 +73,15 @@ export const authenticate = async (
 
     const apiRout = baseUrl.length > 0 ? baseUrl[1] : '';
 
-    const _isCustomer = user.customer?.id! > 0;
+    const _isClient = user.client?.id! > 0;
     const _isApi = apiRout === 'api';
 
     const _isAgent = user.agent?.id! > 0;
     const _isPanel = apiRout === 'panel'
 
-    // log(apiRout, _isCustomer, _isApi, _isAgent, _isPanel)
 
-    if (!((_isCustomer && _isApi) || (_isAgent && _isPanel))) {
+    
+    if (!((_isClient && _isApi) || (_isAgent && _isPanel))) {
 
       responserUtils(res, 403, {
         success: false,
@@ -105,7 +100,7 @@ export const authenticate = async (
 
   } catch (error: any) {
 
- 
+
     if (error.name === 'JsonWebTokenError') {
       return responserUtils(res, 401, {
         success: false,
@@ -123,7 +118,7 @@ export const authenticate = async (
 
 
 
-    
+
     return responserUtils(res, 401, {
       success: false,
       message: 'Invalid token; please login'

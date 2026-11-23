@@ -2,18 +2,18 @@ import { Request, Response } from 'express';
 import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
 import { createUserWalletSchema } from '../dtos/dto';
 import IServiceResult from '../interfaces/IServiceResult';
-import genericService from '../services/generic.service';
-import { generateWalletAddress } from '../utils/generateWalletAddress.utils';
+ import { generateWalletAddress } from '../utils/generateWalletAddress.utils';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 import responserUtils from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 import { log } from 'console';
 import User, { IUser } from '../db/models/user.model';
+import UserWalletService from '../services/UserWallet.service';
 
 
 
 
-const service = genericService(UserWallet)
+const service = UserWalletService(UserWallet)
 
 export default {
 

@@ -1,7 +1,7 @@
 // src/routes/auth.routes.ts
 import { Router } from 'express';
 import { authenticate } from '../../middleware/auth.middleware';
-import authController from '../../controllers/customerAuth.controller';
+import authController from '../../controllers/clientAuth.controller';
 
 const router = Router();
 

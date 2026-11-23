@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { models } from '../db/db';
 import { createMiningWalletSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import responser from '../utils/responser.utils';
+ import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
-import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import DeviceEarningPotService from '../services/DeviceEarningPot.service';
 
 
 
 
-const service = genericService(models.DeviceEarningPot)
+const service = DeviceEarningPotService( )
 
 export default {
 

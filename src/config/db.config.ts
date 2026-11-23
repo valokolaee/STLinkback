@@ -13,8 +13,10 @@ const dbConfig: Sequelize.Options = {
   database: process.env.DB_NAME,
   port: parseInt(process.env.DB_PORT as string, 10),
   logging: false,
-  timezone: '+00:00'  // Keeps everything in UTC, no conversion
-
+  timezone: '+00:00' , // Keeps everything in UTC, no conversion
+  pool: process.env.DB_RESET === '1'
+    ? { max: 1, min: 1 }                       // reset script only
+    : { max: 15, min: 2, acquire: 30000, idle: 10000 },
 };
 
 export default dbConfig;

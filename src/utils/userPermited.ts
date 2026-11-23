@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import Role, { IRole } from '../db/models/role.model';
 import { IUser } from '../db/models/user.model';
-import { agentRoles, customerRoles } from './initialRolesList';
+import { agentRoles, clientRoles } from './initialRolesList';
 import responserUtils from './responser.utils';
 
 export default async (req: Request, res: Response, user: IUser) => {
@@ -18,7 +18,7 @@ export default async (req: Request, res: Response, user: IUser) => {
     var _rolls: IRole[] = [];
 
     if (api === 'api') {
-      _rolls = customerRoles
+      _rolls = clientRoles
     } else if (api === 'panel') {
       _rolls = agentRoles;
     } else {

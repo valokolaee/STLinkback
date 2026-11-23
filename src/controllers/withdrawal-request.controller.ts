@@ -1,31 +1,24 @@
 import { Request, Response } from 'express';
-import { models, sequelize } from '../db/db';
-import { createWithdrawalRequestSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
-import { validate } from '../utils/validator.utils';
-import miningWalletService from '../services/miningWallet.service';
-import IServiceResult from '../interfaces/IServiceResult';
-import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
-import WithdrawalRequest, { IWithdrawalRequest } from '../db/models/withdrawal-request.model';
-import { safeParseFloat } from '../utils/math.utils';
+import { sequelize } from '../db/db';
+import DeviceEarningPot from '../db/models/device-earning-pot.model';
 import UserWallet, { IUserWallet } from '../db/models/user-wallet.model';
-import userWalletService from '../services/userWallet.service';
-import { IUser } from '../db/models/user.model';
-import IWithdrawalRequestWithUser from '../interfaces/IWithdrawalRequest';
-import responserUtils from '../utils/responser.utils';
-import withdrawalRequestSrvc from '../services/withdrawal-request.service';
-import { decimalFromString, decimalGreaterThan, decimalLessThan, decimalMinus, decimalPlus, } from '../utils/decimal.utils';
+import { IWithdrawalRequest } from '../db/models/withdrawal-request.model';
+import { createWithdrawalRequestSchema } from '../dtos/dto';
+import IServiceResult from '../interfaces/IServiceResult';
 import transactionsService from '../services/transactions.service';
-import { log } from 'console';
+import withdrawalRequestSrvc from '../services/withdrawal-request.service';
+import { decimalGreaterThan, decimalMinus, decimalPlus } from '../utils/decimal.utils';
+import getUserByReqUtils from '../utils/getUserByReq.utils';
+import responserUtils from '../utils/responser.utils';
+import { validate } from '../utils/validator.utils';
+import UserWalletService from '../services/UserWallet.service';
 
 
 
 
 
 const withdrawalRequestService = withdrawalRequestSrvc()
-const serviceMiningWallet = genericService(DeviceEarningPot)
-const serviceUserWallet = genericService(UserWallet)
+const serviceUserWallet = UserWalletService(UserWallet)
 
 
 export default {

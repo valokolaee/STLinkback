@@ -1,8 +1,7 @@
 import { models } from '../db/db';
 import { IMiningDevice } from '../db/models/mining-device.model';
 import serviceResponser from '../utils/serviceResponser.utils';
-import genericService from './generic.service';
-
+ 
 
 export default class <T> {
 
@@ -96,7 +95,7 @@ export default class <T> {
 
 
     try {
-      const _device = await models.MiningDevice.create(device);
+      const _device = await models.MiningDevice.create({device} );
 
       return serviceResponser({
         ok: true,

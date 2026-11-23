@@ -1,10 +1,9 @@
 import bcrypt from 'bcryptjs';
 import { models, sequelize } from '../db/db';
-import Role, { IRole } from '../db/models/role.model';
-import initialRolesList from './initialRolesList';
 import Agent from '../db/models/agent.model';
+import Role, { IRole } from '../db/models/role.model';
 import User from '../db/models/user.model';
-import genericService from '../services/generic.service';
+import initialRolesList from './initialRolesList';
 
 
 
@@ -58,7 +57,9 @@ export default async () => {
 
         await transaction.commit()
 
-        console.log('Admin user created');
+
+        console.log('Admin user created:', _adminUser.dataValues,_adminAgent.dataValues);
+     
       } catch (error) {
         await transaction.rollback();
         console.log('Admin user NOT created');

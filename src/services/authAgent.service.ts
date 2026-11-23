@@ -1,19 +1,16 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
-import { models } from '../db/db';
-import Role from '../db/models/role.model';
 import Agent from '../db/models/agent.model';
+import Role from '../db/models/role.model';
 import User from '../db/models/user.model';
-import { log } from 'console';
 
 export default class {
 
   static async login(data: any) {
-    const { email, password } = data;
-    // log(data)
-    const user = await User.findOne({
-      where: { username: email },
+    const { email, username, password } = data;
+    const user = await User.scope('withPassword').findOne({
+      where: { email: email },
       include: [
         {
           model: Agent,
@@ -22,24 +19,23 @@ export default class {
             model: Role,
             as: 'role'
           }]
-        }]
+        }],
+      raw: true,
+      nest: true
     });
 
-    // const aaa = await Agent.findAll()
-    console.log(user?.dataValues);
+    console.log(data, user)
 
 
     if (!user) throw new Error('User not found');
-    console.log(password, user.passwordHash);
 
 
     const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
-    console.log('isPasswordValid', isPasswordValid);
 
     if (!isPasswordValid) throw new Error('Invalid credentials');
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-    return { accessToken: token, user: user.get({ plain: true }) };
+    return { accessToken: token, user: user };
 
   }
 

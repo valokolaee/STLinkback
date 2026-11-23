@@ -8,7 +8,7 @@ import User from '../db/models/user.model';
 import { log } from 'console';
 import { Op } from 'sequelize';
 import serviceResponserUtils from '../utils/serviceResponser.utils';
-import Customer from '../db/models/customer.model';
+import Client from '../db/models/client.model';
 import UserWallet from '../db/models/user-wallet.model';
 
 export default class {
@@ -27,9 +27,9 @@ export default class {
       },
       include: [
         {
-          model: Customer,
-          as: 'customer',
-          required: true, // فقط یوزرهایی که Customer دارند
+          model: Client,
+          as: 'client',
+          required: true, // فقط یوزرهایی که client دارند
           // include: [{
           //   model: UserWallet,
           //   as: 'defaultWallet'
@@ -37,7 +37,7 @@ export default class {
         }],
 
       raw: true,  // Returns plain object, no Sequelize methods
-      nest: true  // Nests the customer object properly
+      nest: true  // Nests the client object properly
     });
 
     return serviceResponserUtils({

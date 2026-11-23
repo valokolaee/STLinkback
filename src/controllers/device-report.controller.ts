@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { validate } from '../utils/validator.utils';
 import { deviceEarningReportSchema } from '../dtos/device.dto';
 // import deviceReportService from '../services/device-report.service';
- import deviceReportService from '../services/device-report.service';
+import deviceReportService from '../services/onEarningRecorded.service/device-report.service';
 import { log } from 'console';
 import responserUtils from '../utils/responser.utils';
 
@@ -19,8 +19,9 @@ function getClientIP(req: Request): string {
 
 export default class DeviceReportController {
   static async go(req: Request, res: Response) { }
+
   static async reportEarning(req: Request, res: Response) {
-    console.log(req.body);
+    // console.log(req.body);
 
 
     const validated = validate(deviceEarningReportSchema, req.body, res);
@@ -31,7 +32,6 @@ export default class DeviceReportController {
 
       const result = await deviceReportService.recordEarning({
         ...req.body,
-
         clientIP,
       });
 
@@ -50,7 +50,11 @@ export default class DeviceReportController {
 
 
     } catch (error) {
-
+      return responserUtils(res, 500, {
+        success: false,
+        message: 'fail',
+        data: error
+      });
     }
   }
 

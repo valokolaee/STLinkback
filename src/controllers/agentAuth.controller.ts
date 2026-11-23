@@ -2,9 +2,9 @@
 import { Request, Response } from 'express';
 import { IAgent } from '../db/models/agent.model';
 import { IRole } from '../db/models/role.model';
-import agentAuthService from '../services/agentAuth.service';
+import agentAuthService from '../services/authAgent.service';
 import getUserByReq from '../utils/getUserByReq.utils';
-import { agentRoles, customerRoles } from '../utils/initialRolesList';
+import { agentRoles, clientRoles } from '../utils/initialRolesList';
 import responserUtils from '../utils/responser.utils';
 import { IUser } from '../db/models/user.model';
 
@@ -23,14 +23,14 @@ export default class {
       const result = await agentAuthService.login(data);
 
 
-      const _user = { ...result.user, token: result.accessToken, passwordHash: undefined, };
+      const _user :IUser = { ...result.user, token: result.accessToken, passwordHash: undefined, };
 
 
-      // console.log('result', _user);
       const r = _user?.agent?.role
+      console.log('result', r);
 
 
-      const roleName = r?.name;
+      const roleName = _user?.agent?.role?.name;
       const baseUrl = req.baseUrl.toString().split('/');
 
       const api = baseUrl.length > 0 ? baseUrl[1] : '';
@@ -43,7 +43,7 @@ export default class {
 
 
       if (api === 'api') {
-        _rolls = customerRoles
+        _rolls = clientRoles
       } else if (api === 'panel') {
         _rolls = agentRoles;
       } else {
@@ -80,7 +80,7 @@ export default class {
         message: 'Authentication failed',
       }, error);
 
-      
+
     }
   }
 
@@ -91,7 +91,7 @@ export default class {
         return
       }
 
-      
+
       return res.status(200).json({
         success: true,
         data: user

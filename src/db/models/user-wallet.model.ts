@@ -1,5 +1,5 @@
 import { BOOLEAN, DATE, DECIMAL, INTEGER, Model, STRING } from 'sequelize';
-import Customer from './customer.model';
+import Client from './client.model';
 import { MONEY_TYPE } from './constants/MONEY_DECIMAL';
 import User, { IUser } from './user.model';
 
@@ -39,7 +39,7 @@ export default class UserWallet extends Model {
           field: 'user_id',
         },
 
-        
+
         withdrawnAmount: {
           type: MONEY_TYPE,
           allowNull: false,
@@ -115,6 +115,6 @@ export default class UserWallet extends Model {
 }
 
 
-export interface IUserWallet extends Partial<UserWallet> { 
-  owner?: IUser; 
+export interface IUserWallet extends Partial<UserWallet> {
+  owner?: IUser;
 }

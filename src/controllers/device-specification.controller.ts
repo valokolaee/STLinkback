@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { models } from '../db/db';
-import { createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { validate } from '../utils/validator.utils';
+import { createWithdrawalRequestSchema } from '../dtos/dto';
+import DeviceSpecificationService from '../services/DeviceSpecification.service';
 import getUserByReqUtils from '../utils/getUserByReq.utils';
 import responserUtils from '../utils/responser.utils';
+import { validate } from '../utils/validator.utils';
 
 
 
 
-const service = genericService(models.DeviceSpecification)
+const service = DeviceSpecificationService(models.DeviceSpecification)
 
 
 export default {

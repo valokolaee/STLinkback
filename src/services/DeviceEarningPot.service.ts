@@ -2,10 +2,12 @@ import { log } from 'console';
 import { Model, ModelStatic, Order, Transaction, WhereOptions } from 'sequelize';
 import buildWhereClause from '../utils/buildWhereClause';
 import serviceResponser from '../utils/serviceResponser.utils';
+import DeviceEarningPot from '../db/models/device-earning-pot.model';
+
+const model: ModelStatic<Model> = DeviceEarningPot
 
 
-
-export default (model: ModelStatic<Model>) => {
+export default ( ) => {
 
   return {
 
@@ -85,7 +87,13 @@ export default (model: ModelStatic<Model>) => {
           where: { ...foreignKey, softDeleted: 0 },
         });
 
-        return serviceResponser({ ok: true, data: items })
+        if (!!!items) {
+          return serviceResponser({ ok: false, message:'No match found' })
+
+        } else {
+          
+          return serviceResponser({ ok: true, data: items })
+        }
 
       } catch (error) {
 
@@ -112,7 +120,7 @@ export default (model: ModelStatic<Model>) => {
     },
 
     async update(object: any, transaction?: Transaction) {
-      console.log('object', object);
+      // console.log('object', object);
 
       try {
 

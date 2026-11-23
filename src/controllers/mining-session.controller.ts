@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
 import { models } from '../db/db';
-import { createMiningSessionSchema, createMiningWalletSchema, createWithdrawalRequestSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { validate } from '../utils/validator.utils';
-import getUserByReqUtils from '../utils/getUserByReq.utils';
 import { IMiningSession } from '../db/models/mining-session.model';
+import { createMiningSessionSchema } from '../dtos/dto';
+import MiningSessionService from '../services/MiningSession.service';
+import getUserByReqUtils from '../utils/getUserByReq.utils';
 import responserUtils from '../utils/responser.utils';
+import { validate } from '../utils/validator.utils';
 
 
 
-const service = genericService(models.MiningSession)
+const service = MiningSessionService(models.MiningSession)
 
 
 export default {

@@ -1,7 +1,7 @@
 // src/models/user.model.ts
 import { BOOLEAN, DATE, INTEGER, Model, STRING } from 'sequelize';
 import Agent, { IAgent } from './agent.model';
-import Customer, { ICustomer } from './customer.model';
+import Client, { IClient } from './client.model';
 import DeviceEarningPot from './device-earning-pot.model';
 
 export default class User extends Model {
@@ -122,15 +122,21 @@ export default class User extends Model {
         modelName: 'User',
         tableName: 'users',
         timestamps: false,
+        defaultScope: {
+          attributes: { exclude: ['passwordHash'] },
+        },
+        scopes: {
+          withPassword: { attributes: { include: ['passwordHash'] } },
+        },
       }
     );
   }
 
   public static associate(models: any) {
 
-    User.hasOne(Customer, {
+    User.hasOne(Client, {
       foreignKey: 'userId',
-      as: 'customer',
+      as: 'client',
     });
 
     User.hasOne(Agent, {
@@ -151,6 +157,6 @@ export default class User extends Model {
 
 export interface IUser extends Partial<User> {
   token?: string;
-  customer?: ICustomer;
+  client?: IClient;
   agent?: IAgent;
 }

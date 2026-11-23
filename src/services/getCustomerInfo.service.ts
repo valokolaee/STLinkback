@@ -1,4 +1,4 @@
-import Customer from '../db/models/customer.model';
+import Client from '../db/models/client.model';
 import UserWallet from '../db/models/user-wallet.model';
 import User, { IUser } from '../db/models/user.model';
 import isValidEmail from '../utils/isValidEmail';
@@ -19,8 +19,8 @@ export default async (data: any) => {
     where,
     include: [
       {
-        model: Customer,
-        as: 'customer',
+        model: Client,
+        as: 'client',
         // include: [{
         //   model: UserWallet,
         //   as: 'defaultWallet'

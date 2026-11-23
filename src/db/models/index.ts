@@ -1,6 +1,6 @@
 // src/models/index.ts
 import Agent from './agent.model.js';
-import Customer from './customer.model.js';
+import Client from './client.model.js';
 import DeviceAlert from './device-alert.model.js';
 import DeviceEarning from './device-earning.model.js';
 import DeviceMetric from './device-metric.model.js';
@@ -19,15 +19,20 @@ import UserWallet from './user-wallet.model.js';
 import User from './user.model.js';
 import WithdrawalRequest from './withdrawal-request.model.js';
 import DevicePotAssignment from './device-pot-assignment.js';
+import DeviceAffiliate from './device-affiliate.model.js';
+import { models } from '../db.js';
 
 const initModels = (sequelize: any) => {
+
+
   const models = {
 
     // base tables
     User: User.initModel(sequelize),
     Role: Role.initModel(sequelize),
     Permission: Permission.initModel(sequelize),
-
+    Agent: Agent.initModel(sequelize),
+    Client: Client.initModel(sequelize),
     // user relations
     UserSession: UserSession.initModel(sequelize),
     UserWallet: UserWallet.initModel(sequelize),
@@ -38,6 +43,7 @@ const initModels = (sequelize: any) => {
     // devices
     MiningDevice: MiningDevice.initModel(sequelize),
     DevicePotAssignment: DevicePotAssignment.initModel(sequelize),
+    DeviceAffiliate: DeviceAffiliate.initModel(sequelize),
 
     DeviceSpecification: DeviceSpecification.initModel(sequelize),
     DeviceMetric: DeviceMetric.initModel(sequelize),
@@ -50,8 +56,7 @@ const initModels = (sequelize: any) => {
     Transaction: Transaction.initModel(sequelize),
 
     // other
-    Agent: Agent.initModel(sequelize),
-    Customer: Customer.initModel(sequelize),
+
     Setting: Setting.initModel(sequelize),
 
     RolePermission: RolePermission.initModel(sequelize),
@@ -59,31 +64,7 @@ const initModels = (sequelize: any) => {
   };
 
 
-  // const models = {
-  //   User: User.initModel(sequelize),
 
-  //   Role: Role.initModel(sequelize),
-  //   Permission: Permission.initModel(sequelize),
-  //   RolePermission: RolePermission.initModel(sequelize),
-  //   UserSession: UserSession.initModel(sequelize),
-  //   MiningDevice: MiningDevice.initModel(sequelize),
-  //   DeviceSpecification: DeviceSpecification.initModel(sequelize),
-  //   WithdrawalRequest: WithdrawalRequest.initModel(sequelize),
-  //   DeviceMetric: DeviceMetric.initModel(sequelize),
-  //   DeviceAlert: DeviceAlert.initModel(sequelize),
-  //   MiningSession: MiningSession.initModel(sequelize),
-  //   DeviceEarning: DeviceEarning.initModel(sequelize),
-  //   DeviceEarningPot: DeviceEarningPot.initModel(sequelize),
-  //   DevicePotAssignment: DevicePotAssignment.initModel(sequelize),
-  //   UserWallet: UserWallet.initModel(sequelize),
-
-  //   Agent: Agent.initModel(sequelize),
-  //   Customer: Customer.initModel(sequelize),
-  //   Setting: Setting.initModel(sequelize),
-  //   Transaction: Transaction.initModel(sequelize),
-  //   UserPermission: UserPermission.initModel(sequelize),
-
-  // };
 
   Object.values(models).forEach((model: any) => {
     if (model.associate) {
@@ -92,10 +73,9 @@ const initModels = (sequelize: any) => {
   });
 
 
-
-
-
   return models;
 };
 
 export default initModels;
+
+

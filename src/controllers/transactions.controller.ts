@@ -1,33 +1,25 @@
 import { Request, Response } from 'express';
-import IResponse from '../interfaces/IResponse';
+import { sequelize } from '../db/db';
+import DeviceEarningPot from '../db/models/device-earning-pot.model';
 import { IMiningDevice } from '../db/models/mining-device.model';
-import getUserByReq from '../utils/getUserByReq.utils';
-import { validate } from '../utils/validator.utils';
-import { createDeviceSchema, createTransactionSchema, createUserWalletSchema } from '../dtos/dto';
-import genericService from '../services/generic.service';
-import { models, sequelize } from '../db/db';
-import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
-import IServiceResult from '../interfaces/IServiceResult';
-import { dateDifference } from '../utils/DateTimeHelper';
-import responserUtils from '../utils/responser.utils';
-import MiningDeviceService from '../services/miningDevice.service';
-import DevicePotAssignment, { IDevicePotAssignment } from '../db/models/device-pot-assignment';
-import { error, log } from 'console';
-import statusCalculator from '../utils/statusCalculator';
-import Transaction, { ITransaction } from '../db/models/transaction.model';
-import TransactionsService from '../services/transactions.service';
+import { ITransaction } from '../db/models/transaction.model';
 import UserWallet from '../db/models/user-wallet.model';
+import { createTransactionSchema } from '../dtos/dto';
+import IResponse from '../interfaces/IResponse';
+import IServiceResult from '../interfaces/IServiceResult';
+import MiningDeviceService from '../services/miningDevice.service';
+import TransactionsService from '../services/transactions.service';
 import { decimalLessThan, decimalMinus } from '../utils/decimal.utils';
-import serviceResponserUtils from '../utils/serviceResponser.utils';
+import responserUtils from '../utils/responser.utils';
+import { validate } from '../utils/validator.utils';
 
 
 
 
 const transactionsService = TransactionsService()
 const miningDeviceService = MiningDeviceService()
-const serviceDeviceEarningPot = genericService(DeviceEarningPot)
-const serviceDeviceJoinPot = genericService(DevicePotAssignment)
-const serviceTransaction = genericService(Transaction)
+
+
 
 export default {
 

@@ -2,8 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/env.config';
 import { sequelize } from '../db/db';
-import Customer from '../db/models/customer.model';
-import UserWallet from '../db/models/user-wallet.model';
+import Client from '../db/models/client.model';
 import User, { IUser } from '../db/models/user.model';
 import isValidEmail from '../utils/isValidEmail';
 import serviceResponserUtils from '../utils/serviceResponser.utils';
@@ -53,14 +52,14 @@ export default class {
       }, { transaction });
 
 
-      const customer = await Customer.create({
+      const client = await Client.create({
         userId: user.id,
         ranking: 'None'
       }, { transaction });
 
 
       await user.update({
-        customerId: customer.id
+        clientId: client.id
       }, { transaction });
 
       await transaction.commit();
@@ -90,40 +89,7 @@ export default class {
 
 
 
-    // const user = await User.create({
-    //   username,
-    //   email,
-    //   passwordHash: hashedPassword,
-    //   clientType,
-
-    // });
-    // console.log(user);
-
-
-    // const w: IUserWallet = {
-    //   userId: user.id,
-    //   walletAddress: 'samp',
-    // }
-
-
-    //TODO const wallet = await UserWallet.create(w)
-
-    // const c: ICustomer = {
-    //   userId: user?.id,
-    //   ranking: 'None',
-    //   // defaultWalletId: wallet?.dataValues?.id || 0
-
-    // }
-    // await Customer.create({
-    //   userId: user?.id,
-    //   ranking: 'None',
-    //   // defaultWalletId: wallet?.dataValues?.id || 0
-
-    // })
-    // console.log('user', user);
-
-
-
+    
 
   }
 
@@ -139,31 +105,26 @@ export default class {
       where = { username: email };
     }
 
-    var user: IUser | null = await User.findOne({
+    var user: IUser | null = await User.scope('withPassword').findOne({
       where,
       include: [
         {
-          model: Customer,
-          as: 'customer',
-          // include: [{
-          //   model: UserWallet,
-          //   as: 'defaultWallet'
-          // }]
+          model: Client,
+          as: 'client',
         }],
       raw: true,  // Returns plain object, no Sequelize methods
-      nest: true  // Nests the customer object properly
+      nest: true  // Nests the client object properly
     });
 
-    // const user: IUser | null = await getCustomerInfoService(data);
-    // console.log('this.login', user);
 
-    // if (!user) throw new Error('Invalid credentials');
+    
+
     if (!user) {
-      console.log('User not found')
+      // console.log('User not found')
       return serviceResponserUtils({
         ok: false,
         data: {
-          code: 500,
+          code: 401,
         }
 
       })

@@ -1,17 +1,18 @@
 import { Request, Response } from 'express';
 import { models } from '../db/db';
+import { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import { IDeviceEarning } from '../db/models/device-earning.model';
 import { createDeviceEarningSchema } from '../dtos/dto';
 import IServiceResult from '../interfaces/IServiceResult';
-import { IDeviceEarning } from '../db/models/device-earning.model';
-import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
-import genericService from '../services/generic.service';
+import DeviceEarningService from '../services/DeviceEarning.service';
+import DeviceEarningPotService from '../services/DeviceEarningPot.service';
 import getUserByReq from '../utils/getUserByReq.utils';
 import responser from '../utils/responser.utils';
 import { validate } from '../utils/validator.utils';
 
 
-const service = genericService(models.DeviceEarning)
-const serviceWallet = genericService(models.DeviceEarningPot)
+const service = DeviceEarningService(models.DeviceEarning)
+const serviceWallet = DeviceEarningPotService()
 
 export default {
 

@@ -1,6 +1,7 @@
 // src/seeds/user-seed.ts
-import { User } from '../db/models/User';
+// import { User } from '../db/models/User';
 import bcrypt from 'bcryptjs';
+import User from '../db/models/user.model';
 
 export const seedUsers = async () => {
   const hashedPassword = bcrypt.hashSync('admin123', 8);
