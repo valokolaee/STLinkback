@@ -4,7 +4,7 @@ import { Request, Response } from 'express';
 import { validate } from '../utils/validator.utils';
 import { deviceEarningReportSchema } from '../dtos/device.dto';
 // import deviceReportService from '../services/device-report.service';
-import deviceReportService from '../services/onEarningRecorded.service/device-report.service';
+import deviceReportService from '../services/device-report.service';
 import { log } from 'console';
 import responserUtils from '../utils/responser.utils';
 

@@ -140,8 +140,8 @@ export default {
       /* fetching all affiliates of the device  */
 
       const thisAffiliates = await serviceDeviceAffiliate.findOne({ affiliateId, potAssignmentId })//if this user is already an affiliate of this device
-      // console.log(1);
 
+      
       if (thisAffiliates.ok) {
 
         return responserUtils(res, 400, {

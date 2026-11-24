@@ -1,13 +1,13 @@
 //src/services/device-report.service.ts
 
-import totalPercent from '../../controllers/mining-device-affiliate.controller/totalPercent';
-import { models } from '../../db/db';
-import DeviceEarningPot, { IDeviceEarningPot } from '../../db/models/device-earning-pot.model';
-import DevicePotAssignment from '../../db/models/device-pot-assignment';
-import MiningDevice, { IMiningDevice } from '../../db/models/mining-device.model';
-import serviceResponser from '../../utils/serviceResponser.utils';
-import deviceService from '../device.service';
-import onEarningRecordedService from '.';
+import totalPercent from '../controllers/mining-device-affiliate.controller/totalPercent';
+import { models } from '../db/db';
+import DeviceEarningPot, { IDeviceEarningPot } from '../db/models/device-earning-pot.model';
+import DevicePotAssignment from '../db/models/device-pot-assignment';
+import MiningDevice, { IMiningDevice } from '../db/models/mining-device.model';
+import serviceResponser from '../utils/serviceResponser.utils';
+import deviceService from './device.service';
+import onEarningRecordedService from './onEarningRecorded.service';
 
 class DeviceReportService {
   async recordEarning(data: {

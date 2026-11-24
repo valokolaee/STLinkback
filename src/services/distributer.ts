@@ -1,11 +1,11 @@
 import { log } from "console";
-import totalPercent from "../../controllers/mining-device-affiliate.controller/totalPercent";
-import DeviceEarningPot, { IDeviceEarningPot } from "../../db/models/device-earning-pot.model";
-import { safeParseFloat } from "../../utils/math.utils";
-import DeviceEarningPotService from "../DeviceEarningPot.service";
-import { IDeviceAffiliate } from "../../db/models/device-affiliate.model";
-import { decimalPlus } from "../../utils/decimal.utils";
-import meLog from "../../utils/meLog";
+import totalPercent from "../controllers/mining-device-affiliate.controller/totalPercent";
+import DeviceEarningPot, { IDeviceEarningPot } from "../db/models/device-earning-pot.model";
+import { safeParseFloat } from "../utils/math.utils";
+import DeviceEarningPotService from "./DeviceEarningPot.service";
+import { IDeviceAffiliate } from "../db/models/device-affiliate.model";
+import { decimalPlus } from "../utils/decimal.utils";
+import meLog from "../utils/meLog";
 
 export default async (ownerPot: DeviceEarningPot, amount: number) => {
 

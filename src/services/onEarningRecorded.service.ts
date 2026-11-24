@@ -1,10 +1,10 @@
 //src/services/onEarningRecorded.service.ts
 
-import DeviceEarningPot from '../../db/models/device-earning-pot.model';
-import MiningDevice from '../../db/models/mining-device.model';
-import MiningSession, { IMiningSession } from '../../db/models/mining-session.model';
-import { safeParseFloat } from '../../utils/math.utils';
-import deviceService from '../device.service';
+import DeviceEarningPot from '../db/models/device-earning-pot.model';
+import MiningDevice from '../db/models/mining-device.model';
+import MiningSession, { IMiningSession } from '../db/models/mining-session.model';
+import { safeParseFloat } from '../utils/math.utils';
+import deviceService from './device.service';
 import distributer from './distributer';
 
 class OnEarningRecordedService {
